@@ -36,3 +36,38 @@ model Note {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 }
+
+model OauthCredential {
+  id String @id @default(cuid())
+
+  provider String
+  userId   String
+  profile  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Account   Account? @relation(fields: [accountId], references: [id])
+  accountId String?
+
+  @@unique([provider, userId])
+}
+
+model Account {
+  id       String @id @default(cuid())
+  username String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wallets          Wallet[]
+  oauthCredentials OauthCredential[]
+}
+
+model Wallet {
+  id String @id @default(cuid())
+
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  address String
+}
