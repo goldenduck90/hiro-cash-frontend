@@ -46,8 +46,8 @@ model OauthCredential {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Account   Account? @relation(fields: [accountId], references: [id])
-  accountId String?
+
+  accounts Account[]
 
   @@unique([provider, userId])
 }

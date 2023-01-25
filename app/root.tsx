@@ -8,6 +8,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { MainContainer } from "./routes/header";
 
 import { getUser } from "./session.server";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
@@ -36,7 +37,8 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <Outlet />
+        <MainContainer />
+        
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
