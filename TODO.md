@@ -1,0 +1,3 @@
+- payment link copy-pasteable.
+- allow ENS domains for address
+- add validations

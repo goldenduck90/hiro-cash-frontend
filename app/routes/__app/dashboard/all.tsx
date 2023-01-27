@@ -1,12 +1,13 @@
-import type { ActionArgs, LoaderArgs} from "@remix-run/node";
+import type { LoaderArgs} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import {  findOauthCredential } from "~/models/oauthCredential.server";
+import { createAccount, findOauthCredential } from "~/models/oauthCredential.server";
 import { authenticator } from "~/services/auth.server";
 
+import { requireUserId } from "~/session.server";
+import { useUser } from "~/utils";
 import { CalendarIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { createAccount } from "~/models/account.server";
 
 
 export async function loader({ request }: LoaderArgs) {
@@ -22,85 +23,34 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 
-export let action = async ({ request }: ActionArgs) => {
-  let oauthCredential = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
-  });  
-  let oauth = await findOauthCredential(oauthCredential.provider, oauthCredential.userId);
-  
-  // const userId = await requireUserId(request);
-
-  const data = await request.formData();
-  // Object.fromEntries(data);
-  const username = data.get("username")
-  const account = await createAccount(oauth, username)
-
-  console.log(account.username)
-  return redirect(`/dashboard/${account.username}`)
-}
 
 export default function DashboardPage() {
   const data = useLoaderData<typeof loader>();
-  const account = data.defaultAccount;
-
-  
+  const oauth = data.oauthCredential;
+  const defaultAccount = data.defaultAccount;
   
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-screen flex-col">
       <header className="flex items-center justify-between p-4">
         <h1 className="">
-          {account && "Home"}
-          {!account && "Welcome"}
+          All Hiro Links
         </h1>
         {/* <p>{user.email}</p> */}
       </header>
 
-      <main className=" h-full ">              
-          {!account && (
-            <div className="p-6 bg-slate-700 bg-opacity-50 rounded-lg shadow">
-            <Form method="post">
-              <h2 className="pb-4">
-                Create your account
-              </h2>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-300">
-                Username/handle
-              </label>
-              <div className="mt-1 flex rounded-md shadow-sm">
-                <span className="inline-flex items-center rounded-l-md border border-slate-800 bg-slate-800 px-3 text-gray-400 sm:text-sm">
-                  http://hiro.cash/
-                </span>
-                <input
-                  type="text"
-                  name="username"
-                  id="username"
-                  className="block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-slate-800  border-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"              
-                  placeholder="username"
-                />              
-              </div>
-              <div className="mt-4 pt-4 text-right border-t border-slate-600">
-                <button
-                  type="submit"
-                  className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Create
-                </button>
-              </div>
-            </Form>
-        </div>
-        )}
-
+      <main className=" h-full ">
         <div className="flex-1 ">
           <div className="overflow-hidden shadow sm:rounded-md">
-            {account && (
             <ul role="list" className="divide-y divide-slate-600">
-              <li key={account.id}>
+              {oauth.accounts.map((account) => {
+                return (<li key={account.id}>
                   <Link to={account.username} className="block hover:bg-slate-700">
                     <div className="flex items-center px-4 py-4 sm:px-6">
                       <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                         <div className="truncate">
                           <div className="flex text-sm">
                             <p className="truncate font-medium text-indigo-600">{account.username}</p>
-                            <p className="ml-1 flex-shrink-0 font-normal text-gray-500">in {}</p>
+                            <p className="ml-1 flex-shrink-0 font-normal text-gray-500"></p>
                           </div>
                           <div className="mt-2 flex">
                             <div className="flex items-center text-sm text-gray-500">
@@ -130,9 +80,9 @@ export default function DashboardPage() {
                     </div>
                   </Link>
                 </li>
-                         
-            </ul>          
-)}
+                );
+              })}          
+            </ul>
           </div>
         </div>
       </main>

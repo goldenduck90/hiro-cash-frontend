@@ -1,3 +1,4 @@
+import type { OauthCredential } from "@prisma/client";
 import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
 
@@ -46,6 +47,20 @@ export function useMatchesData(
 
 function isUser(user: any): user is User {
   return user && typeof user === "object" && typeof user.email === "string";
+}
+
+function isOauthCredential(oauth: any): oauth is OauthCredential {
+  return (
+    oauth && typeof oauth === "object" && typeof oauth.provider === "string"
+  );
+}
+
+export function useOptionalOauth(): OauthCredential | undefined {
+  const data = useMatchesData("routes/__app/dashboard");
+  if (!data || !isOauthCredential(data.oauthCredential)) {
+    return undefined;
+  }
+  return data.oauthCredential;
 }
 
 export function useOptionalUser(): User | undefined {
