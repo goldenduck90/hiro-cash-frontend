@@ -1,4 +1,4 @@
-app = "hiro-7f7b"
+app = "hiro-main"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = [ ]
