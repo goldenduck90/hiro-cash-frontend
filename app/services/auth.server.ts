@@ -8,6 +8,8 @@ import { GitHubStrategy } from "remix-auth-github";
 import type { OauthCredential } from "@prisma/client";
 import { findOrCreatOauthCredential } from "~/models/oauthCredential.server";
 
+const CALLBACK_HOST = process.env.CALLBACK_HOST;
+
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
 const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
 
@@ -39,7 +41,7 @@ let googleStrategy = new GoogleStrategy(
   {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
+    callbackURL: `${CALLBACK_HOST}/auth/google/callback`,
   },
   async ({ accessToken, refreshToken, extraParams, profile }) => {
     try {
@@ -55,7 +57,7 @@ let gitHubStrategy = new GitHubStrategy(
   {
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/github/callback",
+    callbackURL: `${CALLBACK_HOST}/auth/github/callback`,
   },
   async ({ accessToken, extraParams, profile }) => {
     // Get the user data from your DB or API using the tokens and profile
