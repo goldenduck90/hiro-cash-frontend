@@ -82,7 +82,8 @@ const twitterStrategy = new TwitterStrategy(
     // includeEmail: true, // Optional parameter. Default: false.
   },
   // Define what to do when the user is authenticated
-  async ({ accessToken, accessTokenSecret, profile }) => {
+  async ({ profile }) => {
+    console.log(profile);
     // profile contains all the info from `account/verify_credentials`
     // https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
 
@@ -92,7 +93,7 @@ const twitterStrategy = new TwitterStrategy(
     // return User.findOrCreate({ email: profile.emails[0].value });
     try {
       return await findOrCreatOauthCredential(
-        "github",
+        "twitter",
         profile.id.toString(),
         profile
       );
