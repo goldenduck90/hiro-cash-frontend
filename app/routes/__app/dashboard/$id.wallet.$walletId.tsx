@@ -1,4 +1,8 @@
-import type { ActionFunction, LoaderArgs, LoaderFunction} from "@remix-run/node";
+import type {
+  ActionFunction,
+  LoaderArgs,
+  LoaderFunction,
+} from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
@@ -6,13 +10,15 @@ import { findOauthCredential } from "~/models/oauthCredential.server";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import { authenticator } from "~/services/auth.server";
 
-import { useField, ValidatedForm , 
+import {
+  useField,
+  ValidatedForm,
   validationError,
-  ValidatorData,} from "remix-validated-form";
+  ValidatorData,
+} from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-
 
 import invariant from "tiny-invariant";
 import { deleteWallet, updateWallet } from "~/models/wallet.server";
@@ -23,7 +29,7 @@ import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 
 const coins = tokenlist.tokens;
 
-const coinsByChain:any = {};
+const coinsByChain: any = {};
 coins.forEach((c) => {
   if (coinsByChain[c.chainId]) {
     coinsByChain[c.chainId].push(c);
@@ -32,7 +38,7 @@ coins.forEach((c) => {
   }
 });
 
-const filteredChainIds:number[] = [];
+const filteredChainIds: number[] = [];
 routerlist.routers.forEach((routerInfo) => {
   if (routerInfo.version == "0.1") {
     if (!filteredChainIds.includes(routerInfo.chainId)) {
@@ -42,28 +48,27 @@ routerlist.routers.forEach((routerInfo) => {
 });
 
 const filteredChains = filteredChainIds
-    .map((chainId) => {
-      return getChain(chainId);
-    })
-    .filter((chain) => {
-      // return chain && (SHOW_TESTNETS || !chain.testnet);
-      return chain && chain.testnet != true;
-    });
+  .map((chainId) => {
+    return getChain(chainId);
+  })
+  .filter((chain) => {
+    // return chain && (SHOW_TESTNETS || !chain.testnet);
+    return chain && chain.testnet != true;
+  });
 
-function coinSelected(wallet: Wallet, coinId:string): boolean {
-  const coins = wallet.config["coins"] || [];
+function coinSelected(wallet: Wallet, coinId: string): boolean {
+  const coins = wallet?.config["coins"] || [];
 
-  console.log(coins)
+  console.log(coins);
   return coins.includes(coinId);
 }
 
-
 export const validator = withZod(
   z.object({
-    address: z
-      .string()
-      .min(2, { message: "address is required" }),
-    coins: zfd.repeatable(z.array(zfd.text()).min(1, {message: "select at least one coin"}))
+    address: z.string().min(2, { message: "address is required" }),
+    coins: zfd.repeatable(
+      z.array(zfd.text()).min(1, { message: "select at least one coin" })
+    ),
     // lastName: z
     //   .string()
     //   .min(1, { message: "Last name is required" }),
@@ -74,40 +79,52 @@ export const validator = withZod(
   })
 );
 
-
-export const loader: LoaderFunction = async ({ request, params }: LoaderArgs) => {
+export const loader: LoaderFunction = async ({
+  request,
+  params,
+}: LoaderArgs) => {
   let oauthCredential = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
-  });  
+  });
   // const userId = await requireUserId(request);
 
-  let oauth = await findOauthCredential(oauthCredential.provider, oauthCredential.userId);  
-  let account = oauth.accounts.find((account) => account.username === params.id )
-  let wallet = account?.wallets.find((wallet) => wallet.id === params.walletId )
+  let oauth = await findOauthCredential(
+    oauthCredential.provider,
+    oauthCredential.userId
+  );
+  let account = oauth.accounts.find(
+    (account) => account.username === params.id
+  );
+  let wallet = account?.wallets.find((wallet) => wallet.id === params.walletId);
 
   return json({ oauthCredential: oauth, account: account, wallet: wallet });
-}
+};
 
-export const action: ActionFunction = async ({ request, params }: ActionArgs) => {
+export const action: ActionFunction = async ({
+  request,
+  params,
+}: ActionArgs) => {
   let oauthCredential = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
-  });  
-  let oauth = await findOauthCredential(oauthCredential.provider, oauthCredential.userId);
-  
-  let account = oauth.accounts.find((account) => account.username === params.id )
+  });
+  let oauth = await findOauthCredential(
+    oauthCredential.provider,
+    oauthCredential.userId
+  );
+
+  let account = oauth.accounts.find(
+    (account) => account.username === params.id
+  );
   invariant(account, "account not found");
-  let wallet = account?.wallets.find((wallet) => wallet.id === params.walletId )
+  let wallet = account?.wallets.find((wallet) => wallet.id === params.walletId);
   invariant(wallet, "wallet not found");
 
   if (request.method === "DELETE") {
-      await deleteWallet(wallet);
-      return redirect("/dashboard");
+    await deleteWallet(wallet);
+    return redirect("/dashboard");
   } else {
-
     // const userId = await requireUserId(request);
-    const result = await validator.validate(
-      await request.formData()
-    );
+    const result = await validator.validate(await request.formData());
     // if (result.error) return validationError(result.error);
     const data = result.data;
 
@@ -118,14 +135,13 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
       type: params.type,
       exchange: params.exchange,
       config: {
-        coins: data["coins"]
-      }
-    })
+        coins: data["coins"],
+      },
+    });
 
-    return redirect(`../${account.username}`)
+    return redirect(`../${account.username}`);
   }
-}
-
+};
 
 export default function AccountWalletPage() {
   const data = useLoaderData<typeof loader>();
@@ -134,38 +150,35 @@ export default function AccountWalletPage() {
   const account = data.account;
   const wallet = data.account.wallets[0];
 
-  const { error, getInputProps } = useField("address", {formId: "myForm"});
+  const { error, getInputProps } = useField("address", { formId: "myForm" });
 
-  
   // const user = useUser();
-  
+
   return (
     <div className="flex  flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
         <h1 className="font-bold">
           <span className="font-light">Account:</span> {account.username}
-        </h1>              
+        </h1>
       </header>
 
-      <main className="">      
-        <div className="p-6 bg-slate-700 rounded-md">
+      <main className="">
+        <div className="rounded-md bg-slate-700 p-6">
           <ValidatedForm validator={validator} method="post" id="myForm">
             <label htmlFor="email" className="block text-sm font-medium ">
               Wallet Address
             </label>
-            <div className="mt-1">              
+            <div className="mt-1">
               <input
                 {...getInputProps({ id: "address" })}
                 type="text"
                 name="address"
                 id="address"
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md bg-slate-800  border-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"              
+                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"
                 placeholder="0x..."
                 defaultValue={wallet.address}
-              />          
-              {error && (
-                <span className="my-error-class">{error}</span>
-              )}    
+              />
+              {error && <span className="my-error-class">{error}</span>}
             </div>
 
             {/* <fieldset className="mt-8 pl-4">
@@ -219,31 +232,46 @@ export default function AccountWalletPage() {
               return (
                 chain && (
                   <fieldset key={chainId} className="mt-8">
-                    <div
-                      className=""
-                      aria-hidden="true"
-                    >
-                      <img src={ethereumLogo} className="w-8 h-8 inline-block" />
+                    <div className="" aria-hidden="true">
+                      <img
+                        src={ethereumLogo}
+                        className="inline-block h-8 w-8"
+                      />
                       {chain.chainName}
                     </div>
-                    <div className="flex mt-4 pl-2">
-                    {tokensForChain.map((coin:any) => {
-                      const coinId = coin.symbol + "-" + chainId.toString();
-                      return (         
-                        <>
-                          <div key={coinId} className="flex items-center mr-4">
-                              <input defaultChecked={coinSelected(wallet, coinId)} name={`coins`} id={coinId} type="checkbox" value={coinId} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                              <label htmlFor={coinId} className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{coin.symbol}</label>
-                          </div>        
-                        </>             
-                      );
-                    })}
+                    <div className="mt-4 flex pl-2">
+                      {tokensForChain.map((coin: any) => {
+                        const coinId = coin.symbol + "-" + chainId.toString();
+                        return (
+                          <>
+                            <div
+                              key={coinId}
+                              className="mr-4 flex items-center"
+                            >
+                              <input
+                                defaultChecked={coinSelected(wallet, coinId)}
+                                name={`coins`}
+                                id={coinId}
+                                type="checkbox"
+                                value={coinId}
+                                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                              />
+                              <label
+                                htmlFor={coinId}
+                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                              >
+                                {coin.symbol}
+                              </label>
+                            </div>
+                          </>
+                        );
+                      })}
                     </div>
                   </fieldset>
                 )
               );
             })}
-            <div className="mt-4 pt-4 text-right border-t border-slate-600">
+            <div className="mt-4 border-t border-slate-600 pt-4 text-right">
               <button
                 type="submit"
                 disabled={isSubmitting}
