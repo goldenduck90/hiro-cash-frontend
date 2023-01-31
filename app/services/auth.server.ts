@@ -7,6 +7,7 @@ import { GitHubStrategy } from "remix-auth-github";
 
 import type { OauthCredential } from "@prisma/client";
 import { findOrCreatOauthCredential } from "~/models/oauthCredential.server";
+import { TwitterStrategy } from "remix-auth-twitter";
 
 const CALLBACK_HOST = process.env.CALLBACK_HOST;
 
@@ -27,11 +28,11 @@ if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
   throw new Error("GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET must be provided");
 }
 
-// if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
-//   throw new Error(
-//     "TWITTER_CLIENT_ID and TWITTER_CLIENT_SECRET must be provided"
-//   );
-// }
+if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
+  throw new Error(
+    "TWITTER_CLIENT_ID and TWITTER_CLIENT_SECRET must be provided"
+  );
+}
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -53,7 +54,7 @@ let googleStrategy = new GoogleStrategy(
   }
 );
 
-let gitHubStrategy = new GitHubStrategy(
+let githubStrategy = new GitHubStrategy(
   {
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
@@ -71,5 +72,36 @@ let gitHubStrategy = new GitHubStrategy(
   }
 );
 
-authenticator.use(gitHubStrategy);
+const twitterStrategy = new TwitterStrategy(
+  {
+    clientID: TWITTER_CLIENT_ID,
+    clientSecret: TWITTER_CLIENT_SECRET,
+    callbackURL: `${CALLBACK_HOST}/auth/twitter/callback`,
+    // In order to get user's email address, you need to configure your app permission.
+    // See https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials.
+    // includeEmail: true, // Optional parameter. Default: false.
+  },
+  // Define what to do when the user is authenticated
+  async ({ accessToken, accessTokenSecret, profile }) => {
+    // profile contains all the info from `account/verify_credentials`
+    // https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
+
+    // Return a user object to store in sessionStorage.
+    // You can also throw Error to reject the login
+    // Get the user data from your DB or API using the tokens and profile
+    // return User.findOrCreate({ email: profile.emails[0].value });
+    try {
+      return await findOrCreatOauthCredential(
+        "github",
+        profile.id.toString(),
+        profile
+      );
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+);
+authenticator.use(twitterStrategy);
+authenticator.use(githubStrategy);
 authenticator.use(googleStrategy);
