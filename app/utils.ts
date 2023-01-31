@@ -1,3 +1,5 @@
+import type { TokenInfo } from "@hiropay/tokenlists";
+import { getChain, tokenlist } from "@hiropay/tokenlists";
 import type { OauthCredential } from "@prisma/client";
 import { useMatches } from "@remix-run/react";
 import { useMemo } from "react";
@@ -5,6 +7,17 @@ import { useMemo } from "react";
 import type { User } from "~/models/user.server";
 
 const DEFAULT_REDIRECT = "/";
+
+export function coinIdtoToken(coinId: string) {
+  const [symbol, chainId] = coinId.split("-");
+  const chain = getChain(parseInt(chainId));
+
+  const token = tokenlist.tokens.find((token) => {
+    return token.symbol == symbol && token.chainId == chain.chainId;
+  });
+
+  return token;
+}
 
 /**
  * This should be used any time the redirect path is user-provided

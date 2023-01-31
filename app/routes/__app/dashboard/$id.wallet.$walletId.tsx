@@ -127,7 +127,7 @@ export const action: ActionFunction = async ({ request, params }: ActionArgs) =>
 }
 
 
-export default function AccountPage() {
+export default function AccountWalletPage() {
   const data = useLoaderData<typeof loader>();
   const isSubmitting = useIsSubmitting("myForm");
 

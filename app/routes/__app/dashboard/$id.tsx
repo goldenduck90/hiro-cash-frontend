@@ -84,7 +84,7 @@ const coinIdToChain = (coinId: string) => {
   return chain;
 };
 
-export default function AccountPage() {
+export default function AccountOverviewPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.account;
   const wallet = data.primaryWallet;

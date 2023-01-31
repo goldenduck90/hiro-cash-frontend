@@ -24,7 +24,7 @@ export async function loader({ request }: LoaderArgs) {
 
 
 
-export default function DashboardPage() {
+export default function AllPage() {
   const data = useLoaderData<typeof loader>();
   const oauth = data.oauthCredential;
   const defaultAccount = data.defaultAccount;
