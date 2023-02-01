@@ -41,7 +41,7 @@ export const loader: LoaderFunction = async ({
     oauthCredential.userId
   );
   let account = oauth.accounts.find(
-    (account) => account.username === params.username
+    (account) => account.username === params.id
   );
   invariant(account, "account not found");
 
@@ -67,14 +67,14 @@ export const action: ActionFunction = async ({
   );
 
   let account = oauth.accounts.find(
-    (account) => account.username === params.username
+    (account) => account.username === params.id
   );
   if (!account) return redirect(".");
   invariant(account, "account not found");
 
   if (request.method === "DELETE") {
     await deleteAccount(account);
-    return redirect("/dashboard");
+    return redirect("/home");
   } else {
     // const userId = await requireUserId(request);
 

@@ -26,7 +26,6 @@ export const meta: MetaFunction = () => ({
 export async function loader({ request }: LoaderArgs) {
   return json({
     user: await getUser(request),
-        
   });
 }
 
@@ -38,8 +37,7 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full">
-        <MainContainer />
-        
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -121,7 +121,7 @@ export const action: ActionFunction = async ({
 
   if (request.method === "DELETE") {
     await deleteWallet(wallet);
-    return redirect("/dashboard");
+    return redirect("/home");
   } else {
     // const userId = await requireUserId(request);
     const result = await validator.validate(await request.formData());

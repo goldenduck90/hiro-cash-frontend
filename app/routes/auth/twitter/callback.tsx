@@ -3,7 +3,7 @@ import { authenticator } from "~/services/auth.server";
 
 export let loader = ({ request }: LoaderArgs) => {
   return authenticator.authenticate("twitter", request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/home",
     failureRedirect: "/login",
   });
 };

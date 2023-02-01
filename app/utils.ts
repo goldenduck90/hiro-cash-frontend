@@ -69,7 +69,7 @@ function isOauthCredential(oauth: any): oauth is OauthCredential {
 }
 
 export function useOptionalOauth(): OauthCredential | undefined {
-  const data = useMatchesData("routes/__app/dashboard");
+  const data = useMatchesData("routes/__app/home");
   if (!data || !isOauthCredential(data.oauthCredential)) {
     return undefined;
   }

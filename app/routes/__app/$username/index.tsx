@@ -9,7 +9,6 @@ import twitter from "~/assets/images/twitter.svg";
 import github from "~/assets/images/github.svg";
 import { findAccount } from "~/models/account.server";
 import truncateEthAddress from "truncate-eth-address";
-import wallet from "./dashboard/wallet";
 import invariant from "tiny-invariant";
 
 import PluginContainer from "~/plugin/PluginContainer";
