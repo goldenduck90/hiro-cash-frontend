@@ -45,7 +45,7 @@ export default function PagesMain() {
     <main className="-mt-32">
       <div className="relative  overflow-hidden">
         <div className="mx-auto h-screen max-w-7xl px-6 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
-          <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-2xl lg:pt-8">
+          <div className="sm:text-leftlg:mx-0 mx-auto max-w-2xl flex-shrink-0 pt-24 text-center lg:max-w-2xl lg:pt-8">
             {/* <div className="mt-16 sm:mt-16 lg:mt-16">
               <a href="#" className="inline-flex space-x-6">
                 <span className="rounded-full bg-indigo-500/10 px-3 py-1 text-sm font-semibold leading-6 text-indigo-400 ring-1 ring-inset ring-indigo-500/20">
@@ -60,7 +60,7 @@ export default function PagesMain() {
                 </span>
               </a>
             </div> */}
-            <h1 className="mt-10 text-4xl font-bold  text-white sm:text-6xl">
+            <h1 className="mt-10  text-4xl font-bold text-white  sm:text-6xl">
               Payments infrastructure for crypto & web3
             </h1>
             <p className="mt-6 text-2xl font-light leading-8 text-gray-400">
