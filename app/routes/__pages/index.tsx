@@ -97,7 +97,7 @@ export default function PagesMain() {
             </h1>
             <p className="mt-6 text-2xl font-light leading-8 text-gray-400">
               Hiro is a next-generation payment rails, that combines the best
-              parts of crypto/web3 and VISA/MasterCard.
+              parts of crypto/web3 and traditional payment systems.
             </p>
             {/* <div className="mt-10 flex items-center gap-x-6">
               <a
