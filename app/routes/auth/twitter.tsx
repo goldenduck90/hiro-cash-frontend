@@ -4,6 +4,9 @@ import { authenticator } from "~/services/auth.server";
 
 export let loader = () => redirect("/login");
 
-export let action = ({ request }: ActionArgs) => {
-  return authenticator.authenticate("twitter", request);
+export let action = async ({ request }: ActionArgs) => {
+  const response = await authenticator.authenticate("twitter", request, {
+    throwOnError: true,
+  });
+  return response;
 };
