@@ -11,6 +11,7 @@ import { authenticator } from "~/services/auth.server";
 
 import invariant from "tiny-invariant";
 import { deleteAccount, updateAccount } from "~/models/account.server";
+import CardHeader from "~/components/__home/card_header";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -71,20 +72,7 @@ export default function AccountWalletPage() {
 
   return (
     <div className="flex  flex-col">
-      <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
-        <h1 className="font-bold">
-          <span className="font-light">Account:</span> {account.username}
-        </h1>
-
-        <Form method="delete">
-          <button
-            type="submit"
-            className="rounded bg-slate-600 py-1 px-2 text-xs hover:bg-red-500 active:bg-red-600"
-          >
-            Delete
-          </button>
-        </Form>
-      </header>
+      <CardHeader account={account} />
 
       <main className=" h-full ">
         <div className="rounded-lg bg-slate-700 bg-opacity-50 p-6 shadow">
@@ -118,6 +106,15 @@ export default function AccountWalletPage() {
             </div>
           </Form>
         </div>
+
+        <Form method="delete" className="mt-4">
+          <button
+            type="submit"
+            className="rounded bg-slate-600 py-1 px-2 text-xs hover:bg-red-500 active:bg-red-600"
+          >
+            Delete
+          </button>
+        </Form>
       </main>
     </div>
   );

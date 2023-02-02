@@ -39,6 +39,7 @@ import { zfd } from "zod-form-data";
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 import { validator } from "./$id.wallet.$walletId";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
+import CardHeader from "~/components/__home/card_header";
 
 const coins = tokenlist.tokens;
 
@@ -172,27 +173,17 @@ export default function AccountOverviewPage() {
   const wallet = data.primaryWallet;
 
   return (
-    <div className="flex  flex-col">
-      <header className="flex items-center justify-between bg-slate-800 p-4 pl-0 text-white">
-        <h1 className="mb-4 font-bold">
-          <span className="text-2xl font-light">@{account.username}</span>
-          <br />
-          <Link
-            to={`/${account.username}`}
-            target="_blank"
-            className="text-sm font-light text-slate-300"
-          >
-            https://hiro.cash/{account.username}
-          </Link>
-          <LinkIcon className="ml-2 inline-block w-4" />
-        </h1>
+    <div className="flex flex-col">
+      <CardHeader account={account} />
+
+      <div className="mb-8 pb-4">
         <Link
           to="edit"
           className="rounded bg-slate-600 py-1 px-2 text-xs text-blue-100 hover:bg-blue-500 active:bg-blue-600"
         >
-          Edit
+          Edit Account
         </Link>
-      </header>
+      </div>
 
       <main className="">
         {wallet && <WalletOverview wallet={wallet} />}

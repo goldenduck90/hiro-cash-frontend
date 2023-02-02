@@ -28,6 +28,7 @@ import type { Wallet } from ".prisma/client";
 import { useIsSubmitting } from "remix-validated-form";
 
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
+import CardHeader from "~/components/__home/card_header";
 
 const coins = tokenlist.tokens;
 
@@ -157,19 +158,8 @@ export default function AccountWalletPage() {
   // const user = useUser();
 
   return (
-    <div className="flex  flex-col">
-      <h1 className="mb-8 font-bold">
-        <span className="text-2xl font-light">@{account.username}</span>
-        <br />
-        <Link
-          to={`/${account.username}`}
-          target="_blank"
-          className="text-sm font-light text-slate-300"
-        >
-          https://hiro.cash/{account.username}
-        </Link>
-        <LinkIcon className="ml-2 inline-block w-4" />
-      </h1>
+    <div className="flex flex-col">
+      <CardHeader account={account} />
 
       <main className="">
         <div className="rounded-md bg-slate-700 p-6">

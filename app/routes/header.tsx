@@ -27,32 +27,38 @@ export function Header() {
       */}
       <div className="pb-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="relative mb-5 flex items-center justify-center border-b border-slate-800 pt-5 pb-2 lg:justify-between">
+          <div className="items-right relative mb-5 flex flex-row justify-center border-b border-slate-800 pt-5 pb-2 lg:justify-between">
             {/* Logo */}
-            <div className="absolute left-0 flex-shrink-0 lg:static">
+            <div className="flex-shrink-0 basis-1/2">
               <a href="/">
                 <span className="sr-only">Hiro</span>
                 <img className="h-8 w-auto" src={hiro} alt="Hiro" />
               </a>
             </div>
-            {oauth && (
-              <Form action="/auth/logout" method="post">
-                <button
-                  type="submit"
-                  className="rounded py-1 px-2 text-sm text-blue-100 hover:bg-slate-500 active:bg-slate-600"
+            <div className=" flex-shrink-0 basis-1/2 text-right">
+              {oauth && (
+                <Form
+                  action="/auth/logout"
+                  method="post"
+                  className="flex-shrink-0 basis-1/2"
                 >
-                  Logout
-                </button>
-              </Form>
-            )}
-            {!oauth && (
-              <Link
-                to="/login"
-                className="inline-block rounded-xl bg-indigo-500 px-4 py-1 font-medium text-white hover:bg-blue-600"
-              >
-                Login
-              </Link>
-            )}
+                  <button
+                    type="submit"
+                    className="rounded py-1 px-2 text-sm text-blue-100 hover:bg-slate-500 active:bg-slate-600"
+                  >
+                    Logout
+                  </button>
+                </Form>
+              )}
+              {!oauth && (
+                <Link
+                  to="/login"
+                  className="inline-block rounded-xl bg-indigo-500 px-4 py-1 font-medium text-white hover:bg-blue-600"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
