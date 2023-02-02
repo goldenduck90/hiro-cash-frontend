@@ -20,7 +20,11 @@ export async function loader({ request }: LoaderArgs) {
   );
   const defaultAccount = oauth.accounts[0];
 
-  return json({ oauthCredential: oauth, defaultAccount: defaultAccount });
+  if (defaultAccount) {
+    return redirect(defaultAccount.username);
+  } else {
+    return json({ oauthCredential: oauth, defaultAccount: defaultAccount });
+  }
 }
 
 export let action = async ({ request }: ActionArgs) => {
@@ -39,7 +43,6 @@ export let action = async ({ request }: ActionArgs) => {
   const username = data.get("username");
   const account = await createAccount(oauth, username);
 
-  console.log(account.username);
   return redirect(`/home/${account.username}`);
 };
 
@@ -50,10 +53,7 @@ export default function DashboardPage() {
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between p-4">
-        <h1 className="">
-          {account && "Home"}
-          {!account && "Welcome"}
-        </h1>
+        <h1 className=""></h1>
         {/* <p>{user.email}</p> */}
       </header>
 
@@ -61,22 +61,16 @@ export default function DashboardPage() {
         {!account && (
           <div className="rounded-lg bg-slate-700 bg-opacity-50 p-6 shadow">
             <Form method="post">
-              <h2 className="pb-4">Create your account</h2>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-slate-300"
-              >
-                Username/handle
-              </label>
-              <div className="mt-1 flex rounded-md shadow-sm">
-                <span className="inline-flex items-center rounded-l-md border border-slate-800 bg-slate-800 px-3 text-gray-400 sm:text-sm">
+              <h2 className="pb-4">Choose your username</h2>
+              <div className="mt-1 flex rounded-md text-lg shadow-sm">
+                <span className="inline-flex items-center rounded-l-md border border-slate-800 bg-slate-800 px-3 text-sm text-gray-400">
                   http://hiro.cash/
                 </span>
                 <input
                   type="text"
                   name="username"
                   id="username"
-                  className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"
+                  className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 "
                   placeholder="username"
                 />
               </div>

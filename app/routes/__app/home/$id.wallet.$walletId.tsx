@@ -1,3 +1,5 @@
+import { LinkIcon } from "@heroicons/react/20/solid";
+
 import type {
   ActionFunction,
   LoaderArgs,
@@ -156,11 +158,18 @@ export default function AccountWalletPage() {
 
   return (
     <div className="flex  flex-col">
-      <header className="flex items-center justify-between bg-slate-800 p-4 text-white">
-        <h1 className="font-bold">
-          <span className="font-light">Account:</span> {account.username}
-        </h1>
-      </header>
+      <h1 className="mb-8 font-bold">
+        <span className="text-2xl font-light">@{account.username}</span>
+        <br />
+        <Link
+          to={`/${account.username}`}
+          target="_blank"
+          className="text-sm font-light text-slate-300"
+        >
+          https://hiro.cash/{account.username}
+        </Link>
+        <LinkIcon className="ml-2 inline-block w-4" />
+      </h1>
 
       <main className="">
         <div className="rounded-md bg-slate-700 p-6">
@@ -228,6 +237,12 @@ export default function AccountWalletPage() {
               );
             })}
             <div className="mt-4 border-t border-slate-600 pt-4 text-right">
+              <Link
+                to={"../"}
+                className="mr-4 inline-flex items-center rounded-md border border-transparent bg-slate-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                Back
+              </Link>
               <button
                 type="submit"
                 disabled={isSubmitting}

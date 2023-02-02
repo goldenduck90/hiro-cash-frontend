@@ -24,7 +24,6 @@ import type { Wallet } from "@prisma/client";
 import truncateEthAddress from "truncate-eth-address";
 import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
 import { chainlist } from "@hiropay/tokenlists";
-import { tokenlist } from "@hiropay/tokenlists";
 import { getTokens } from "@hiropay/tokenlists";
 
 import {
@@ -38,7 +37,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
-import { validator } from "./$id.wallet";
+import { validator } from "./$id.wallet.$walletId";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 
 const coins = tokenlist.tokens;
@@ -175,13 +174,13 @@ export default function AccountOverviewPage() {
   return (
     <div className="flex  flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 pl-0 text-white">
-        <h1 className="font-bold">
-          <span className="font-medium">Account</span>
+        <h1 className="mb-4 font-bold">
+          <span className="text-2xl font-light">@{account.username}</span>
           <br />
           <Link
             to={`/${account.username}`}
             target="_blank"
-            className="text-sm font-light"
+            className="text-sm font-light text-slate-300"
           >
             https://hiro.cash/{account.username}
           </Link>
