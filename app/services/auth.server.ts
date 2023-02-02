@@ -34,9 +34,11 @@ if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
   );
 }
 
+export type User = Pick<OauthCredential, "id" | "provider">;
+
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
-export let authenticator = new Authenticator<OauthCredential>(sessionStorage);
+export let authenticator = new Authenticator<User>(sessionStorage);
 
 let googleStrategy = new GoogleStrategy(
   {
@@ -103,6 +105,7 @@ const twitterStrategy = new TwitterStrategy(
     }
   }
 );
+
 authenticator.use(twitterStrategy, "twitter");
 authenticator.use(githubStrategy, "github");
 authenticator.use(googleStrategy, "google");
