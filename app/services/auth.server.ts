@@ -95,7 +95,7 @@ const twitterStrategy = new TwitterStrategy(
       return await findOrCreatOauthCredential(
         "twitter",
         profile.id.toString(),
-        profile
+        {}
       );
     } catch (e) {
       console.log(e);

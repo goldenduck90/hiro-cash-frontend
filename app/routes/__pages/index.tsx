@@ -20,7 +20,7 @@ import ah from "~/assets/images/pages/ah.jpg";
 const features = [
   {
     name: "Lowest fees",
-    description: "Hiro network charges 0.20% for B2C payments. Free for P2P. ",
+    description: "0.20% for B2C payments. Free for P2P. ",
     icon: CloudArrowUpIcon,
   },
   {
