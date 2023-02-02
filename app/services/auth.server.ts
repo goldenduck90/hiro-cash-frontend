@@ -81,7 +81,7 @@ const twitterStrategy = new TwitterStrategy(
     callbackURL: `${CALLBACK_HOST}/auth/twitter/callback`,
     // In order to get user's email address, you need to configure your app permission.
     // See https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials.
-    includeEmail: false, // Optional parameter. Default: false.
+    includeEmail: true, // Optional parameter. Default: false.
   },
   // Define what to do when the user is authenticated
   async ({ profile }) => {
