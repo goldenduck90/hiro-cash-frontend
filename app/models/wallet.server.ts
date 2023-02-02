@@ -40,12 +40,18 @@ export async function updateWallet(
   }
 }
 
-export async function createWallet(account: Account, address: string) {
+export async function createWallet(
+  account: Account,
+  address: string,
+  props: Object
+) {
   try {
     return await prisma.wallet.create({
       data: {
         address: address,
-        config: {},
+        type: props.type,
+        exchange: props.exchange,
+        config: props.config,
         account: {
           connect: { id: account.id },
         },

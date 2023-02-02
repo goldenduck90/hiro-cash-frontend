@@ -181,50 +181,6 @@ export default function AccountWalletPage() {
               {error && <span className="my-error-class">{error}</span>}
             </div>
 
-            {/* <fieldset className="mt-8 pl-4">
-              <legend className="sr-only">Wallet Type</legend>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <input
-                    id="type-wallet"
-                    name="type"
-                    type="radio"
-                    value="wallet"
-                    defaultChecked={wallet.type == 'wallet'}
-                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <label htmlFor="type-wallet" className="ml-3 block text-sm font-medium ">
-                    Wallet
-                    <span className="font-light"> (Metamask, WalletConnect, Coinbase, multi-sigs)</span>
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="type-exchange"
-                    name="type"
-                    type="radio"
-                    value="exchange"
-                    defaultChecked={wallet.type == "exchange"}
-                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  />
-                  <label htmlFor="type-exchange" className="ml-3 block text-sm font-medium ">
-                    Exchange                    
-                  </label>
-                    <select
-                      id="exchange"
-                      name="exchange"                      
-                      className="mt-1 ml-4 block rounded-md py-2 pl-3 pr-10 text-base bg-slate-800 border-slate-800 focus:border-slate-800 focus:ring-slate-800 focus:outline-none sm:text-sm"
-                      defaultValue={wallet.exchange}
-                    >
-                      <option>choose</option>
-                      <option>Binance</option>
-                      <option>Kraken</option>
-                      <option>Crypto.com</option>
-                      <option>Coinbase Exchange</option>
-                    </select>
-                </div>
-              </div>
-            </fieldset> */}
             {filteredChains.map((chain) => {
               const chainId = chain.chainId;
               const tokensForChain = coinsByChain[chainId] || [];

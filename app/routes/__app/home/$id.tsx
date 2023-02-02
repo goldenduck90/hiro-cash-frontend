@@ -27,6 +27,54 @@ import { chainlist } from "@hiropay/tokenlists";
 import { tokenlist } from "@hiropay/tokenlists";
 import { getTokens } from "@hiropay/tokenlists";
 
+import {
+  useField,
+  ValidatedForm,
+  validationError,
+  ValidatorData,
+} from "remix-validated-form";
+import { withZod } from "@remix-validated-form/with-zod";
+import { z } from "zod";
+import { zfd } from "zod-form-data";
+
+import ethereumLogo from "~/assets/images/chains/ethereum.svg";
+import { validator } from "./$id.wallet";
+import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
+
+const coins = tokenlist.tokens;
+
+export function coinSelected(wallet: Wallet, coinId: string): boolean {
+  const coins = wallet?.config["coins"] || [];
+  return coins.includes(coinId);
+}
+
+export const coinsByChain: any = {};
+coins.forEach((c) => {
+  if (coinsByChain[c.chainId]) {
+    coinsByChain[c.chainId].push(c);
+  } else {
+    coinsByChain[c.chainId] = [c];
+  }
+});
+
+export const filteredChainIds: number[] = [];
+routerlist.routers.forEach((routerInfo) => {
+  if (routerInfo.version == "0.1") {
+    if (!filteredChainIds.includes(routerInfo.chainId)) {
+      filteredChainIds.push(routerInfo.chainId);
+    }
+  }
+});
+
+export const filteredChains = filteredChainIds
+  .map((chainId) => {
+    return getChain(chainId);
+  })
+  .filter((chain) => {
+    // return chain && (SHOW_TESTNETS || !chain.testnet);
+    return chain && chain.testnet != true;
+  });
+
 export const loader: LoaderFunction = async ({
   request,
   params,
@@ -78,14 +126,24 @@ export const action: ActionFunction = async ({
   } else {
     // const userId = await requireUserId(request);
 
-    const data = await request.formData();
-
     const wallet = account.wallets.find((w) => w.primary === true);
     if (wallet) {
       return redirect(".");
     } else {
-      const address = data.get("address");
-      await createWallet(account, address);
+      const result = await validator.validate(await request.formData());
+      // if (result.error) return validationError(result.error);
+      const data = result.data;
+
+      console.log(data);
+
+      const address = data["address"];
+      await createWallet(account, address, {
+        type: params.type,
+        exchange: params.exchange,
+        config: {
+          coins: data["coins"],
+        },
+      });
 
       return redirect(".");
     }
@@ -114,10 +172,6 @@ export default function AccountOverviewPage() {
   const account = data.account;
   const wallet = data.primaryWallet;
 
-  const coinIds = wallet?.config["coins"] || [];
-  const tokens: TokenInfo[] = coinIds.map(coinIdToToken);
-  const chains: ChainInfo[] = [...new Set(coinIds.map(coinIdToChain))];
-
   return (
     <div className="flex  flex-col">
       <header className="flex items-center justify-between bg-slate-800 p-4 pl-0 text-white">
@@ -142,75 +196,11 @@ export default function AccountOverviewPage() {
       </header>
 
       <main className="">
-        {wallet && (
-          <div className="flex-1 pb-6">
-            <div className="overflow-hidden shadow sm:rounded-md">
-              <h2>Primary Wallet</h2>
-              <ul role="list" className="divide-y divide-slate-600">
-                <li key={wallet.id}>
-                  <Link
-                    to={`wallet/${wallet.id}`}
-                    className="block hover:bg-slate-700"
-                  >
-                    <div className="flex items-center px-4 py-4 sm:px-6">
-                      <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div className="truncate">
-                          <div className="flex text-sm">
-                            <p className="truncate font-medium text-indigo-300">
-                              {truncateEthAddress(wallet.address)}
-                            </p>
-                            <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
-                              {" "}
-                              {}
-                            </p>
-                          </div>
-                          <div className="mt-2 flex">
-                            <div className=" items-center text-sm text-gray-500">
-                              <p>
-                                Tokens:{" "}
-                                {tokens
-                                  .map((token) => {
-                                    return token.symbol;
-                                  })
-                                  .join(", ")}
-                              </p>
-                              <p>
-                                Chains:{" "}
-                                {chains.map((c) => c.chainName).join(", ")}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-                          <div className="flex -space-x-1 overflow-hidden">
-                            {/* {position.applicants.map((applicant) => (
-                              <img
-                                key={applicant.email}
-                                className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-                                src={applicant.imageUrl}
-                                alt={applicant.name}
-                              />
-                            ))} */}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ml-5 flex-shrink-0">
-                        <ChevronRightIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        )}
+        {wallet && <WalletOverview wallet={wallet} />}
         {!wallet && (
           <div className="rounded-md bg-slate-700 p-6">
-            <Form method="post">
-              <label htmlFor="email" className="block text-sm font-medium ">
+            <ValidatedForm validator={validator} method="post">
+              <label htmlFor="address" className="block text-sm font-medium ">
                 Wallet Address
               </label>
               <div className="mt-1">
@@ -223,6 +213,54 @@ export default function AccountOverviewPage() {
                 />
               </div>
 
+              <div>
+                {filteredChains.map((chain) => {
+                  console.log(chain);
+                  const chainId = chain.chainId;
+                  const tokensForChain = coinsByChain[chainId] || [];
+                  console.log(chainId);
+
+                  return (
+                    <fieldset key={chainId} className="mt-8">
+                      <div className="" aria-hidden="true">
+                        <img
+                          src={ethereumLogo}
+                          className="inline-block h-8 w-8"
+                        />
+                        {chain.chainName}
+                      </div>
+                      <div className="mt-4 flex pl-2">
+                        {tokensForChain.map((coin: any) => {
+                          const coinId = coin.symbol + "-" + chainId.toString();
+                          console.log(coinId);
+                          return (
+                            <div
+                              key={coinId}
+                              className="mr-4 flex items-center"
+                            >
+                              <input
+                                defaultChecked={coinSelected(wallet, coinId)}
+                                name={`coins`}
+                                id={coinId}
+                                type="checkbox"
+                                value={coinId}
+                                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                              />
+                              <label
+                                htmlFor={coinId}
+                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                              >
+                                {coin.symbol}
+                              </label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+                  );
+                })}
+              </div>
+
               <div className="mt-4 border-t border-slate-600 pt-4 text-right">
                 <button
                   type="submit"
@@ -231,10 +269,81 @@ export default function AccountOverviewPage() {
                   Create
                 </button>
               </div>
-            </Form>
+            </ValidatedForm>
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+function WalletOverview({ wallet }) {
+  const coinIds = wallet?.config["coins"] || [];
+  const tokens: TokenInfo[] = coinIds.map(coinIdToToken);
+  const chains = [...new Set(coinIds.map(coinIdToChain))];
+
+  return (
+    <div className="flex-1 pb-6">
+      <div className="overflow-hidden shadow sm:rounded-md">
+        <h2>Primary Wallet</h2>
+        <ul role="list" className="divide-y divide-slate-600">
+          <li key={wallet.id}>
+            <Link
+              to={`wallet/${wallet.id}`}
+              className="block hover:bg-slate-700"
+            >
+              <div className="flex items-center px-4 py-4 sm:px-6">
+                <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                  <div className="truncate">
+                    <div className="flex text-sm">
+                      <p className="truncate font-medium text-indigo-300">
+                        {truncateEthAddress(wallet.address)}
+                      </p>
+                      <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
+                        {" "}
+                        {}
+                      </p>
+                    </div>
+                    <div className="mt-2 flex">
+                      <div className=" items-center text-sm text-gray-500">
+                        <p>
+                          Tokens:{" "}
+                          {tokens
+                            .map((token) => {
+                              return token.symbol;
+                            })
+                            .join(", ")}
+                        </p>
+                        <p>
+                          Chains: {chains.map((c) => c.chainName).join(", ")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+                    <div className="flex -space-x-1 overflow-hidden">
+                      {/* {position.applicants.map((applicant) => (
+                              <img
+                                key={applicant.email}
+                                className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
+                                src={applicant.imageUrl}
+                                alt={applicant.name}
+                              />
+                            ))} */}
+                    </div>
+                  </div>
+                </div>
+                <div className="ml-5 flex-shrink-0">
+                  <ChevronRightIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

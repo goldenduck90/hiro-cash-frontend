@@ -15,6 +15,16 @@ import { useAccount, useNetwork, useSigner, useConnect } from "wagmi";
 import { useEffect } from "react";
 import { getChainById } from "~/plugin/constants/Chains";
 
+import metamaskIcon from "~/assets/images/wallets/metamask.svg";
+import walletconnectIcon from "~/assets/images/wallets/walletconnect.svg";
+import coinbasewalletIcon from "~/assets/images/wallets/coinbasewallet.svg";
+
+const icons = {
+  metamask: metamaskIcon,
+  walletconnect: walletconnectIcon,
+  coinbasewallet: coinbasewalletIcon,
+};
+
 function SubHeader() {
   const { state } = usePayment();
   const { address } = useAccount();
@@ -26,7 +36,7 @@ function SubHeader() {
   const chainInfo = state.context?.chain;
 
   return (
-    <div className="py-4 grid grid-cols-1 gap-4 border-b-1 border-sky-100">
+    <div className="border-b-1 grid grid-cols-1 gap-4 border-sky-100 py-4">
       <div className="text-right">
         {chainInfo && (
           <div className="mr-3 inline-flex items-center rounded-lg bg-gray-100 px-2 py-2 text-sm font-medium text-indigo-800">
@@ -39,7 +49,7 @@ function SubHeader() {
         <div className="inline-flex items-center rounded-lg bg-gray-100 px-2 py-2 text-sm font-medium text-indigo-800">
           {truncateEthAddress(address)}{" "}
           <button onClick={() => disconnect()}>
-            <PowerIcon className="h-4 w-4 ml-4" />
+            <PowerIcon className="ml-4 h-4 w-4" />
           </button>
         </div>
       </div>
@@ -82,7 +92,7 @@ export default function HiroMain() {
       <>
         <Header receiver={invoice.merchantAddress}></Header>
         <div className="px-6 py-3 text-base font-bold ">Connect Wallet</div>
-        <div className="pt-2 overflow-hidden bg-white">
+        <div className="overflow-hidden bg-white pt-2">
           <ul role="list" className="divide-y divide-blue-300">
             {connectors.map((connector) => (
               <li
@@ -93,7 +103,7 @@ export default function HiroMain() {
                   <div className="flex-shrink-0">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src={`/img/wallets/${connector.id.toLocaleLowerCase()}.svg`}
+                      src={icons[connector.id.toLocaleLowerCase()]}
                       alt=""
                     />
                   </div>
