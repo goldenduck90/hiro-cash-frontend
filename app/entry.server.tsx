@@ -4,6 +4,19 @@ import { Response } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import { prisma } from "~/db.server";
+
+import * as Sentry from "@sentry/remix";
+import invariant from "tiny-invariant";
+
+const SENTRY_DSN = process.env.SENTRY_DSN;
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    tracesSampleRate: 1,
+    integrations: [new Sentry.Integrations.Prisma({ client: prisma })],
+  });
+}
 
 const ABORT_DELAY = 5000;
 
