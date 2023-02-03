@@ -34,7 +34,10 @@ if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
   );
 }
 
-export type User = Pick<OauthCredential, "id" | "provider">;
+export type SessionCredential = Pick<
+  OauthCredential,
+  "id" | "provider" | "userId"
+>;
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -48,7 +51,7 @@ let googleStrategy = new GoogleStrategy(
   },
   async ({ accessToken, refreshToken, extraParams, profile }) => {
     try {
-      return await findOrCreatOauthCredential("google", profile.id, profile);
+      return findOrCreatOauthCredential("google", profile.id, profile);
     } catch (e) {
       console.log(e);
       throw e;
@@ -66,7 +69,7 @@ let githubStrategy = new GitHubStrategy(
     // Get the user data from your DB or API using the tokens and profile
     // return User.findOrCreate({ email: profile.emails[0].value });
     try {
-      return await findOrCreatOauthCredential("github", profile.id, profile);
+      return findOrCreatOauthCredential("github", profile.id, profile);
     } catch (e) {
       console.log(e);
       throw e;
@@ -94,11 +97,7 @@ const twitterStrategy = new TwitterStrategy(
     // Get the user data from your DB or API using the tokens and profile
     // return User.findOrCreate({ email: profile.emails[0].value });
     try {
-      return await findOrCreatOauthCredential(
-        "twitter",
-        profile.id.toString(),
-        {}
-      );
+      return findOrCreatOauthCredential("twitter", profile.id.toString(), {});
     } catch (e) {
       console.log(e);
       throw e;

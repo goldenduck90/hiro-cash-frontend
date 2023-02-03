@@ -6,7 +6,10 @@ import type {
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { findOauthCredential } from "~/models/oauthCredential.server";
+import {
+  findFromSession,
+  findOauthCredential,
+} from "~/models/oauthCredential.server";
 import { authenticator } from "~/services/auth.server";
 
 import { requireUserId } from "~/session.server";
@@ -79,15 +82,12 @@ export const loader: LoaderFunction = async ({
   request,
   params,
 }: LoaderArgs) => {
-  let oauthCredential = await authenticator.isAuthenticated(request, {
+  let authenticatedSession = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  // const userId = await requireUserId(request);
 
-  let oauth = await findOauthCredential(
-    oauthCredential.provider,
-    oauthCredential.userId
-  );
+  let oauth = await findFromSession(authenticatedSession);
+
   let account = oauth.accounts.find(
     (account) => account.username === params.id
   );
@@ -106,13 +106,10 @@ export const action: ActionFunction = async ({
   request,
   params,
 }: ActionArgs) => {
-  let oauthCredential = await authenticator.isAuthenticated(request, {
+  let authenticatedSession = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  let oauth = await findOauthCredential(
-    oauthCredential.provider,
-    oauthCredential.userId
-  );
+  let oauth = await findFromSession(authenticatedSession);
 
   let account = oauth.accounts.find(
     (account) => account.username === params.id
@@ -133,8 +130,6 @@ export const action: ActionFunction = async ({
       const result = await validator.validate(await request.formData());
       // if (result.error) return validationError(result.error);
       const data = result.data;
-
-      console.log(data);
 
       const address = data["address"];
       await createWallet(account, address, {
@@ -172,6 +167,8 @@ export default function AccountOverviewPage() {
   const account = data.account;
   const wallet = data.primaryWallet;
 
+  const { error, getInputProps } = useField("address", { formId: "myForm" });
+
   return (
     <div className="flex flex-col">
       <CardHeader account={account} />
@@ -189,26 +186,25 @@ export default function AccountOverviewPage() {
         {wallet && <WalletOverview wallet={wallet} />}
         {!wallet && (
           <div className="rounded-md bg-slate-700 p-6">
-            <ValidatedForm validator={validator} method="post">
+            <ValidatedForm validator={validator} method="post" id="myForm">
               <label htmlFor="address" className="block text-sm font-medium ">
                 Wallet Address
               </label>
               <div className="mt-1">
                 <input
                   type="text"
-                  name="address"
+                  {...getInputProps({ id: "address" })}
                   id="address"
                   className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"
                   placeholder="0x..."
                 />
+                {error && <span>{error}</span>}
               </div>
 
               <div>
                 {filteredChains.map((chain) => {
-                  console.log(chain);
                   const chainId = chain.chainId;
                   const tokensForChain = coinsByChain[chainId] || [];
-                  console.log(chainId);
 
                   return (
                     <fieldset key={chainId} className="mt-8">
@@ -222,7 +218,6 @@ export default function AccountOverviewPage() {
                       <div className="mt-4 flex pl-2">
                         {tokensForChain.map((coin: any) => {
                           const coinId = coin.symbol + "-" + chainId.toString();
-                          console.log(coinId);
                           return (
                             <div
                               key={coinId}

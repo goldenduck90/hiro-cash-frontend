@@ -61,14 +61,16 @@ const filteredChains = filteredChainIds
 
 function coinSelected(wallet: Wallet, coinId: string): boolean {
   const coins = wallet?.config["coins"] || [];
-
-  console.log(coins);
   return coins.includes(coinId);
 }
 
 export const validator = withZod(
   z.object({
-    address: z.string().min(2, { message: "address is required" }),
+    address: z
+      .string()
+      .min(3, { message: "address is required" })
+      .regex(/.*(?<!\.eth)$/, "ENS domain not yet supported coming soon.")
+      .regex(/^0[xX][0-9a-fA-F]{40}$/, "must be a valid ethereum address."),
     coins: zfd.repeatable(
       z.array(zfd.text()).min(1, { message: "select at least one coin" })
     ),
@@ -128,10 +130,8 @@ export const action: ActionFunction = async ({
   } else {
     // const userId = await requireUserId(request);
     const result = await validator.validate(await request.formData());
-    // if (result.error) return validationError(result.error);
+    if (result.error) return validationError(result.error);
     const data = result.data;
-
-    console.log(data);
 
     const address = data["address"];
     await updateWallet(wallet, address, {

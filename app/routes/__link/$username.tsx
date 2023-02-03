@@ -67,8 +67,6 @@ export default function HiroLinkPage() {
     // }
     // if (invoice.memo) values.memo = invoice.memo;
 
-    console.log(values);
-
     setInvoice({
       memo: "",
       amountInMinor: values.amount,
