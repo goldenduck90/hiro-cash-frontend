@@ -75,9 +75,7 @@ const client = createClient({
 
 PluginContainer.propTypes = {};
 
-export default function PluginContainer({ children }) {
-  const [open, setOpen] = useState(true);
-
+export default function PluginContainer({ children, open, setOpen }) {
   // setupAnalytics();
 
   return (
@@ -93,11 +91,11 @@ export default function PluginContainer({ children }) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gradient-to-r to-blue-300/75 from-pink-300/75 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-opacity-75 bg-gradient-to-r from-pink-300/75 to-blue-300/75 transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="md:flex md:mt-16 items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div className="items-end justify-center p-4 text-center sm:items-center sm:p-0 md:mt-16 md:flex">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -107,8 +105,8 @@ export default function PluginContainer({ children }) {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm md:sm:max-w-2xl sm:p-6">
-                  <div className="sm:hidden absolute top-0 right-0 hidden pt-4 pr-4 sm:block">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 md:sm:max-w-2xl">
+                  <div className="absolute top-0 right-0 hidden pt-4 pr-4 sm:block sm:hidden">
                     <button
                       type="button"
                       className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

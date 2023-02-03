@@ -35,6 +35,7 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function HiroLinkPage() {
+  const [openPopup, setOpenPopup] = useState(false);
   const { account, wallet } = useLoaderData<typeof loader>();
   const [invoice, setInvoice] = useState(null);
   const [payment, setPayment] = useState(null);
@@ -77,6 +78,8 @@ export default function HiroLinkPage() {
       coins: tokens,
       onComplete: () => {},
     });
+
+    setOpenPopup(true);
   };
 
   return (
@@ -159,9 +162,9 @@ export default function HiroLinkPage() {
         </p>
       </form>
 
-      {invoice?.amountInMinor && (
+      {openPopup && (
         <PaymentProvider invoice={invoice}>
-          <PluginContainer>
+          <PluginContainer open={openPopup} setOpen={setOpenPopup}>
             <HiroMain />
           </PluginContainer>
         </PaymentProvider>
