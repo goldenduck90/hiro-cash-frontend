@@ -10,6 +10,7 @@ import { createAccount } from "~/models/account.server";
 import { useField, ValidatedForm, validationError } from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
+import { useIsSubmitting } from "remix-validated-form";
 
 export const validator = withZod(
   z.object({
@@ -57,6 +58,7 @@ export let action = async ({ request }: ActionArgs) => {
 export default function NewAccountPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.defaultAccount;
+  const isSubmitting = useIsSubmitting("accountForm");
 
   const { error, getInputProps } = useField("username", {
     formId: "accountForm",
@@ -89,9 +91,10 @@ export default function NewAccountPage() {
             <div className="mt-4 border-t border-slate-600 pt-4 text-right">
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Create
+                {isSubmitting ? "Saving..." : "Save"}
               </button>
             </div>
           </ValidatedForm>

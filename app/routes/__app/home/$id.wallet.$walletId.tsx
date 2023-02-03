@@ -8,7 +8,10 @@ import type {
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { findOauthCredential } from "~/models/oauthCredential.server";
+import {
+  findFromSession,
+  findOauthCredential,
+} from "~/models/oauthCredential.server";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import { authenticator } from "~/services/auth.server";
 
@@ -74,13 +77,6 @@ export const validator = withZod(
     coins: zfd.repeatable(
       z.array(zfd.text()).min(1, { message: "select at least one coin" })
     ),
-    // lastName: z
-    //   .string()
-    //   .min(1, { message: "Last name is required" }),
-    // email: z
-    //   .string()
-    //   .min(1, { message: "Email is required" })
-    //   .email("Must be a valid email"),
   })
 );
 
@@ -109,26 +105,24 @@ export const action: ActionFunction = async ({
   request,
   params,
 }: ActionArgs) => {
-  let oauthCredential = await authenticator.isAuthenticated(request, {
+  const authSession = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  let oauth = await findOauthCredential(
-    oauthCredential.provider,
-    oauthCredential.userId
-  );
+  const oauth = await findFromSession(authSession);
 
-  let account = oauth.accounts.find(
+  const account = oauth.accounts.find(
     (account) => account.username === params.id
   );
   invariant(account, "account not found");
-  let wallet = account?.wallets.find((wallet) => wallet.id === params.walletId);
+  const wallet = account?.wallets.find(
+    (wallet) => wallet.id === params.walletId
+  );
   invariant(wallet, "wallet not found");
 
   if (request.method === "DELETE") {
     await deleteWallet(wallet);
     return redirect("/home");
   } else {
-    // const userId = await requireUserId(request);
     const result = await validator.validate(await request.formData());
     if (result.error) return validationError(result.error);
     const data = result.data;

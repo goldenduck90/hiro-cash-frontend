@@ -19,7 +19,7 @@ import truncateEthAddress from "truncate-eth-address";
 import type { TokenInfo } from "@hiropay/tokenlists";
 import { chainlist } from "@hiropay/tokenlists";
 
-import { useField, ValidatedForm } from "remix-validated-form";
+import { useField, useIsSubmitting, ValidatedForm } from "remix-validated-form";
 
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 import { validator } from "./$id.wallet.$walletId";
@@ -144,8 +144,12 @@ export default function AccountOverviewPage() {
   const account = data.account;
   const wallet = data.primaryWallet;
 
-  const { error, getInputProps } = useField("address", { formId: "myForm" });
-  const coinInput = useField("coins", { formId: "myForm" });
+  const isSubmitting = useIsSubmitting("walletForm");
+
+  const { error, getInputProps } = useField("address", {
+    formId: "walletForm",
+  });
+  const coinInput = useField("coins", { formId: "walletForm" });
 
   return (
     <div className="flex flex-col">
@@ -162,7 +166,7 @@ export default function AccountOverviewPage() {
 
       <main className="">
         <div className="rounded-md bg-slate-700 p-6">
-          <ValidatedForm validator={validator} method="post" id="myForm">
+          <ValidatedForm validator={validator} method="post" id="walletForm">
             <label htmlFor="address" className="block text-sm font-medium ">
               Wallet Address
             </label>
@@ -225,9 +229,10 @@ export default function AccountOverviewPage() {
             <div className="mt-4 border-t border-slate-600 pt-4 text-right">
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
-                Create
+                {isSubmitting ? "Saving..." : "Save"}
               </button>
             </div>
           </ValidatedForm>
