@@ -119,7 +119,7 @@ export default function HiroLinkPage() {
                   decimalScale={2}
                   intlConfig={{ locale: "en-US" }}
                   autoFocus={true}
-                  placeholder="amount"
+                  placeholder="___.__"
                   className="block w-full rounded-md bg-slate-900 pl-7 pr-12 text-xl text-white focus:border-indigo-500 focus:ring-indigo-500"
                   {...register("amount", {
                     required: true,

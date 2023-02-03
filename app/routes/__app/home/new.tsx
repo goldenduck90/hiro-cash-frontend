@@ -15,11 +15,11 @@ export const validator = withZod(
   z.object({
     username: z
       .string()
-      .min(4, { message: "minimum 4 characters required" })
-      .max(15, { message: "maximum 4 characters required" })
+      .min(4, { message: "username has to be 4 - 15 characters long" })
+      .max(15, { message: "username has to be 4 - 15 characters long" })
       .trim()
       .regex(/[a-zA-Z_0-9]*/, {
-        message: "only letters, numbers and underscores",
+        message: "username can only contain letters, numbers and underscores",
       }),
   })
 );
@@ -84,8 +84,8 @@ export default function NewAccountPage() {
                 className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 "
                 placeholder="username"
               />
-              {error && <span>{error}</span>}
             </div>
+            {error && <p className="p-2 text-xs text-red-300">{error}</p>}
             <div className="mt-4 border-t border-slate-600 pt-4 text-right">
               <button
                 type="submit"
