@@ -1,6 +1,7 @@
 import type { TokenInfo } from "@hiropay/tokenlists";
 import * as React from "react";
 import { useAccount, useSwitchNetwork, useNetwork } from "wagmi";
+import { tokensOfChain } from "~/plugin/utils";
 
 import { CHAINS } from "~/plugin/constants/Chains";
 import { usePayment } from "~/plugin/hooks";
@@ -9,6 +10,8 @@ export default function ChainDialog() {
   const { send, state } = usePayment();
   const { connector } = useAccount();
   const { chain } = useNetwork();
+
+  const invoice = state.context.invoice;
 
   const { switchNetwork, isLoading } = useSwitchNetwork({
     onSuccess(chain) {
@@ -31,7 +34,7 @@ export default function ChainDialog() {
     throwForSwitchChainNotSupported: true,
   });
 
-  const chainIds = state.context.invoice.coins.map(
+  const chainIds = invoice.coins.map(
     (tokenInfo: TokenInfo) => tokenInfo.chainId
   );
   const availableChains = CHAINS.filter((chain) => {
@@ -88,14 +91,16 @@ export default function ChainDialog() {
                       </div>
                       <div className="flex-shrink-5 mt-4 sm:mt-0 sm:ml-5">
                         <div className="flex -space-x-1 overflow-hidden">
-                          {chain.tokens?.map((token) => (
-                            <img
-                              key={token.address}
-                              className="inline-block h-8 w-8"
-                              src={token.logoUri}
-                              alt={token.name}
-                            />
-                          ))}
+                          {tokensOfChain(invoice.coins, chain.chainId).map(
+                            (token) => (
+                              <img
+                                key={token.address}
+                                className="inline-block h-8 w-8"
+                                src={token.logoUri}
+                                alt={token.name}
+                              />
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
