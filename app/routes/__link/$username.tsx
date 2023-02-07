@@ -1,18 +1,11 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
-import { findOauthCredential } from "~/models/oauthCredential.server";
-import { authenticator } from "~/services/auth.server";
+import { useLoaderData } from "@remix-run/react";
 
-import twitter from "~/assets/images/twitter.svg";
-import github from "~/assets/images/github.svg";
 import { findAccount } from "~/models/account.server";
-import truncateEthAddress from "truncate-eth-address";
 import invariant from "tiny-invariant";
 
 import PluginContainer from "~/plugin/PluginContainer";
-import HiroLinkContainer from "~/plugin/HiroLinkContainer";
 
 import HiroMain from "~/plugin/components/HiroMain";
 
@@ -38,22 +31,42 @@ export default function HiroLinkPage() {
   const [openPopup, setOpenPopup] = useState(false);
   const { account, wallet } = useLoaderData<typeof loader>();
   const [invoice, setInvoice] = useState(null);
-  const [payment, setPayment] = useState(null);
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    formState: { errors, isSubmitSuccessful },
-  } = useForm({
+  const [baseCurrency, setBaseCurrency] = useState("USD");
+
+  const { register, getValues, handleSubmit, onChange } = useForm({
     defaultValues: {
       // memo: paymentConfig.memo,
       amount: null,
-      baseCurrency: "USD",
+      baseCurrency: baseCurrency,
     },
   });
 
   const coinIds = wallet.config["coins"] || [];
   const tokens = coinIds.map(coinIdtoToken);
+
+  function baseCurrencyChanged(evt) {
+    setBaseCurrency(evt.target.value);
+  }
+
+  const currSymbol =
+    {
+      EUR: "€",
+      USD: "$",
+      GBP: "£",
+      JPY: "¥",
+      CNY: "¥",
+      KRW: "₩",
+      INR: "₹",
+      RUB: "₽",
+      TRY: "₺",
+      BRL: "R$",
+      CAD: "C$",
+      AUD: "A$",
+      NZD: "NZ$",
+      CHF: "",
+    }[baseCurrency] || "";
+
+  console.log(baseCurrency);
 
   const onSubmit = (data, event) => {
     event.preventDefault();
@@ -74,7 +87,7 @@ export default function HiroLinkPage() {
       merchantAddress: wallet.address,
       extraFeeAddress: null,
       extraFeeDivisor: null,
-      currency: "USD",
+      currency: values.baseCurrency,
       coins: tokens,
       onComplete: () => {},
     });
@@ -113,7 +126,7 @@ export default function HiroLinkPage() {
             <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-2 sm:mt-0">
               <div className="relative mt-1 w-60 rounded-md text-xl shadow-sm">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="text-slate-100">$</span>
+                  <span className="text-slate-100">{currSymbol}</span>
                 </div>
                 <CurrencyInput
                   decimalScale={2}
@@ -137,6 +150,7 @@ export default function HiroLinkPage() {
                   <select
                     id="baseCurrency"
                     {...register("baseCurrency")}
+                    onChange={baseCurrencyChanged}
                     className="h-full w-24 rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-xl text-slate-100 focus:border-indigo-500 focus:ring-indigo-500"
                   >
                     {["USD", "EUR", "CHF"].map((curr) => {
