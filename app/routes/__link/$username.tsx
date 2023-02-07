@@ -33,7 +33,7 @@ export default function HiroLinkPage() {
   const [invoice, setInvoice] = useState(null);
   const [baseCurrency, setBaseCurrency] = useState("USD");
 
-  const { register, getValues, handleSubmit, onChange } = useForm({
+  const { register, getValues, handleSubmit } = useForm({
     defaultValues: {
       // memo: paymentConfig.memo,
       amount: null,

@@ -1,4 +1,3 @@
-import type { TokenInfo } from "@hiropay/tokenlists";
 import { getChain, tokenlist } from "@hiropay/tokenlists";
 import type { OauthCredential } from "@prisma/client";
 import { useMatches } from "@remix-run/react";

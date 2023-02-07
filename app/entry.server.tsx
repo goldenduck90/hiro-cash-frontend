@@ -7,7 +7,6 @@ import { renderToPipeableStream } from "react-dom/server";
 import { prisma } from "~/db.server";
 
 import * as Sentry from "@sentry/remix";
-import invariant from "tiny-invariant";
 
 const SENTRY_DSN = process.env.SENTRY_DSN;
 if (SENTRY_DSN) {

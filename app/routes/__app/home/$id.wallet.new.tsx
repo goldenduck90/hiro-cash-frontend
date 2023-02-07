@@ -9,15 +9,9 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { findFromSession } from "~/models/oauthCredential.server";
 import { authenticator } from "~/services/auth.server";
 
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import invariant from "tiny-invariant";
-import { deleteAccount } from "~/models/account.server";
 import { createWallet } from "~/models/wallet.server";
 import type { Wallet } from "@prisma/client";
-
-import truncateEthAddress from "truncate-eth-address";
-import type { TokenInfo } from "@hiropay/tokenlists";
-import { chainlist } from "@hiropay/tokenlists";
 
 import { useField, useIsSubmitting, ValidatedForm } from "remix-validated-form";
 
@@ -122,23 +116,6 @@ export const action: ActionFunction = async ({
   }
 };
 
-const tokens = tokenlist.tokens;
-const chains = chainlist.chains;
-
-const coinIdToToken = (coinId: string) => {
-  const [symbol, chainIdString] = coinId.split("-");
-  const token = tokens.find(
-    (t) => t.symbol === symbol && t.chainId === parseInt(chainIdString)
-  );
-  return token;
-};
-
-const coinIdToChain = (coinId: string) => {
-  const [symbol, chainIdString] = coinId.split("-");
-  const chain = chains.find((c) => c.chainId === parseInt(chainIdString));
-  return chain;
-};
-
 export default function AccountOverviewPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.account;
@@ -190,6 +167,7 @@ export default function AccountOverviewPage() {
                       <img
                         src={ethereumLogo}
                         className="inline-block h-8 w-8"
+                        alt="Ethereum Logo"
                       />
                       {chain.chainName}
                     </div>

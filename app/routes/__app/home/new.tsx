@@ -1,11 +1,9 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { findFromSession } from "~/models/oauthCredential.server";
 import { authenticator } from "~/services/auth.server";
 
-import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { createAccount } from "~/models/account.server";
 import { useField, ValidatedForm, validationError } from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -56,8 +54,6 @@ export let action = async ({ request }: ActionArgs) => {
 };
 
 export default function NewAccountPage() {
-  const data = useLoaderData<typeof loader>();
-  const account = data.defaultAccount;
   const isSubmitting = useIsSubmitting("accountForm");
 
   const { error, getInputProps } = useField("username", {

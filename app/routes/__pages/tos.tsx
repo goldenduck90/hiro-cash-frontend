@@ -1,5 +1,3 @@
-import { Content } from "../header";
-
 export default function TosPage() {
   return (
     <main className="-mt-24 pb-8">

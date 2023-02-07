@@ -5,7 +5,7 @@ import { getTxUrl } from "~/plugin/utils";
 
 export default function ReceiptDialog() {
   // const { open, payment: paymentMachine, onComplete } = props;
-  const { state, send } = usePayment();
+  const { state } = usePayment();
 
   const context = state.context;
   const tx = context.tx;

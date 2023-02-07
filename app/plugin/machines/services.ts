@@ -1,7 +1,6 @@
 //@ts-check
 // These functions are in a separate module so they can easily be mocked
 import { ethers, utils } from "ethers";
-import { abis } from "@hiropay/tokenlists";
 
 import {
   getErc20Contract,

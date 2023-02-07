@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import assert from "minimalistic-assert";
-import { abis, ChainInfo } from "@hiropay/tokenlists";
+import { abis } from "@hiropay/tokenlists";
 
 // export function tokensOfChain(tokens: TokenInfo[], chainId: number) {
 //   return tokens.filter((token) => token.chainId == chainId);

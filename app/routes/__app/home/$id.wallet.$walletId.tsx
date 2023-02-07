@@ -1,5 +1,3 @@
-import { LinkIcon } from "@heroicons/react/20/solid";
-
 import type {
   ActionFunction,
   LoaderArgs,
@@ -7,7 +5,7 @@ import type {
 } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import {
   findFromSession,
   findOauthCredential,
@@ -15,12 +13,7 @@ import {
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import { authenticator } from "~/services/auth.server";
 
-import {
-  useField,
-  ValidatedForm,
-  validationError,
-  ValidatorData,
-} from "remix-validated-form";
+import { useField, ValidatedForm, validationError } from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
@@ -185,6 +178,7 @@ export default function AccountWalletPage() {
                       <img
                         src={ethereumLogo}
                         className="inline-block h-8 w-8"
+                        alt="Ethereum Logo"
                       />
                       {chain.chainName}
                     </div>

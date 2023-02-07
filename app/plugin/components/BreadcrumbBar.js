@@ -1,16 +1,12 @@
 import * as React from "react";
 import { usePayment } from "../hooks";
-import { HomeIcon } from "@heroicons/react/20/solid";
 import {
-  LinkIcon,
   CubeTransparentIcon,
   CurrencyYenIcon,
   CheckBadgeIcon,
 } from "@heroicons/react/20/solid";
-import ChainDialog from "./ChainDialog";
 
 export default function BreadcrumbBar(props) {
-  const { currentTab } = props;
   const { state } = usePayment();
 
   const chain = state.context.chain;
@@ -85,6 +81,7 @@ export default function BreadcrumbBar(props) {
                   <img
                     className="-ml-0.5 mr-2 h-6 w-6 rounded-full"
                     src={tab.selectedIconURI}
+                    alt="Slected Icon"
                   />
                 )}
                 {!tab.selectedIconURI && (

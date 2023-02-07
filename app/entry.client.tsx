@@ -4,7 +4,6 @@ import { hydrateRoot } from "react-dom/client";
 import { useLocation, useMatches } from "@remix-run/react";
 import * as Sentry from "@sentry/remix";
 import { useEffect } from "react";
-import invariant from "tiny-invariant";
 
 if (window.ENV.SENTRY_DSN) {
   console.log(window.ENV);

@@ -2,9 +2,6 @@
 
 import { Fragment } from "react";
 import { Form, Link, Outlet } from "@remix-run/react";
-import { Menu, Popover, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useOptionalOauth } from "~/utils";
 import hiro from "~/assets/images/hiro.png";
 

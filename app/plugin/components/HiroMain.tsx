@@ -11,9 +11,8 @@ import Header from "./Header";
 import truncateEthAddress from "truncate-eth-address";
 import { PowerIcon } from "@heroicons/react/20/solid";
 
-import { useAccount, useNetwork, useSigner, useConnect } from "wagmi";
+import { useAccount, useSigner, useConnect } from "wagmi";
 import { useEffect } from "react";
-import { getChainById } from "~/plugin/constants/Chains";
 
 import metamaskIcon from "~/assets/images/wallets/metamask.svg";
 import walletconnectIcon from "~/assets/images/wallets/walletconnect.svg";
@@ -29,7 +28,6 @@ function SubHeader() {
   const { state } = usePayment();
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { chain } = useNetwork();
 
   // const chainInfo = getChainById(chain.id);
 
@@ -42,7 +40,11 @@ function SubHeader() {
           <div className="mr-3 inline-flex items-center rounded-lg bg-gray-100 px-2 py-2 text-sm font-medium text-indigo-800">
             <span>{chainInfo?.chainName}</span>
             <div className="flex-shrink-0 ">
-              <img className="h-4 w-4" src={chainInfo?.logoUri} />
+              <img
+                className="h-4 w-4"
+                src={chainInfo?.logoUri}
+                alt="Chain Logo"
+              />
             </div>
           </div>
         )}
@@ -62,17 +64,15 @@ export default function HiroMain() {
 
   const invoice = state.context.invoice;
 
-  const { address, isConnected, isConnecting, isDisconnected } = useAccount({
+  const { address, isConnected } = useAccount({
     onDisconnect() {
       console.log("disconnecting");
       send("DISCONNECT");
     },
   });
-  const { chain } = useNetwork();
   const { data: signer } = useSigner();
 
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
+  const { connect, connectors, isLoading, pendingConnector } = useConnect();
 
   // This has to work in 2 cases:
   // - user has just connected
@@ -85,7 +85,7 @@ export default function HiroMain() {
         signer: signer,
       });
     }
-  }, [state.matches("disconnected"), isConnected, signer]);
+  }, [address, isConnected, send, signer, state]);
 
   if (state.matches("disconnected") || state.matches("connecting")) {
     return (
@@ -93,7 +93,7 @@ export default function HiroMain() {
         <Header receiver={invoice.merchantAddress}></Header>
         <div className="px-6 py-3 text-base font-bold ">Connect Wallet</div>
         <div className="overflow-hidden bg-white pt-2">
-          <ul role="list" className="divide-y divide-blue-300">
+          <ul className="divide-y divide-blue-300">
             {connectors.map((connector) => (
               <li
                 key={connector.id}

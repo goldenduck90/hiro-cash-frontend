@@ -1,4 +1,3 @@
-import { utils } from "ethers";
 import * as React from "react";
 import { usePayment } from "../hooks";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -15,7 +14,7 @@ const formatToken = (number) => {
 
 export default function TokenItem({ balance, tokenInfo, amountInMinor }) {
   const { state, send } = usePayment();
-  const { chain, invoice } = state.context;
+  const { invoice } = state.context;
   const isBalanceSufficient = (balance) => {
     const amount = parseAmountInMinorForComparison(
       invoice.amountInMinor.toString(),
@@ -27,7 +26,7 @@ export default function TokenItem({ balance, tokenInfo, amountInMinor }) {
   return (
     <li key={tokenInfo.address}>
       <a
-        href="#"
+        href="/#"
         onClick={() =>
           isBalanceSufficient(balance) &&
           send({ type: "SELECT_TOKEN", token: tokenInfo })

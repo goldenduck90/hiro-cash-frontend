@@ -21,6 +21,7 @@ export default function Screen() {
               src={twitter}
               className="mr-3 h-6 w-6 grayscale"
               aria-hidden="true"
+              alt="Twitter Logo"
             />
             Twitter
           </button>
@@ -34,6 +35,7 @@ export default function Screen() {
               src={google}
               className="mr-3 h-6 w-6 grayscale"
               aria-hidden="true"
+              alt="Google Logo"
             />
             Google
           </button>
@@ -47,6 +49,7 @@ export default function Screen() {
               src={github}
               className="mr-3 h-6 w-6 grayscale"
               aria-hidden="true"
+              alt="Github Logo"
             />
             Github
           </button>

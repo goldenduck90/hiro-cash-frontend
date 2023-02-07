@@ -1,5 +1,4 @@
 import * as React from "react";
-import { utils } from "ethers";
 import { useContractRead } from "wagmi";
 import { priceFeedFor } from "~/plugin/utils";
 function formatCurrency(minor) {
@@ -20,7 +19,8 @@ export default function PriceInToken({ chain, invoice, tokenInfo }) {
   const priceFeed = priceFeedFor(chain, currency, tokenInfo);
 
   if (priceFeed) {
-    let { data, isLoading } = useContractRead({
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    let { data } = useContractRead({
       address: priceFeed,
       abi: [
         "function latestRoundData() external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)",
@@ -33,7 +33,6 @@ export default function PriceInToken({ chain, invoice, tokenInfo }) {
 
     if (data && data[1]) {
       const exchangeRate = data[1]; // BigNum
-      const decimals = 8; // TODO ensure it's always 8.
 
       converted = exchangeRate.mul(amountInMinor).div(10 ** 8) / 100;
     }

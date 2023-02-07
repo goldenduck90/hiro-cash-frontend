@@ -1,10 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import { findOauthCredential } from "~/models/oauthCredential.server";
-import { authenticator } from "~/services/auth.server";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import {
   ArrowPathIcon,
   CloudArrowUpIcon,
@@ -179,10 +174,7 @@ export default function PagesMain() {
                   Web3.
                 </p>
               </div>
-              <ul
-                role="list"
-                className="grid grid-cols-2 sm:space-y-0 lg:grid-cols-4 lg:gap-2"
-              >
+              <ul className="grid grid-cols-2 sm:space-y-0 lg:grid-cols-4 lg:gap-2">
                 {people.map((person) => (
                   <li
                     key={person.name}
@@ -200,7 +192,7 @@ export default function PagesMain() {
                           <p className="text-indigo-400">{person.role}</p>
                         </div>
                       </div>
-                      <ul role="list" className="flex justify-center space-x-5">
+                      <ul className="flex justify-center space-x-5">
                         <li>
                           <a
                             href={person.linkedinUrl}

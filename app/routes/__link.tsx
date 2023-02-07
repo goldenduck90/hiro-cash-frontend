@@ -1,5 +1,4 @@
-import { Link } from "@remix-run/react";
-import { Container, Header, Content, Footer } from "./header";
+import { Container, Content, Footer } from "./header";
 import hiro from "~/assets/images/hiro.png";
 
 export default function LinkLayout() {

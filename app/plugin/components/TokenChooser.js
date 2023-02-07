@@ -17,7 +17,7 @@ export default function TokenChooser() {
   return (
     <>
       <div className="overflow-hidden bg-white pt-2">
-        <ul role="list" className="divide-y divide-blue-300">
+        <ul className="divide-y divide-blue-300">
           {filteredBalances.map((balance) => (
             <TokenItem
               key={balance.tokenInfo.address}

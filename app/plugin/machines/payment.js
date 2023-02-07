@@ -1,4 +1,3 @@
-import { ethers, utils } from "ethers";
 import { assign, createMachine } from "xstate";
 import {
   getBalances,
@@ -6,7 +5,7 @@ import {
   increaseAllowance,
   pay,
 } from "~/plugin/machines/services";
-import { getChainById, walletParams } from "~/plugin/constants/Chains";
+import { getChainById } from "~/plugin/constants/Chains";
 import {
   getRouterContract,
   parseAmountInMinorForComparison,

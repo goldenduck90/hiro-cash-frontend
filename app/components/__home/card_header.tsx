@@ -1,8 +1,4 @@
-import {
-  CalendarIcon,
-  ChevronRightIcon,
-  LinkIcon,
-} from "@heroicons/react/20/solid";
+import { LinkIcon } from "@heroicons/react/20/solid";
 
 import { Link } from "@remix-run/react";
 

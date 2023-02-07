@@ -1,9 +1,6 @@
 //@ts-check
 import * as React from "react";
 
-// import { setupAnalytics } from "../reportWebVitals";
-import { usePayment } from "~/plugin/hooks";
-
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -18,12 +15,10 @@ import {
 import { publicProvider } from "wagmi/providers/public";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
-import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { Buffer } from "buffer";
 
-const { useState, Fragment } = React;
+const { Fragment } = React;
 
 // polyfill Buffer for client
 // if (!window.Buffer) {

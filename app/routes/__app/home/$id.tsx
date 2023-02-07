@@ -1,8 +1,4 @@
-import type {
-  ActionFunction,
-  LoaderArgs,
-  LoaderFunction,
-} from "@remix-run/node";
+import type { LoaderArgs, LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -11,18 +7,12 @@ import { authenticator } from "~/services/auth.server";
 
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import invariant from "tiny-invariant";
-import { deleteAccount } from "~/models/account.server";
-import { createWallet } from "~/models/wallet.server";
 import type { Wallet } from "@prisma/client";
 
 import truncateEthAddress from "truncate-eth-address";
 import type { TokenInfo } from "@hiropay/tokenlists";
 import { chainlist } from "@hiropay/tokenlists";
 
-import { useField, ValidatedForm } from "remix-validated-form";
-
-import ethereumLogo from "~/assets/images/chains/ethereum.svg";
-import { validator } from "./$id.wallet.$walletId";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import CardHeader from "~/components/__home/card_header";
 
@@ -100,7 +90,7 @@ const coinIdToToken = (coinId: string) => {
 };
 
 const coinIdToChain = (coinId: string) => {
-  const [symbol, chainIdString] = coinId.split("-");
+  const [chainIdString] = coinId.split("-");
   const chain = chains.find((c) => c.chainId === parseInt(chainIdString));
   return chain;
 };
@@ -109,9 +99,6 @@ export default function AccountOverviewPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.account;
   const wallet = data.primaryWallet;
-
-  const { error, getInputProps } = useField("address", { formId: "myForm" });
-  const coinInput = useField("coins", { formId: "myForm" });
 
   return (
     <div className="flex flex-col">
@@ -140,7 +127,7 @@ function WalletOverview({ wallet }) {
     <div className="flex-1 pb-6">
       <div className="overflow-hidden shadow sm:rounded-md">
         <h2>Primary Wallet</h2>
-        <ul role="list" className="divide-y divide-slate-600">
+        <ul className="divide-y divide-slate-600">
           <li key={wallet.id}>
             <Link
               to={`wallet/${wallet.id}`}

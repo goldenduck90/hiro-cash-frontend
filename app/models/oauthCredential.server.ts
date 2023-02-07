@@ -1,6 +1,3 @@
-import type { OauthCredential } from "@prisma/client";
-import { find } from "isbot";
-
 import { prisma } from "~/db.server";
 import type { SessionCredential } from "~/services/auth.server";
 
