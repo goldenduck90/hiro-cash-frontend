@@ -1,3 +1,4 @@
+import type { TokenInfo } from "@hiropay/tokenlists";
 import * as React from "react";
 import { useAccount, useSwitchNetwork, useNetwork } from "wagmi";
 
@@ -5,9 +6,37 @@ import { CHAINS } from "~/plugin/constants/Chains";
 import { usePayment } from "~/plugin/hooks";
 
 export default function ChainDialog() {
-  const { send } = usePayment();
+  const { send, state } = usePayment();
   const { connector } = useAccount();
   const { chain } = useNetwork();
+
+  const { switchNetwork, isLoading } = useSwitchNetwork({
+    onSuccess(chain) {
+      console.log("switchNetwork");
+      send({ type: "SELECT_CHAIN", chainId: chain.id });
+    },
+    onMutate(data) {
+      console.log("onMutate", data);
+      if (chain.id == data.chainId) {
+        // If you select the currently selected chain, onSuccess would otherwise not be called.
+        send({ type: "SELECT_CHAIN", chainId: data.chainId });
+      }
+    },
+    onSettled(data) {
+      console.log("onSettled", data);
+    },
+    onError(error) {
+      console.log("Error", error);
+    },
+    throwForSwitchChainNotSupported: true,
+  });
+
+  const chainIds = state.context.invoice.coins.map(
+    (tokenInfo: TokenInfo) => tokenInfo.chainId
+  );
+  const availableChains = CHAINS.filter((chain) => {
+    return chainIds.includes(chain.chainId);
+  });
 
   if (connector?.id === "walletConnect") {
     // If wallet provider is wallet connect, we have to pick the chain
@@ -21,25 +50,12 @@ export default function ChainDialog() {
     }, []);
     return <></>;
   } else {
-    const { switchNetwork, isLoading } = useSwitchNetwork({
-      onSuccess(chain) {
-        console.log("switchNetwork");
-        send({ type: "SELECT_CHAIN", chainId: chain.id });
-      },
-      onMutate(data) {
-        console.log("onMutate", data);
-      },
-      onError(error) {
-        console.log("Error", error);
-      },
-      throwForSwitchChainNotSupported: true,
-    });
     // STATE: SELECT BLOCKCHAIN
     return (
       <>
         <div className="overflow-hidden bg-white pt-2 sm:rounded-md">
           <ul role="list" className="divide-y divide-purple-300">
-            {CHAINS.map((chain) => (
+            {availableChains.map((chain) => (
               <li key={chain.chainId}>
                 <a
                   href="#"
