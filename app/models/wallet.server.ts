@@ -2,7 +2,7 @@ import type { Account, Wallet } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
-export type { OauthCredential } from "@prisma/client";
+export type { Wallet } from "@prisma/client";
 
 export async function deleteWallet(wallet: Wallet) {
   try {

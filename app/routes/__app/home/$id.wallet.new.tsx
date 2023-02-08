@@ -134,7 +134,7 @@ export default function AccountOverviewPage() {
 
       <div className="mb-8 pb-4">
         <Link
-          to="edit"
+          to={`/home/${account.username}/edit`}
           className="rounded bg-slate-600 py-1 px-2 text-xs text-blue-100 hover:bg-blue-500 active:bg-blue-600"
         >
           Edit Account

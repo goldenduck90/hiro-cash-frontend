@@ -10,11 +10,10 @@ import invariant from "tiny-invariant";
 import type { Wallet } from "@prisma/client";
 
 import truncateEthAddress from "truncate-eth-address";
-import type { TokenInfo } from "@hiropay/tokenlists";
-import { chainlist } from "@hiropay/tokenlists";
 
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import CardHeader from "~/components/__home/card_header";
+import { supportedChainsOfWallet, supportedTokensOfWallet } from "~/helpers";
 
 const coins = tokenlist.tokens;
 
@@ -78,23 +77,6 @@ export const loader: LoaderFunction = async ({
   }
 };
 
-const tokens = tokenlist.tokens;
-const chains = chainlist.chains;
-
-const coinIdToToken = (coinId: string) => {
-  const [symbol, chainIdString] = coinId.split("-");
-  const token = tokens.find(
-    (t) => t.symbol === symbol && t.chainId === parseInt(chainIdString)
-  );
-  return token;
-};
-
-const coinIdToChain = (coinId: string) => {
-  const [chainIdString] = coinId.split("-");
-  const chain = chains.find((c) => c.chainId === parseInt(chainIdString));
-  return chain;
-};
-
 export default function AccountOverviewPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.account;
@@ -119,11 +101,8 @@ export default function AccountOverviewPage() {
 }
 
 function WalletOverview({ wallet }) {
-  const coinIds = wallet?.config["coins"] || [];
-  const tokens: TokenInfo[] = coinIds.map(coinIdToToken);
-  const chains = [...new Set(coinIds.map(coinIdToChain))].filter(
-    (c) => c != undefined
-  );
+  const tokens = wallet ? supportedTokensOfWallet(wallet) : [];
+  const chains = wallet ? supportedChainsOfWallet(wallet) : [];
 
   return (
     <div className="flex-1 pb-6">
