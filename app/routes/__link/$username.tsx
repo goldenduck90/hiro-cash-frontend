@@ -14,6 +14,10 @@ import { useState } from "react";
 import { coinIdtoToken } from "~/utils";
 import { useForm } from "react-hook-form";
 import CurrencyInput from "react-currency-input-field";
+import { CHAINS } from "~/plugin/constants/Chains";
+import type { ChainInfo } from "@hiropay/tokenlists";
+import { walletIcon } from "~/plugin/view/walletHelper";
+import { tokensOfChain } from "~/plugin/utils";
 
 export async function loader({ request, params }: LoaderArgs) {
   const account = await findAccount(params.username);
@@ -44,7 +48,7 @@ export default function HiroLinkPage() {
   const coinIds = wallet.config["coins"] || [];
   const tokens = coinIds.map(coinIdtoToken);
 
-  function baseCurrencyChanged(evt) {
+  function baseCurrencyChanged(evt: any) {
     setBaseCurrency(evt.target.value);
   }
 
@@ -66,12 +70,10 @@ export default function HiroLinkPage() {
       CHF: "",
     }[baseCurrency] || "";
 
-  console.log(baseCurrency);
-
-  const onSubmit = (data, event) => {
+  const onSubmit = (data: any, event: any) => {
     event.preventDefault();
 
-    const values = getValues();
+    const values: any = getValues();
 
     // Ensure nothing gets overwritten:
     // if (invoice.amount) {
@@ -95,87 +97,127 @@ export default function HiroLinkPage() {
     setOpenPopup(true);
   };
 
+  const chainIds = tokens.map((tokenInfo: TokenInfo) => tokenInfo.chainId);
+  const availableChains = CHAINS.filter((chain) => {
+    return chainIds.includes(chain.chainId);
+  });
+
   return (
     <>
-      <div>
-        <h3 className="text-lg font-medium leading-6 text-slate-100">
-          Send money
-        </h3>
-      </div>
-      <form
-        className="mt-5 border-t border-slate-900"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <dl className="divide-y divide-slate-900">
-          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-            <dt className="text-sm font-medium text-gray-400">Username</dt>
-            <dd className="mt-1 flex text-sm text-slate-100 sm:col-span-2 sm:mt-0">
-              <span className="flex-grow font-mono text-xl">
-                @{account.username}
-              </span>
-            </dd>
-          </div>
-          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-            <dt className="text-sm font-medium text-gray-400">Address</dt>
-            <dd className="mt-1 flex text-sm text-slate-100 sm:col-span-2 sm:mt-0">
-              <span className="flex-grow font-mono">{wallet.address}</span>
-            </dd>
-          </div>
-          <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
-            <dt className="text-sm font-medium text-gray-400">Amount</dt>
-            <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              <div className="relative mt-1 w-60 rounded-md text-xl shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="text-slate-100">{currSymbol}</span>
-                </div>
-                <CurrencyInput
-                  decimalScale={2}
-                  intlConfig={{ locale: "en-US" }}
-                  autoFocus={true}
-                  placeholder="___.__"
-                  className="block w-full rounded-md bg-slate-900 pl-7 pr-12 text-xl text-white focus:border-indigo-500 focus:ring-indigo-500"
-                  {...register("amount", {
-                    required: true,
-                    // disabled: invoice?.amount != null,
-                    validate: {
-                      positive: (v: string) =>
-                        parseFloat(v.replaceAll(",", "")) > 0,
-                    },
-                  })}
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center">
-                  <label htmlFor="currency" className="sr-only">
-                    Currency
-                  </label>
-                  <select
-                    id="baseCurrency"
-                    {...register("baseCurrency")}
-                    onChange={baseCurrencyChanged}
-                    className="h-full w-24 rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-xl text-slate-100 focus:border-indigo-500 focus:ring-indigo-500"
-                  >
-                    {["USD", "EUR", "CHF"].map((curr) => {
-                      return (
-                        <option key={curr} value={curr}>
-                          {curr}
-                        </option>
-                      );
+      <div className="overflow-hidden rounded-lg bg-slate-800 p-6 text-white shadow">
+        <div>
+          <h3 className="text-lg font-medium leading-6 text-slate-100">
+            Send money
+          </h3>
+        </div>
+        <form
+          className="mt-5 border-t border-slate-900"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <dl className="">
+            <div className="py-4 text-xl sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+              <dt className=" font-medium text-gray-400">To</dt>
+              <dd className="mt-1 flex text-slate-100 sm:col-span-2 sm:mt-0">
+                <span className="flex-grow font-mono ">
+                  @{account.username}
+                </span>
+              </dd>
+            </div>
+            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+              <dt className="text-sm font-medium text-gray-400">Address</dt>
+              <dd className="mt-1 flex text-sm text-slate-100 sm:col-span-2 sm:mt-0">
+                <span className="flex-grow font-mono">{wallet.address}</span>
+              </dd>
+            </div>
+            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+              <dt className="text-sm font-medium text-gray-400">Amount</dt>
+              <dd className="mt-1 flex text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <div className="relative mt-1 w-60 rounded-md text-xl shadow-sm">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <span className="text-slate-100">{currSymbol}</span>
+                  </div>
+                  <CurrencyInput
+                    decimalScale={2}
+                    intlConfig={{ locale: "en-US" }}
+                    autoFocus={true}
+                    placeholder="___.__"
+                    className="block w-full rounded-md bg-slate-900 pl-7 pr-12 text-xl text-white focus:border-indigo-500 focus:ring-indigo-500"
+                    {...register("amount", {
+                      required: true,
+                      // disabled: invoice?.amount != null,
+                      validate: {
+                        positive: (v: string) =>
+                          parseFloat(v.replaceAll(",", "")) > 0,
+                      },
                     })}
-                  </select>
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center">
+                    <label htmlFor="currency" className="sr-only">
+                      Currency
+                    </label>
+                    <select
+                      id="baseCurrency"
+                      {...register("baseCurrency")}
+                      onChange={baseCurrencyChanged}
+                      className="h-full w-24 rounded-md border-transparent bg-transparent py-0 pl-2 pr-7 text-xl text-slate-100 focus:border-indigo-500 focus:ring-indigo-500"
+                    >
+                      {["USD", "EUR", "CHF"].map((curr) => {
+                        return (
+                          <option key={curr} value={curr}>
+                            {curr}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
                 </div>
-              </div>
-            </dd>
-          </div>
-        </dl>
-        <p className="mt-8 border-t border-slate-900 pt-4 text-center">
-          <button
-            type="submit"
-            className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-8 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Pay
-          </button>
-        </p>
-      </form>
-
+              </dd>
+            </div>
+            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+              <dt className="text-sm font-medium text-gray-400"></dt>
+              <dd className="mt-1 flex text-lg text-slate-100 sm:col-span-2 sm:mt-0">
+                <button
+                  type="submit"
+                  className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-8 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Pay
+                </button>
+              </dd>
+            </div>
+            <div className="mt-8 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+              <dt className="text-sm font-medium text-gray-400">
+                Supported Wallets
+              </dt>
+              <dd className="mt-1 flex text-sm text-slate-100 sm:col-span-2 sm:mt-0">
+                {["metamask", "walletconnect", "coinbasewallet"].map(
+                  (wallet) => {
+                    return (
+                      <img
+                        className="mr-1 h-6 w-6 rounded-full"
+                        src={walletIcon(wallet)}
+                        alt=""
+                      />
+                    );
+                  }
+                )}
+              </dd>
+            </div>
+            <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5">
+              <dt className="text-sm font-medium text-gray-400">
+                Supported Chains
+              </dt>
+              <dd className="mt-1 flex text-sm text-slate-100 sm:col-span-2 sm:mt-0">
+                {availableChains.map((chain) => (
+                  <img
+                    className="mr-1 h-6 w-6 rounded-full"
+                    src={chain.logoUri}
+                  />
+                ))}
+              </dd>
+            </div>
+          </dl>
+        </form>
+      </div>
       {openPopup && (
         <PaymentProvider invoice={invoice}>
           <PluginContainer open={openPopup} setOpen={setOpenPopup}>

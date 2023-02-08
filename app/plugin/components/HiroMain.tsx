@@ -14,15 +14,7 @@ import { PowerIcon } from "@heroicons/react/20/solid";
 import { useAccount, useSigner, useConnect } from "wagmi";
 import { useEffect } from "react";
 
-import metamaskIcon from "~/assets/images/wallets/metamask.svg";
-import walletconnectIcon from "~/assets/images/wallets/walletconnect.svg";
-import coinbasewalletIcon from "~/assets/images/wallets/coinbasewallet.svg";
-
-const icons = {
-  metamask: metamaskIcon,
-  walletconnect: walletconnectIcon,
-  coinbasewallet: coinbasewalletIcon,
-};
+import { connectorWalletIcon } from "../view/walletHelper";
 
 function SubHeader() {
   const { state } = usePayment();
@@ -103,7 +95,7 @@ export default function HiroMain() {
                   <div className="flex-shrink-0">
                     <img
                       className="h-10 w-10 rounded-full"
-                      src={icons[connector.id.toLocaleLowerCase()]}
+                      src={connectorWalletIcon(connector)}
                       alt=""
                     />
                   </div>
