@@ -52,7 +52,7 @@ export function Header() {
                   to="/login"
                   className="inline-block rounded-xl bg-indigo-500 px-4 py-1 font-medium text-white hover:bg-blue-600"
                 >
-                  Login
+                  Register / Sign In
                 </Link>
               )}
             </div>

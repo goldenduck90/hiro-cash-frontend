@@ -11,7 +11,7 @@ export default function Screen() {
   return (
     <>
       <div className="text-center">
-        <h2 className="pb-6 text-lg">Login to Hiro</h2>
+        <h2 className="pb-6 text-lg">Register / Sign in</h2>
         <Form action="/auth/twitter" method="post">
           <button
             type="submit"
