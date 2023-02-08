@@ -121,7 +121,9 @@ export default function AccountOverviewPage() {
 function WalletOverview({ wallet }) {
   const coinIds = wallet?.config["coins"] || [];
   const tokens: TokenInfo[] = coinIds.map(coinIdToToken);
-  const chains = [...new Set(coinIds.map(coinIdToChain))];
+  const chains = [...new Set(coinIds.map(coinIdToChain))].filter(
+    (c) => c != undefined
+  );
 
   return (
     <div className="flex-1 pb-6">
