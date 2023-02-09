@@ -2,17 +2,28 @@ import * as React from "react";
 import { usePayment } from "../hooks";
 import TestnetActions from "./TestnetActions";
 import TokenItem from "./TokenItem";
-import { supportedTokensOfWallet } from "~/helpers";
-import { tokenlist } from "@hiropay/tokenlists";
-import { classnames } from "tailwindcss-classnames";
+import {
+  classnames,
+  alignItems,
+  display,
+  spacing,
+  borders,
+} from "tailwindcss-classnames";
 import { useSigner } from "wagmi";
+import type { TokenInfo } from "@hiropay/tokenlists";
 
-export default function TokenChooser({ chain, setToken }) {
+export default function TokenChooser({
+  chain,
+  setToken,
+}: {
+  chain: any;
+  setToken: any;
+}) {
   const { invoice } = usePayment();
 
   const { data: signer } = useSigner();
 
-  const tokens = invoice.coins.filter((token) => {
+  const tokens = invoice.coins.filter((token: { chainId: any }) => {
     return token.chainId == chain.chainId;
   });
 
@@ -21,13 +32,10 @@ export default function TokenChooser({ chain, setToken }) {
       <div className="overflow-hidden bg-white pt-2">
         <div
           className={classnames(
-            "flex",
-            "items-center",
-            "px-0",
-            "py-3",
-            "sm:px-6",
-            "border-b",
-            "border-gray-400"
+            display("flex"),
+            alignItems("items-center"),
+            spacing("px-0", "py-3", "sm:px-6"),
+            borders("border-b", "border-gray-400")
           )}
         >
           <div className="flex min-w-0 flex-1 items-center">
@@ -46,7 +54,7 @@ export default function TokenChooser({ chain, setToken }) {
         </div>
 
         <ul className="divide-y divide-blue-300">
-          {tokens.map((token) => (
+          {tokens.map((token: TokenInfo) => (
             <TokenItem
               key={token.address}
               invoice={invoice}
@@ -58,7 +66,7 @@ export default function TokenChooser({ chain, setToken }) {
         </ul>
       </div>
       {chain.testnet && (
-        <TestnetActions tokens={tokens} provider={signer.provider} />
+        <TestnetActions tokens={tokens} provider={signer?.provider} />
       )}
     </>
   );

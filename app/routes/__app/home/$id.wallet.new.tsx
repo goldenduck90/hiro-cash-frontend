@@ -1,4 +1,5 @@
 import type {
+  ActionArgs,
   ActionFunction,
   LoaderArgs,
   LoaderFunction,
@@ -25,7 +26,8 @@ const coins = tokenlist.tokens;
 const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
 
 export function coinSelected(wallet: Wallet, coinId: string): boolean {
-  const coins = wallet?.config["coins"] || [];
+  const coins: any[] =
+    wallet?.config!["coins" as keyof typeof wallet.config] || [];
   return coins.includes(coinId);
 }
 
@@ -105,12 +107,12 @@ export const action: ActionFunction = async ({
     // if (result.error) return validationError(result.error);
     const data = result.data;
 
-    const address = data["address"];
+    const address = data!["address"];
     await createWallet(account, address, {
       type: params.type,
       exchange: params.exchange,
       config: {
-        coins: data["coins"],
+        coins: data!["coins"],
       },
     });
 

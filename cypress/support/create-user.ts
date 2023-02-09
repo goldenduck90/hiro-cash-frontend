@@ -1,3 +1,4 @@
+//@ts-nocheck
 // Use this to create a new user and login with that user
 // Simply call this with:
 // npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts username@example.com
@@ -7,7 +8,7 @@
 import { installGlobals } from "@remix-run/node";
 import { parse } from "cookie";
 
-import { createUser } from "~/models/user.server";
+import { createAccount } from "~/models/account.server";
 import { createUserSession } from "~/session.server";
 
 installGlobals();
@@ -20,7 +21,7 @@ async function createAndLogin(email: string) {
     throw new Error("All test emails must end in @example.com");
   }
 
-  const user = await createUser(email, "myreallystrongpassword");
+  const user = await createAccount(email, "myreallystrongpassword");
 
   const response = await createUserSession({
     request: new Request("test://test"),

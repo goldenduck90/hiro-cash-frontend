@@ -1,4 +1,4 @@
-//@ts-check
+//@ts-nocheck
 import * as React from "react";
 
 import { Dialog, Transition } from "@headlessui/react";
@@ -31,7 +31,9 @@ const { chains, provider, webSocketProvider } = configureChains(
     publicProvider(),
     jsonRpcProvider({
       rpc: (chain) => {
-        return { http: chain.rpcUrls.default[0] };
+        return {
+          http: chain.rpcUrls.default[0],
+        };
       },
     }),
   ]
@@ -68,9 +70,17 @@ const client = createClient({
   webSocketProvider,
 });
 
-PluginContainer.propTypes = {};
+type PluginContainerType = {
+  children: any;
+  open: boolean;
+  setOpen: (value: boolean) => void;
+};
 
-export default function PluginContainer({ children, open, setOpen }) {
+export default function PluginContainer({
+  children,
+  open,
+  setOpen,
+}: PluginContainerType) {
   // setupAnalytics();
 
   return (

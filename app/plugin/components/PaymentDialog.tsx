@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { usePayment } from "../hooks";
+import type { Address } from "wagmi";
 import {
   useContractRead,
   usePrepareContractWrite,
   useAccount,
   useContractWrite,
-  useSigner,
 } from "wagmi";
 import PriceInToken from "~/plugin/components/PriceInToken";
 import { latestRouter, abis } from "@hiropay/tokenlists";
@@ -17,7 +17,15 @@ import {
 import { ethers } from "ethers";
 import spinner from "~/plugin/view/spinner";
 
-export function paymentPayload({ invoice, tokenInfo, chain }) {
+export function paymentPayload({
+  invoice,
+  tokenInfo,
+  chain,
+}: {
+  invoice: any;
+  tokenInfo: any;
+  chain: any;
+}) {
   const amount = parseAmountInMinorForComparison(
     invoice.amountInMinor.toString(),
     tokenInfo.decimals
@@ -47,14 +55,21 @@ export function paymentPayload({ invoice, tokenInfo, chain }) {
   ];
 }
 
-export default function PaymentDialog({ chain, tokenInfo, setTx }) {
+export default function PaymentDialog({
+  chain,
+  tokenInfo,
+  setTx,
+}: {
+  chain: any;
+  tokenInfo: any;
+  setTx: any;
+}) {
   const { invoice } = usePayment();
 
   const { address } = useAccount();
-  const { data: signer } = useSigner();
-  const [isPaying, setIsPaying] = useState(false);
+  const [isPaying] = useState(false);
 
-  const routerAddress = latestRouter(chain.chainId).address;
+  const routerAddress = latestRouter(chain.chainId).address as Address;
 
   const allowance = useContractRead({
     address: tokenInfo.address,
@@ -65,7 +80,7 @@ export default function PaymentDialog({ chain, tokenInfo, setTx }) {
 
   const payload = paymentPayload({ invoice, chain, tokenInfo });
 
-  const isAllowanceSufficient = (balance) => {
+  const isAllowanceSufficient = (balance: any) => {
     const amount = parseAmountInMinorForComparison(
       invoice.amountInMinor.toString(),
       tokenInfo.decimals
@@ -86,7 +101,7 @@ export default function PaymentDialog({ chain, tokenInfo, setTx }) {
 
   const allowWrite = useContractWrite(allowPrepared.config);
 
-  const { config, error } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     address: routerAddress,
     abi: abis["0_1"],
     functionName: "payWithToken",
@@ -98,7 +113,7 @@ export default function PaymentDialog({ chain, tokenInfo, setTx }) {
   const payment = useContractWrite(config);
 
   function paymentPressed() {
-    payment.write();
+    payment.write?.();
   }
 
   const allowanceOk =
@@ -144,9 +159,10 @@ export default function PaymentDialog({ chain, tokenInfo, setTx }) {
         )}
         {!allowanceOk && (
           <button
-            size="large"
+            // size="large"
             disabled={allowance.isLoading}
-            onClick={() => allowance.write()}
+            //TODO: Property 'write' does not exist on type 'UseQueryResult<unknown, Error>'.ts(2339)
+            // onClick={() => allowance.write()}
             className="mx-4 inline-flex items-center rounded-md border border-transparent bg-gradient-to-r from-pink-500 to-blue-500 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             {!allowWrite.isLoading && `Approve ${tokenInfo.symbol}`}

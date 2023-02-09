@@ -1,7 +1,8 @@
 import * as React from "react";
+import type { BigNumber } from "ethers/lib/ethers";
 import { useContractRead } from "wagmi";
 import { priceFeedFor } from "~/plugin/utils";
-function formatCurrency(minor) {
+function formatCurrency(minor: number) {
   var formatter = new Intl.NumberFormat("en-US", {
     style: "decimal",
 
@@ -12,7 +13,15 @@ function formatCurrency(minor) {
 
   return formatter.format(minor / 100); /* $2,500.00 */
 }
-export default function PriceInToken({ chain, invoice, tokenInfo }) {
+export default function PriceInToken({
+  chain,
+  invoice,
+  tokenInfo,
+}: {
+  chain: any;
+  invoice: any;
+  tokenInfo: any;
+}) {
   const currency = invoice.currency;
   const amountInMinor = invoice.amountInMinor;
 
@@ -31,10 +40,10 @@ export default function PriceInToken({ chain, invoice, tokenInfo }) {
 
     let converted;
 
-    if (data && data[1]) {
-      const exchangeRate = data[1]; // BigNum
+    if (data && data[1 as keyof typeof data]) {
+      const exchangeRate = data[1 as keyof typeof data] as BigNumber; // BigNum
 
-      converted = exchangeRate.mul(amountInMinor).div(10 ** 8) / 100;
+      converted = Number(exchangeRate.mul(amountInMinor).div(10 ** 8)) / 100;
     }
 
     return <>{converted && converted.toString()}</>;

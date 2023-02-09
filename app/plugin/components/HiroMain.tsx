@@ -20,7 +20,7 @@ function SubHeader() {
   const { disconnect } = useDisconnect();
   const { chain } = useNetwork();
 
-  const chainInfo = getChain(chain.id);
+  const chainInfo = getChain(chain!.id);
 
   return (
     <div className="border-b-1 grid grid-cols-1 gap-4 border-sky-100 py-4">
@@ -56,7 +56,7 @@ export default function HiroMain() {
 
   const { isConnected } = useAccount({});
 
-  const { connect, connectors, isLoading, pendingConnector } = useConnect();
+  const { isLoading } = useConnect();
 
   if (!isConnected || isLoading) {
     return (

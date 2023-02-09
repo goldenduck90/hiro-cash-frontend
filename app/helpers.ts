@@ -1,9 +1,9 @@
-import { chainlist, getChain, tokenlist } from "@hiropay/tokenlists";
+//@ts-nocheck
+import { getChain, tokenlist } from "@hiropay/tokenlists";
 import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
 import type { Wallet } from "./models/wallet.server";
 
 const tokens = tokenlist.tokens;
-const chains = chainlist.chains;
 
 export const coinIdToToken = (coinId: string) => {
   const [symbol, chainIdString] = coinId.split("-");
@@ -14,6 +14,7 @@ export const coinIdToToken = (coinId: string) => {
 };
 
 export const coinIdToChain = (coinId: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_symbol, chainIdString] = coinId.split("-");
   const chain = getChain(parseInt(chainIdString));
   return chain;

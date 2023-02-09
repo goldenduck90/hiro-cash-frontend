@@ -1,15 +1,20 @@
 import { ethers } from "ethers";
 import assert from "minimalistic-assert";
+import type { TokenInfo } from "@hiropay/tokenlists";
 import { abis } from "@hiropay/tokenlists";
 
 // export function tokensOfChain(tokens: TokenInfo[], chainId: number) {
 //   return tokens.filter((token) => token.chainId == chainId);
 // }
-export function tokensOfChain(tokens, chainId) {
-  return tokens.filter((token) => token.chainId == chainId);
+export function tokensOfChain(tokens: TokenInfo[], chainId: number) {
+  return tokens.filter((token: { chainId: any }) => token.chainId == chainId);
 }
 
-export function priceFeedFor(chain, currency, tokenInfo) {
+export function priceFeedFor(
+  chain: { priceFeeds: { [x: string]: any } },
+  currency: string,
+  tokenInfo: TokenInfo
+) {
   let priceFeed;
 
   if (currency != "USD") {
@@ -19,7 +24,7 @@ export function priceFeedFor(chain, currency, tokenInfo) {
   return priceFeed;
 }
 
-export function getPriceFeeds(chain, currency, tokenInfo) {
+export function getPriceFeeds(chain: any, currency: any, tokenInfo: TokenInfo) {
   let priceFeeds = [];
 
   let priceFeed = priceFeedFor(chain, currency, tokenInfo);
@@ -37,23 +42,29 @@ export const ERC20abi = [
   "function approve(address spender, uint256 amount) external returns (bool)",
 ];
 
-export const getErc20Contract = (address, signer) => {
+export const getErc20Contract = (
+  address: string,
+  signer: ethers.Signer | ethers.providers.Provider | undefined
+) => {
   const contract = new ethers.Contract(address, ERC20abi, signer);
   return contract;
 };
 
-export const getRouterContract = (address, signer) => {
+export const getRouterContract = (
+  address: string,
+  signer: ethers.Signer | ethers.providers.Provider | undefined
+) => {
   return new ethers.Contract(address, abis["0_1"], signer);
 };
 
-export const getTxUrl = (chain, txHash) => {
+export const getTxUrl = (chain: { explorerUrl: any }, txHash: any) => {
   const explorer = chain.explorerUrl;
   return `${explorer}/tx/${txHash}`;
 };
 
 export const parseAmountInMinorForComparison = (
-  amountInMinorString,
-  comparisonDecimals
+  amountInMinorString: string,
+  comparisonDecimals: number
 ) => {
   assert(
     typeof amountInMinorString === "string",

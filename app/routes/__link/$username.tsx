@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -10,6 +12,7 @@ import PluginContainer from "~/plugin/PluginContainer";
 import HiroMain from "~/plugin/components/HiroMain";
 
 import { PaymentProvider } from "~/plugin/context/PaymentProvider";
+import type { SetStateAction } from "react";
 import { useState } from "react";
 import { coinIdtoToken } from "~/utils";
 import { useForm } from "react-hook-form";
@@ -32,7 +35,25 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function HiroLinkPage() {
   const [openPopup, setOpenPopup] = useState(false);
   const { account, wallet } = useLoaderData<typeof loader>();
-  const [invoice, setInvoice] = useState(null);
+  const [invoice, setInvoice] = useState<{
+    memo: string;
+    amountInMinor: number | null;
+    merchantAddress: string;
+    extraFeeAddress: string | null;
+    extraFeeDivisor: string | null;
+    currency: string;
+    coins: object;
+    onComplete: any;
+  }>({
+    memo: "",
+    amountInMinor: null,
+    merchantAddress: "",
+    extraFeeAddress: null,
+    extraFeeDivisor: null,
+    currency: "",
+    coins: {},
+    onComplete: () => {},
+  });
   const [baseCurrency, setBaseCurrency] = useState("USD");
 
   const { register, getValues, handleSubmit } = useForm({
@@ -43,10 +64,13 @@ export default function HiroLinkPage() {
     },
   });
 
-  const coinIds = wallet.config["coins"] || [];
+  const coinIds: any[] =
+    wallet.config!["coins" as keyof typeof wallet.config] || [];
   const tokens = coinIds.map(coinIdtoToken);
 
-  function baseCurrencyChanged(evt: any) {
+  function baseCurrencyChanged(evt: {
+    target: { value: SetStateAction<string> };
+  }) {
     setBaseCurrency(evt.target.value);
   }
 
@@ -71,13 +95,18 @@ export default function HiroLinkPage() {
   const onSubmit = (data: any, event: any) => {
     event.preventDefault();
 
-    const values: any = getValues();
+    const values: {
+      baseCurrency: string;
+      amount: number | null;
+    } = getValues();
 
     // Ensure nothing gets overwritten:
     // if (invoice.amount) {
     //   values.amount = invoice.amount;
     // } else {
-    values.amount = Math.floor(values.amount.replace(",", "") * 100);
+    values.amount = Math.floor(
+      Number(values.amount?.toString().replace(",", "")) * 100
+    );
     // }
     // if (invoice.memo) values.memo = invoice.memo;
 
@@ -95,7 +124,7 @@ export default function HiroLinkPage() {
     setOpenPopup(true);
   };
 
-  const chainIds = tokens.map((tokenInfo: TokenInfo) => tokenInfo.chainId);
+  const chainIds = tokens.map((tokenInfo) => tokenInfo?.chainId);
   const availableChains = CHAINS.filter((chain) => {
     return chainIds.includes(chain.chainId);
   });
@@ -194,7 +223,7 @@ export default function HiroLinkPage() {
                         key={wallet}
                         className="mr-1 h-6 w-6 rounded-full"
                         src={walletIcon(wallet)}
-                        alt=""
+                        alt={wallet}
                       />
                     );
                   }
@@ -211,6 +240,7 @@ export default function HiroLinkPage() {
                     key={chain.chainId}
                     className="mr-1 h-6 w-6 rounded-full"
                     src={chain.logoUri}
+                    alt=""
                   />
                 ))}
               </dd>

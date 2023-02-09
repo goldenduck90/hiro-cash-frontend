@@ -1,7 +1,8 @@
 import { utils } from "ethers";
+import type { ChainInfo } from "@hiropay/tokenlists";
 import { chainlist, getTokens, latestRouter } from "@hiropay/tokenlists";
 
-export function walletParams(chain) {
+export function walletParams(chain: ChainInfo) {
   if (!chain) {
     return undefined;
   }
@@ -14,7 +15,7 @@ export function walletParams(chain) {
   };
 }
 
-function chainConfig(chain) {
+function chainConfig(chain: ChainInfo) {
   const tokens = getTokens(chain.chainId);
   const router = latestRouter(chain.chainId);
 
@@ -37,6 +38,6 @@ export const MAIN_NETS = chainlist.chains
 
 export const CHAINS = MAIN_NETS.concat(TEST_NETS);
 
-export const getChainById = (chainId) => {
+export const getChainById = (chainId: number) => {
   return CHAINS.find((c) => c.chainId === chainId);
 };

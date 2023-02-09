@@ -7,7 +7,7 @@ import { tokensOfChain } from "~/plugin/utils";
 import { CHAINS } from "~/plugin/constants/Chains";
 import { usePayment } from "../hooks";
 
-export default function ChainDialog({ setChain }) {
+export default function ChainDialog({ setChain }: { setChain: any }) {
   const { invoice } = usePayment();
   const { connector } = useAccount();
   const { chain } = useNetwork();
@@ -22,7 +22,7 @@ export default function ChainDialog({ setChain }) {
     onMutate(data) {
       console.log("onMutate", data);
       console.log("currentChain", currentChain);
-      if (currentChain.id == data.chainId) {
+      if (currentChain?.id == data.chainId) {
         // If you select the currently selected chain, onSuccess would otherwise not be called.
         setChain(getChain(data.chainId));
         // send({ type: "SELECT_CHAIN", chainId: data.chainId });
@@ -53,7 +53,7 @@ export default function ChainDialog({ setChain }) {
       setChain(currentChain);
       // send({ type: "SELECT_CHAIN", chainId: chain.id });
     }
-  }, [currentChain?.chainId, connector?.id]);
+  }, [connector?.id, setChain, currentChain]);
 
   if (connector?.id === "walletConnect") return null;
   // STATE: SELECT BLOCKCHAIN
@@ -66,7 +66,7 @@ export default function ChainDialog({ setChain }) {
               key={chain.chainId}
               onClick={(e) => {
                 e.preventDefault();
-                switchNetwork(chain.chainId);
+                switchNetwork!(chain.chainId);
               }}
               className="block hover:cursor-pointer hover:bg-pink-50"
             >

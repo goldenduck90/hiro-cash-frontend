@@ -1,9 +1,8 @@
 import { getChain, tokenlist } from "@hiropay/tokenlists";
 import type { OauthCredential } from "@prisma/client";
 import { useMatches } from "@remix-run/react";
+import type { User } from "@sentry/remix";
 import { useMemo } from "react";
-
-import type { User } from "~/models/user.server";
 
 const DEFAULT_REDIRECT = "/";
 

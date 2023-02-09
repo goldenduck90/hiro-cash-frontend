@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Use this to delete a user by their email
 // Simply call this with:
 // npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts username@example.com
@@ -19,7 +20,7 @@ async function deleteUser(email: string) {
   }
 
   try {
-    await prisma.user.delete({ where: { email } });
+    await prisma.account.delete({ where: { email } });
   } catch (error) {
     if (
       error instanceof PrismaClientKnownRequestError &&

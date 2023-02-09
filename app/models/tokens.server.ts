@@ -1,9 +1,10 @@
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
+import type { Wallet } from "@prisma/client";
 
 const coins = tokenlist.tokens;
 
-export function coinSelected(wallet: Wallet, coinId: string): boolean {
-  const coins = wallet?.config["coins"] || [];
+export function coinSelected(wallet: Wallet, coinId: number): boolean {
+  const coins: any[] = wallet?.config!["coins" as keyof typeof wallet.config];
   return coins.includes(coinId);
 }
 

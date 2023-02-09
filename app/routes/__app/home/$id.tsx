@@ -18,7 +18,7 @@ import { supportedChainsOfWallet, supportedTokensOfWallet } from "~/helpers";
 const coins = tokenlist.tokens;
 
 export function coinSelected(wallet: Wallet, coinId: string): boolean {
-  const coins = wallet?.config["coins"] || [];
+  const coins: any[] = wallet?.config!["coins" as keyof typeof wallet.config];
   return coins.includes(coinId);
 }
 
@@ -100,7 +100,7 @@ export default function AccountOverviewPage() {
   );
 }
 
-function WalletOverview({ wallet }) {
+function WalletOverview({ wallet }: { wallet: Wallet }) {
   const tokens = wallet ? supportedTokensOfWallet(wallet) : [];
   const chains = wallet ? supportedChainsOfWallet(wallet) : [];
 
@@ -132,12 +132,13 @@ function WalletOverview({ wallet }) {
                           Tokens:{" "}
                           {tokens
                             .map((token) => {
-                              return token.symbol;
+                              return token?.symbol;
                             })
                             .join(", ")}
                         </p>
                         <p>
-                          Chains: {chains.map((c) => c.chainName).join(", ")}
+                          Chains:{" "}
+                          {chains.map((c: any) => c.chainName).join(", ")}
                         </p>
                       </div>
                     </div>

@@ -1,4 +1,5 @@
 import type {
+  ActionArgs,
   ActionFunction,
   LoaderArgs,
   LoaderFunction,
@@ -57,7 +58,8 @@ const filteredChains = filteredChainIds
   });
 
 function coinSelected(wallet: Wallet, coinId: string): boolean {
-  const coins = wallet?.config["coins"] || [];
+  const coins: any[] =
+    wallet?.config!["coins" as keyof typeof wallet.config] || [];
   return coins.includes(coinId);
 }
 

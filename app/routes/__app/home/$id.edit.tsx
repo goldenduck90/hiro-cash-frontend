@@ -61,7 +61,7 @@ export const action: ActionFunction = async ({
   } else {
     const data = await request.formData();
     // Object.fromEntries(data);
-    const username = data.get("username");
+    const username = data.get("username") as string;
 
     await updateAccount(account, username);
 

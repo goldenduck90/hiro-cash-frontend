@@ -1,18 +1,20 @@
 import * as React from "react";
 import { ethers } from "ethers";
-import PropTypes from "prop-types";
+import type { TokenInfo } from "@hiropay/tokenlists";
 import { getFaucetAddress } from "@hiropay/tokenlists";
 
-TestnetActions.propTypes = {
-  tokens: PropTypes.array.isRequired,
-  provider: PropTypes.object.isRequired,
-};
-
-export default function TestnetActions(props) {
+export default function TestnetActions(props: {
+  tokens: TokenInfo[];
+  provider: any;
+}) {
   const { tokens, provider } = props;
 
-  const addToWallet = (token) => {
-    window.ethereum.request({
+  const addToWallet = (token: {
+    address: any;
+    symbol: string;
+    decimals: number;
+  }) => {
+    window.ethereum?.request({
       method: "wallet_watchAsset",
       params: {
         type: "ERC20",
@@ -20,13 +22,12 @@ export default function TestnetActions(props) {
           address: token.address,
           symbol: token.symbol,
           decimals: token.decimals,
-          image: token.image,
         },
       },
     });
   };
 
-  const mint = async (token) => {
+  const mint = async (token: TokenInfo) => {
     // Create a JavaScript object from the Contract ABI, to interact
     // with the HelloWorld contract.
     const routerContract = new ethers.Contract(
@@ -42,7 +43,7 @@ export default function TestnetActions(props) {
     <>
       <div style={{ backgroundColor: "#ffe", marginTop: 0 }}>
         <span style={{ color: "#555", marginRight: 10 }}>Testnet Faucets:</span>
-        {tokens.map((token) => {
+        {tokens.map((token: TokenInfo) => {
           return (
             <button
               disabled={!getFaucetAddress(token)}
@@ -56,10 +57,10 @@ export default function TestnetActions(props) {
         })}
         <hr />
         <span style={{ color: "#555", marginRight: 10 }}>Add to Wallet:</span>
-        {tokens.map((token) => {
+        {tokens.map((token: TokenInfo) => {
           return (
             <button
-              size="small"
+              // size="small"
               onClick={() => addToWallet(token)}
               key={token.address}
               className="ml-4"

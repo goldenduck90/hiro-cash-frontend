@@ -1,9 +1,19 @@
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { classnames } from "tailwindcss-classnames";
+import type { TokenInfo } from "@hiropay/tokenlists";
+import {
+  classnames,
+  display,
+  flexBox,
+  opacity,
+  spacing,
+  interactivity,
+  backgrounds,
+} from "tailwindcss-classnames";
+import type { Address } from "wagmi";
 import { useContractRead, useAccount } from "wagmi";
 import { parseAmountInMinorForComparison, ERC20abi } from "~/plugin/utils";
 
-const formatToken = (number) => {
+const formatToken = (number: number | bigint) => {
   const numberFormat = new Intl.NumberFormat(navigator.language, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -11,14 +21,24 @@ const formatToken = (number) => {
   return numberFormat.format(number);
 };
 
-export default function TokenItem({ tokenInfo, amountInMinor, setToken }) {
+export default function TokenItem({
+  tokenInfo,
+  amountInMinor,
+  setToken,
+  invoice,
+}: {
+  tokenInfo: TokenInfo;
+  amountInMinor: number;
+  setToken: any;
+  invoice: any;
+}) {
   const { address } = useAccount();
   const { data: balance, isLoading } = useContractRead({
-    address: tokenInfo.address,
+    address: tokenInfo.address as Address,
     abi: ERC20abi,
     functionName: "balanceOf",
     args: [address],
-  });
+  }) as { data: any; isLoading: boolean };
 
   const isBalanceSufficient = () => {
     const amount = parseAmountInMinorForComparison(
@@ -41,16 +61,18 @@ export default function TokenItem({ tokenInfo, amountInMinor, setToken }) {
     >
       <div
         className={classnames(
-          "flex",
-          "items-center",
-          "px-0",
-          "py-3",
-          "sm:px-6",
-          isBalanceSufficient() ? "opacity-100" : "opacity-50",
-          isBalanceSufficient()
-            ? "hover:cursor-pointer"
-            : "hover:cursor-not-allowed",
-          isBalanceSufficient() ? "hover:bg-indigo-50" : "hover:bg-gray-100"
+          flexBox("items-center"),
+          display("flex"),
+          spacing("px-0", "py-3", "sm:px-6"),
+          opacity(isBalanceSufficient() ? "opacity-100" : "opacity-50"),
+          interactivity(
+            isBalanceSufficient()
+              ? "hover:cursor-pointer"
+              : "hover:cursor-not-allowed"
+          ),
+          backgrounds(
+            isBalanceSufficient() ? "hover:bg-indigo-50" : "hover:bg-gray-100"
+          )
         )}
       >
         <div className="flex min-w-0 flex-1 items-center">

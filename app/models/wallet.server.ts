@@ -20,7 +20,11 @@ export async function deleteWallet(wallet: Wallet) {
 export async function updateWallet(
   wallet: Wallet,
   address: string,
-  props: Object
+  props: {
+    type: string | undefined;
+    exchange: string | undefined;
+    config: { coins: string[] };
+  }
 ) {
   try {
     return await prisma.wallet.update({
@@ -43,7 +47,11 @@ export async function updateWallet(
 export async function createWallet(
   account: Account,
   address: string,
-  props: Object
+  props: {
+    type: string | undefined;
+    exchange: string | undefined;
+    config: { coins: string[] };
+  }
 ) {
   try {
     return await prisma.wallet.create({

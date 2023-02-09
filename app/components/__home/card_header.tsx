@@ -1,8 +1,8 @@
 import { LinkIcon } from "@heroicons/react/20/solid";
-
+import type { Account } from "@prisma/client";
 import { Link } from "@remix-run/react";
 
-export default function CardHeader({ account }) {
+export default function CardHeader({ account }: { account: Account }) {
   return (
     <header className="mb-4 flex items-center justify-between border-b border-slate-900 bg-slate-800 pl-0 text-white">
       <h1 className="mb-4 font-bold">
