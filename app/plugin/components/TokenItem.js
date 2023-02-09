@@ -37,7 +37,7 @@ export default function TokenItem({ tokenInfo, amountInMinor, setToken }) {
           setToken(tokenInfo);
         }
       }}
-      className="block hover:cursor-pointer hover:bg-blue-50"
+      className="block"
     >
       <div
         className={classnames(
@@ -46,7 +46,11 @@ export default function TokenItem({ tokenInfo, amountInMinor, setToken }) {
           "px-0",
           "py-3",
           "sm:px-6",
-          isBalanceSufficient() ? "opacity-100" : "opacity-50"
+          isBalanceSufficient() ? "opacity-100" : "opacity-50",
+          isBalanceSufficient()
+            ? "hover:cursor-pointer"
+            : "hover:cursor-not-allowed",
+          isBalanceSufficient() ? "hover:bg-indigo-50" : "hover:bg-gray-100"
         )}
       >
         <div className="flex min-w-0 flex-1 items-center">
@@ -64,7 +68,7 @@ export default function TokenItem({ tokenInfo, amountInMinor, setToken }) {
               </p>
             </div>
             <div className="">
-              <div className="text-md truncate pt-0 text-right font-medium text-gray-400">
+              <div className="text-md truncate pt-0 text-right font-medium text-gray-600">
                 {!isLoading &&
                   formatToken(
                     Math.abs(Math.round(balance / 10 ** tokenInfo.decimals))
@@ -75,7 +79,7 @@ export default function TokenItem({ tokenInfo, amountInMinor, setToken }) {
         </div>
         <div>
           <ChevronRightIcon
-            className="h-5 w-5 text-gray-400"
+            className="h-5 w-5 text-gray-600"
             aria-hidden="true"
           />
         </div>
