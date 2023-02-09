@@ -22,6 +22,8 @@ import CardHeader from "~/components/__home/card_header";
 
 const coins = tokenlist.tokens;
 
+const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
+
 export function coinSelected(wallet: Wallet, coinId: string): boolean {
   const coins = wallet?.config["coins"] || [];
   return coins.includes(coinId);
@@ -51,7 +53,7 @@ export const filteredChains = filteredChainIds
   })
   .filter((chain) => {
     // return chain && (SHOW_TESTNETS || !chain.testnet);
-    return chain && chain.testnet != true;
+    return chain && (chain.testnet != true || SHOW_TESTNETS);
   });
 
 export const loader: LoaderFunction = async ({

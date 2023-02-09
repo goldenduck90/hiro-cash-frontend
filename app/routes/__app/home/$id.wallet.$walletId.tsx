@@ -26,6 +26,8 @@ import { useIsSubmitting } from "remix-validated-form";
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 import CardHeader from "~/components/__home/card_header";
 
+const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
+
 const coins = tokenlist.tokens;
 
 const coinsByChain: any = {};
@@ -51,8 +53,7 @@ const filteredChains = filteredChainIds
     return getChain(chainId);
   })
   .filter((chain) => {
-    // return chain && (SHOW_TESTNETS || !chain.testnet);
-    return chain && chain.testnet != true;
+    return chain && (chain.testnet != true || SHOW_TESTNETS);
   });
 
 function coinSelected(wallet: Wallet, coinId: string): boolean {
@@ -186,27 +187,22 @@ export default function AccountWalletPage() {
                       {tokensForChain.map((coin: any) => {
                         const coinId = coin.symbol + "-" + chainId.toString();
                         return (
-                          <>
-                            <div
-                              key={coinId}
-                              className="mr-4 flex items-center"
+                          <div key={coinId} className="mr-4 flex items-center">
+                            <input
+                              defaultChecked={coinSelected(wallet, coinId)}
+                              name={`coins`}
+                              id={coinId}
+                              type="checkbox"
+                              value={coinId}
+                              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                            />
+                            <label
+                              htmlFor={coinId}
+                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                             >
-                              <input
-                                defaultChecked={coinSelected(wallet, coinId)}
-                                name={`coins`}
-                                id={coinId}
-                                type="checkbox"
-                                value={coinId}
-                                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-                              />
-                              <label
-                                htmlFor={coinId}
-                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                              >
-                                {coin.symbol}
-                              </label>
-                            </div>
-                          </>
+                              {coin.symbol}
+                            </label>
+                          </div>
                         );
                       })}
                     </div>

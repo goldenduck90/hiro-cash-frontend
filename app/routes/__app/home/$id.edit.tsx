@@ -69,7 +69,7 @@ export const action: ActionFunction = async ({
   }
 };
 
-export default function AccountWalletPage() {
+export default function AccountEditPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.account;
   const isSubmitting = useIsSubmitting("accountForm");
