@@ -1,29 +1,28 @@
 //@ts-check
-import * as React from "react";
-import { usePayment } from "../hooks";
-import { useDisconnect } from "wagmi";
+import { useDisconnect, useNetwork } from "wagmi";
 import PaymentDialog from "./PaymentDialog";
 import ChainDialog from "./ChainDialog";
 import TokenChooser from "./TokenChooser";
 import ReceiptDialog from "./ReceiptDialog";
-import BreadcrumbBar from "./BreadcrumbBar";
 import Header from "./Header";
 import truncateEthAddress from "truncate-eth-address";
 import { PowerIcon } from "@heroicons/react/20/solid";
 
-import { useAccount, useSigner, useConnect } from "wagmi";
-import { useEffect } from "react";
+import { useAccount, useConnect } from "wagmi";
+import { useState } from "react";
 
 import { connectorWalletIcon } from "../view/walletHelper";
+import { getChain } from "@hiropay/tokenlists";
+import { usePayment } from "../hooks";
 
 function SubHeader() {
-  const { state } = usePayment();
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
+  const { chain } = useNetwork();
 
   // const chainInfo = getChainById(chain.id);
 
-  const chainInfo = state.context?.chain;
+  const chainInfo = getChain(chain.id);
 
   return (
     <div className="border-b-1 grid grid-cols-1 gap-4 border-sky-100 py-4">
@@ -52,37 +51,19 @@ function SubHeader() {
 }
 
 export default function HiroMain() {
-  const { state, send } = usePayment();
+  const { invoice } = usePayment();
+  const [chain, setChain] = useState(null);
+  const [token, setToken] = useState(null);
+  const [tx, setTx] = useState(null);
 
-  const invoice = state.context.invoice;
-
-  const { address, isConnected } = useAccount({
-    onDisconnect() {
-      console.log("disconnecting");
-      send("DISCONNECT");
-    },
-  });
-  const { data: signer } = useSigner();
+  const { address, isConnected } = useAccount({});
 
   const { connect, connectors, isLoading, pendingConnector } = useConnect();
 
-  // This has to work in 2 cases:
-  // - user has just connected
-  // - user is already connected with metamask.
-  useEffect(() => {
-    if (state.matches("disconnected") && isConnected && signer) {
-      send({
-        type: "CONNECT",
-        address: address,
-        signer: signer,
-      });
-    }
-  }, [address, isConnected, send, signer, state]);
-
-  if (state.matches("disconnected") || state.matches("connecting")) {
+  if (!isConnected || isLoading) {
     return (
       <>
-        <Header receiver={invoice.merchantAddress}></Header>
+        <Header />
         <div className="px-6 py-3 text-base font-bold ">Connect Wallet</div>
         <div className="overflow-hidden bg-white pt-2">
           <ul className="divide-y divide-blue-300">
@@ -119,36 +100,35 @@ export default function HiroMain() {
         </div>
       </>
     );
-  } else if (state.matches("connected.no_chain")) {
+  } else if (chain == null && token == null) {
     return (
       <>
-        <Header></Header>
+        <Header />
         <SubHeader />
-        <ChainDialog />
+        <ChainDialog setChain={setChain} />
       </>
     );
-  } else if (state.matches("connected.no_token")) {
+  } else if (chain != null && token == null) {
     return (
       <>
-        <Header></Header>
+        <Header />
         <SubHeader />
-        <TokenChooser />
+        <TokenChooser chain={chain} setToken={setToken} />
       </>
     );
-  } else if (state.matches("connected.ready")) {
+  } else if (chain && token) {
     return (
       <>
-        <Header></Header>
+        <Header />
         <SubHeader />
-        <PaymentDialog />
+        <PaymentDialog setTx={setTx} chain={chain} tokenInfo={token} />
       </>
     );
-  } else if (state.matches("connected.completed")) {
+  } else if (tx) {
     return (
       <>
-        <Header></Header>
-        <BreadcrumbBar currentTab="receipt" />
-        <ReceiptDialog></ReceiptDialog>
+        <Header />
+        <ReceiptDialog tx={tx} invoice={invoice} />
       </>
     );
   }

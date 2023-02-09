@@ -15,9 +15,7 @@ import { coinIdtoToken } from "~/utils";
 import { useForm } from "react-hook-form";
 import CurrencyInput from "react-currency-input-field";
 import { CHAINS } from "~/plugin/constants/Chains";
-import type { ChainInfo } from "@hiropay/tokenlists";
 import { walletIcon } from "~/plugin/view/walletHelper";
-import { tokensOfChain } from "~/plugin/utils";
 
 export async function loader({ request, params }: LoaderArgs) {
   const account = await findAccount(params.username);
@@ -193,6 +191,7 @@ export default function HiroLinkPage() {
                   (wallet) => {
                     return (
                       <img
+                        key={wallet}
                         className="mr-1 h-6 w-6 rounded-full"
                         src={walletIcon(wallet)}
                         alt=""
@@ -209,6 +208,7 @@ export default function HiroLinkPage() {
               <dd className="mt-1 flex text-sm text-slate-100 sm:col-span-2 sm:mt-0">
                 {availableChains.map((chain) => (
                   <img
+                    key={chain.chainId}
                     className="mr-1 h-6 w-6 rounded-full"
                     src={chain.logoUri}
                   />

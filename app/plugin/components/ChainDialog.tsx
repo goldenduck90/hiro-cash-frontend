@@ -1,28 +1,31 @@
 import type { TokenInfo } from "@hiropay/tokenlists";
+import { getChain } from "@hiropay/tokenlists";
 import React, { useEffect } from "react";
 import { useAccount, useSwitchNetwork, useNetwork } from "wagmi";
 import { tokensOfChain } from "~/plugin/utils";
 
 import { CHAINS } from "~/plugin/constants/Chains";
-import { usePayment } from "~/plugin/hooks";
+import { usePayment } from "../hooks";
 
-export default function ChainDialog() {
-  const { send, state } = usePayment();
+export default function ChainDialog({ setChain }) {
+  const { invoice } = usePayment();
   const { connector } = useAccount();
   const { chain } = useNetwork();
-
-  const invoice = state.context.invoice;
+  const currentChain = chain;
 
   const { switchNetwork } = useSwitchNetwork({
     onSuccess(chain) {
-      console.log("switchNetwork");
-      send({ type: "SELECT_CHAIN", chainId: chain.id });
+      console.log("switchNetwork", chain);
+      setChain(chain);
+      // send({ type: "SELECT_CHAIN", chainId: chain.id });
     },
     onMutate(data) {
       console.log("onMutate", data);
-      if (chain.id == data.chainId) {
+      console.log("currentChain", currentChain);
+      if (currentChain.id == data.chainId) {
         // If you select the currently selected chain, onSuccess would otherwise not be called.
-        send({ type: "SELECT_CHAIN", chainId: data.chainId });
+        setChain(getChain(data.chainId));
+        // send({ type: "SELECT_CHAIN", chainId: data.chainId });
       }
     },
     onSettled(data) {
@@ -47,9 +50,10 @@ export default function ChainDialog() {
   useEffect(() => {
     // Run! Like go get some data from an API.
     if (connector?.id === "walletConnect") {
-      send({ type: "SELECT_CHAIN", chainId: chain.id });
+      setChain(currentChain);
+      // send({ type: "SELECT_CHAIN", chainId: chain.id });
     }
-  }, [chain.id, connector?.id, send]);
+  }, [currentChain?.chainId, connector?.id]);
 
   if (connector?.id === "walletConnect") return null;
   // STATE: SELECT BLOCKCHAIN
@@ -58,54 +62,53 @@ export default function ChainDialog() {
       <div className="overflow-hidden bg-white pt-2 sm:rounded-md">
         <ul className="divide-y divide-purple-300">
           {availableChains.map((chain) => (
-            <li key={chain.chainId}>
-              <a
-                href="/#"
-                onClick={() => {
-                  switchNetwork(chain.chainId);
-                }}
-                className="block hover:bg-pink-50"
-              >
-                <div className="flex items-center px-0 py-3 sm:px-4">
-                  <div className="flex min-w-0 flex-1 items-center">
-                    <div className="flex-shrink-0 ">
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={chain.logoUri}
-                        alt="Logo"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                      <div>
-                        <p className="mt-2 truncate text-sm font-medium text-indigo-600">
-                          {chain.chainName}
-                        </p>
-                        <p className="mt-2 flex items-center text-sm text-gray-500">
-                          {/* <EnvelopeIcon
+            <li
+              key={chain.chainId}
+              onClick={(e) => {
+                e.preventDefault();
+                switchNetwork(chain.chainId);
+              }}
+              className="block hover:cursor-pointer hover:bg-pink-50"
+            >
+              <div className="flex items-center px-0 py-3 sm:px-4">
+                <div className="flex min-w-0 flex-1 items-center">
+                  <div className="flex-shrink-0 ">
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src={chain.logoUri}
+                      alt="Logo"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
+                    <div>
+                      <p className="mt-2 truncate text-sm font-medium text-indigo-600">
+                        {chain.chainName}
+                      </p>
+                      <p className="mt-2 flex items-center text-sm text-gray-500">
+                        {/* <EnvelopeIcon
                             className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
                             aria-hidden="true"
                           /> */}
-                          <span className="truncate"></span>
-                        </p>
-                      </div>
-                      <div className="flex-shrink-5 mt-4 sm:mt-0 sm:ml-5">
-                        <div className="flex -space-x-1 overflow-hidden">
-                          {tokensOfChain(invoice.coins, chain.chainId).map(
-                            (token) => (
-                              <img
-                                key={token.address}
-                                className="inline-block h-8 w-8"
-                                src={token.logoUri}
-                                alt={token.name}
-                              />
-                            )
-                          )}
-                        </div>
+                        <span className="truncate"></span>
+                      </p>
+                    </div>
+                    <div className="flex-shrink-5 mt-4 sm:mt-0 sm:ml-5">
+                      <div className="flex flex-row-reverse -space-x-1 overflow-hidden">
+                        {tokensOfChain(invoice.coins, chain.chainId).map(
+                          (token) => (
+                            <img
+                              key={token.address}
+                              className="inline-block h-8 w-8"
+                              src={token.logoUri}
+                              alt={token.name}
+                            />
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
-              </a>
+              </div>
             </li>
           ))}
         </ul>

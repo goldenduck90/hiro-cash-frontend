@@ -29,18 +29,16 @@ export function getPriceFeeds(chain, currency, tokenInfo) {
   return priceFeeds;
 }
 
+export const ERC20abi = [
+  "function balanceOf(address owner) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)",
+  "function allowance(address owner, address spender) external view returns (uint256)",
+  "function approve(address spender, uint256 amount) external returns (bool)",
+];
+
 export const getErc20Contract = (address, signer) => {
-  const contract = new ethers.Contract(
-    address,
-    [
-      "function balanceOf(address owner) view returns (uint256)",
-      "function decimals() view returns (uint8)",
-      "function symbol() view returns (string)",
-      "function allowance(address owner, address spender) external view returns (uint256)",
-      "function approve(address spender, uint256 amount) external returns (bool)",
-    ],
-    signer
-  );
+  const contract = new ethers.Contract(address, ERC20abi, signer);
   return contract;
 };
 

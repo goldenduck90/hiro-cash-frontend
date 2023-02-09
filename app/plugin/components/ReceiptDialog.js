@@ -1,16 +1,8 @@
 //@ts-check
 import * as React from "react";
-import { usePayment } from "~/plugin/hooks";
 import { getTxUrl } from "~/plugin/utils";
 
-export default function ReceiptDialog() {
-  // const { open, payment: paymentMachine, onComplete } = props;
-  const { state } = usePayment();
-
-  const context = state.context;
-  const tx = context.tx;
-  const invoice = state.context.invoice;
-
+export default function ReceiptDialog({ invoice, tx }) {
   const onCompleteFunction = () => {
     if (invoice.onComplete) {
       invoice.onComplete(tx.transactionHash, context.chain);
@@ -20,7 +12,7 @@ export default function ReceiptDialog() {
     }
   };
 
-  const txUrl = getTxUrl(context.chain, tx.transactionHash);
+  const txUrl = getTxUrl(invoice.chain, tx.transactionHash);
 
   return (
     <>

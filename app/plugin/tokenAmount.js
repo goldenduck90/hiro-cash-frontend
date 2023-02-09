@@ -1,8 +1,6 @@
 import { CURRENCIES_WITH_PLAIN_STYLE } from "~/plugin/constants";
 
-export function tokenAmount(state) {
-  const { invoice } = state.context;
-
+export function tokenAmount(invoice) {
   function formatCurrency(minor) {
     const style = CURRENCIES_WITH_PLAIN_STYLE.includes(invoice.currency)
       ? "decimal"

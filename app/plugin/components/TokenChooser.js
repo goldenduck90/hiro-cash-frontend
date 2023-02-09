@@ -1,28 +1,30 @@
 import * as React from "react";
+import { usePayment } from "../hooks";
 import TestnetActions from "./TestnetActions";
 import TokenItem from "./TokenItem";
-import { usePayment } from "../hooks";
+import { supportedTokensOfWallet } from "~/helpers";
+import { tokenlist } from "@hiropay/tokenlists";
+import { useSigner } from "wagmi";
 
-export default function TokenChooser() {
-  const { state } = usePayment();
+export default function TokenChooser({ chain, setToken }) {
+  const { invoice } = usePayment();
 
-  const { chain, balances, signer, invoice } = state.context;
-  const { tokens } = chain;
+  const { data: signer } = useSigner();
 
-  // This should really happen before loading balances
-  const filteredBalances = balances.filter((b) => {
-    return invoice.coins.includes(b.tokenInfo);
+  const tokens = invoice.coins.filter((token) => {
+    return token.chainId == chain.chainId;
   });
 
   return (
     <>
       <div className="overflow-hidden bg-white pt-2">
         <ul className="divide-y divide-blue-300">
-          {filteredBalances.map((balance) => (
+          {tokens.map((token) => (
             <TokenItem
-              key={balance.tokenInfo.address}
-              balance={balance}
-              tokenInfo={balance.tokenInfo}
+              key={token.address}
+              invoice={invoice}
+              tokenInfo={token}
+              setToken={setToken}
               amountInMinor={invoice.amountInMinor}
             />
           ))}

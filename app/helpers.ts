@@ -1,5 +1,6 @@
 import { chainlist, tokenlist } from "@hiropay/tokenlists";
 import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
+import type { Wallet } from "./models/wallet.server";
 
 const tokens = tokenlist.tokens;
 const chains = chainlist.chains;
