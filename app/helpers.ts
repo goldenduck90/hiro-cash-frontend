@@ -1,4 +1,4 @@
-import { chainlist, tokenlist } from "@hiropay/tokenlists";
+import { chainlist, getChain, tokenlist } from "@hiropay/tokenlists";
 import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
 import type { Wallet } from "./models/wallet.server";
 
@@ -14,8 +14,8 @@ export const coinIdToToken = (coinId: string) => {
 };
 
 export const coinIdToChain = (coinId: string) => {
-  const [chainIdString] = coinId.split("-");
-  const chain = chains.find((c) => c.chainId === parseInt(chainIdString));
+  const [_symbol, chainIdString] = coinId.split("-");
+  const chain = getChain(parseInt(chainIdString));
   return chain;
 };
 
