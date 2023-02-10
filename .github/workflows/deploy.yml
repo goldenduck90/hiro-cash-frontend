@@ -122,15 +122,6 @@ jobs:
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"
-          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
-          SESSION_SECRET: "42c6911a7318408bba71cca058d77d23"
-          CALLBACK_HOST: "..."
-          GOOGLE_CLIENT_ID: "..."
-          GOOGLE_CLIENT_SECRET: "..."
-          TWITTER_CLIENT_ID: "..."
-          TWITTER_CLIENT_SECRET: "..."
-          GITHUB_CLIENT_ID: "..."
-          GITHUB_CLIENT_SECRET: ".."
 
   build:
     name: 🐳 Build
