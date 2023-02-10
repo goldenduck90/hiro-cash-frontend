@@ -65,7 +65,7 @@ export default function TokenChooser({
           ))}
         </ul>
       </div>
-      {chain.testnet && (
+      {false && chain.testnet && (
         <TestnetActions tokens={tokens} provider={signer?.provider} />
       )}
     </>

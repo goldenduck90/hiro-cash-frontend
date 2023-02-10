@@ -1,5 +1,6 @@
 //@ts-check
 import { useDisconnect, useNetwork } from "wagmi";
+import type { PaymentReceipt } from "./PaymentDialog";
 import PaymentDialog from "./PaymentDialog";
 import ChainDialog from "./ChainDialog";
 import TokenChooser from "./TokenChooser";
@@ -11,9 +12,11 @@ import { PowerIcon } from "@heroicons/react/20/solid";
 import { useAccount, useConnect } from "wagmi";
 import { useState } from "react";
 
+import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
 import { getChain } from "@hiropay/tokenlists";
 import { usePayment } from "../hooks";
 import { ConnectWalletDialog } from "./ConnectWalletDialog";
+import type { ethers } from "ethers";
 
 function SubHeader() {
   const { address } = useAccount();
@@ -48,14 +51,20 @@ function SubHeader() {
   );
 }
 
+//
+// const fakeReceipt = {
+//   hash: "0x123",
+//   chain: getChain(5),
+//   receipt: {} as ethers.providers.TransactionReceipt,
+// };
+
 export default function HiroMain() {
   const { invoice } = usePayment();
-  const [chain, setChain] = useState(null);
-  const [token, setToken] = useState(null);
-  const [tx, setTx] = useState(null);
+  const [chain, setChain] = useState<ChainInfo | null>(null);
+  const [token, setToken] = useState<TokenInfo | null>(null);
+  const [tx, setTx] = useState<PaymentReceipt | null>(null);
 
-  const { isConnected } = useAccount({});
-
+  const { isConnected } = useAccount();
   const { isLoading } = useConnect();
 
   if (!isConnected || isLoading) {
@@ -63,6 +72,13 @@ export default function HiroMain() {
       <>
         <Header />
         <ConnectWalletDialog />
+      </>
+    );
+  } else if (tx) {
+    return (
+      <>
+        <Header />
+        <ReceiptDialog tx={tx} invoice={invoice} />
       </>
     );
   } else if (chain == null && token == null) {
@@ -87,13 +103,6 @@ export default function HiroMain() {
         <Header />
         <SubHeader />
         <PaymentDialog setTx={setTx} chain={chain} tokenInfo={token} />
-      </>
-    );
-  } else if (tx) {
-    return (
-      <>
-        <Header />
-        <ReceiptDialog tx={tx} invoice={invoice} />
       </>
     );
   }

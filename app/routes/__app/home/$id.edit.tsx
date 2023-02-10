@@ -65,7 +65,7 @@ export const action: ActionFunction = async ({
 
     await updateAccount(account, username);
 
-    return redirect(`../${username}`);
+    return redirect(`/home}`);
   }
 };
 

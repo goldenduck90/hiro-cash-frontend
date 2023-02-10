@@ -6,8 +6,10 @@ import {
   usePrepareContractWrite,
   useAccount,
   useContractWrite,
+  useWaitForTransaction,
 } from "wagmi";
 import PriceInToken from "~/plugin/components/PriceInToken";
+import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
 import { latestRouter, abis } from "@hiropay/tokenlists";
 import {
   parseAmountInMinorForComparison,
@@ -16,6 +18,13 @@ import {
 } from "~/plugin/utils";
 import { ethers } from "ethers";
 import spinner from "~/plugin/view/spinner";
+import type { SendTransactionResult } from "@wagmi/core";
+
+export type PaymentReceipt = {
+  hash: string;
+  chain: ChainInfo;
+  receipt: ethers.providers.TransactionReceipt;
+};
 
 export function paymentPayload({
   invoice,
@@ -55,24 +64,58 @@ export function paymentPayload({
   ];
 }
 
+export function TransactionProgress({
+  chain,
+  setTx,
+  transaction,
+}: {
+  chain: ChainInfo;
+  setTx: Function;
+  transaction: SendTransactionResult;
+}) {
+  const { data, isError, isLoading, error } = useWaitForTransaction({
+    hash: transaction.hash,
+    onSuccess(data) {
+      if (data.status == 1) {
+        setTx({
+          hash: transaction.hash,
+          chain: chain,
+          receipt: data,
+        });
+      }
+    },
+  });
+
+  return (
+    <div>
+      <>
+        {data && data.status == 0 && "Transaction failed"}
+        {isLoading && <div>{spinner}</div>}
+        {isError && error}
+      </>
+    </div>
+  );
+}
+
 export default function PaymentDialog({
   chain,
   tokenInfo,
   setTx,
 }: {
-  chain: any;
-  tokenInfo: any;
-  setTx: any;
+  chain: ChainInfo;
+  tokenInfo: TokenInfo;
+  setTx: Function;
 }) {
   const { invoice } = usePayment();
-
   const { address } = useAccount();
-  const [isPaying] = useState(false);
+  const [transaction, setTransaction] = useState<SendTransactionResult | null>(
+    null
+  );
 
   const routerAddress = latestRouter(chain.chainId).address as Address;
 
   const allowance = useContractRead({
-    address: tokenInfo.address,
+    address: tokenInfo.address as Address,
     abi: ERC20abi,
     functionName: "allowance",
     args: [address, routerAddress],
@@ -90,7 +133,7 @@ export default function PaymentDialog({
 
   const maxAllowance = ethers.constants.MaxUint256;
   const allowPrepared = usePrepareContractWrite({
-    address: tokenInfo.address,
+    address: tokenInfo.address as Address,
     abi: ERC20abi,
     functionName: "approve",
     args: [latestRouter(chain.chainId).address, maxAllowance],
@@ -106,11 +149,23 @@ export default function PaymentDialog({
     abi: abis["0_1"],
     functionName: "payWithToken",
     args: payload,
+  });
+  const payment = useContractWrite({
+    ...config,
+    onMutate(data) {
+      console.log(data);
+    },
     onSuccess(data) {
-      setTx(data);
+      console.log(data);
+      setTransaction(data);
+    },
+    onError(error) {
+      console.log("Error", error);
+    },
+    onSettled(data, error) {
+      console.log("Settled", { data, error });
     },
   });
-  const payment = useContractWrite(config);
 
   function paymentPressed() {
     payment.write?.();
@@ -139,7 +194,14 @@ export default function PaymentDialog({
         </div>
       </div>
       <div className="bg-white px-4 py-3 text-center sm:px-6">
-        {allowanceOk && !isPaying && (
+        {transaction && (
+          <TransactionProgress
+            chain={chain}
+            setTx={setTx}
+            transaction={transaction}
+          />
+        )}
+        {!transaction && allowanceOk && (
           <button
             type="button"
             disabled={!allowanceOk}
@@ -157,12 +219,11 @@ export default function PaymentDialog({
             )}
           </button>
         )}
-        {!allowanceOk && (
+        {!transaction && !allowanceOk && (
           <button
             // size="large"
             disabled={allowance.isLoading}
-            //TODO: Property 'write' does not exist on type 'UseQueryResult<unknown, Error>'.ts(2339)
-            // onClick={() => allowance.write()}
+            onClick={allowWrite.write}
             className="mx-4 inline-flex items-center rounded-md border border-transparent bg-gradient-to-r from-pink-500 to-blue-500 px-4 py-2 text-lg font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             {!allowWrite.isLoading && `Approve ${tokenInfo.symbol}`}

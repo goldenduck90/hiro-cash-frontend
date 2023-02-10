@@ -16,7 +16,7 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
   const { switchNetwork } = useSwitchNetwork({
     onSuccess(chain) {
       console.log("switchNetwork", chain);
-      setChain(chain);
+      setChain(getChain(chain.id));
       // send({ type: "SELECT_CHAIN", chainId: chain.id });
     },
     onMutate(data) {
