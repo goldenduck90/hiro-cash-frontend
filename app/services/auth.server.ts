@@ -1,13 +1,12 @@
 // app/services/auth.server.ts
 import { Authenticator } from "remix-auth";
 import { sessionStorage } from "~/services/session.server";
-
 import { GoogleStrategy } from "remix-auth-google";
 import { GitHubStrategy } from "remix-auth-github";
-
+import { TwitterStrategy } from "remix-auth-twitter";
+import { SiweStrategy } from "@sloikaxyz/remix-auth-siwe";
 import type { OauthCredential } from "@prisma/client";
 import { findOrCreatOauthCredential } from "~/models/oauthCredential.server";
-import { TwitterStrategy } from "remix-auth-twitter";
 
 const CALLBACK_HOST = process.env.CALLBACK_HOST;
 
@@ -41,7 +40,13 @@ export type SessionCredential = Pick<
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
-export let authenticator = new Authenticator<SessionCredential>(sessionStorage);
+export let authenticator = new Authenticator<SessionCredential>(
+  sessionStorage,
+  {
+    sessionKey: "sessionKey", // keep in sync
+    sessionErrorKey: "sessionErrorKey", // keep in sync
+  }
+);
 
 let googleStrategy = new GoogleStrategy(
   {
@@ -105,6 +110,19 @@ const twitterStrategy = new TwitterStrategy(
   }
 );
 
+const siweStrategy = new SiweStrategy(
+  { domain: "localhost:3000" },
+  async ({ message }) => {
+    try {
+      return findOrCreatOauthCredential("siwe", message.address, {});
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+);
+
 authenticator.use(twitterStrategy, "twitter");
 authenticator.use(githubStrategy, "github");
 authenticator.use(googleStrategy, "google");
+authenticator.use(siweStrategy, "siwe");

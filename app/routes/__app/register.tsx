@@ -1,13 +1,30 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, useSubmit } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
 import google from "~/assets/images/google.svg";
 import github from "~/assets/images/github.svg";
 import twitter from "~/assets/images/twitter.svg";
+import { getWeb3 } from "~/entry.client";
+import metamask from "~/assets/images/wallets/metamask.svg";
 
 // First we create our UI with the form doing a POST and the inputs with the
 // names we are going to use in the strategy
 export default function Screen() {
+  const submit = useSubmit();
+  async function handleSubmit() {
+    const [message, signature] = await getWeb3();
+    const formData = new FormData();
+    //@ts-ignore
+    formData.append("message", message);
+    //@ts-ignore
+    formData.append("signature", signature);
+    submit(formData, {
+      action: "/auth/siwe",
+      method: "post",
+      encType: "application/x-www-form-urlencoded",
+      replace: true,
+    });
+  }
   return (
     <>
       <div className="text-center">
@@ -54,6 +71,18 @@ export default function Screen() {
             Github
           </button>
         </Form>
+        <button
+          onClick={handleSubmit}
+          className="mt-4 inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-2 font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          <img
+            src={metamask}
+            className="mr-3 h-6 w-6 grayscale"
+            aria-hidden="true"
+            alt="Metamask Logo"
+          />
+          Metamask
+        </button>
       </div>
     </>
   );

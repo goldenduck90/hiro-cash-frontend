@@ -14,17 +14,20 @@ export default function TestnetActions(props: {
     symbol: string;
     decimals: number;
   }) => {
-    window.ethereum?.request({
-      method: "wallet_watchAsset",
-      params: {
-        type: "ERC20",
-        options: {
-          address: token.address,
-          symbol: token.symbol,
-          decimals: token.decimals,
+    if (window.ethereum) {
+      window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20",
+          options: {
+            address: token.address,
+            symbol: token.symbol,
+            decimals: token.decimals,
+          },
         },
-      },
-    });
+      });
+    }
+    throw new Error("metamask needs to be installed");
   };
 
   const mint = async (token: TokenInfo) => {
