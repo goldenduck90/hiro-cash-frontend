@@ -15,10 +15,19 @@ export function ConnectWalletDialog() {
   } = useConnect();
   const [width, setWidth] = useState<number>(window.innerWidth);
 
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
   const metaMask = connectors.find((c) => c.id === "metaMask");
 
   const isMobile = width <= 768;
-  const walletPresent = window.ethereum != null;
 
   useEffect(() => {
     if (isMobile && window.ethereum && window.ethereum.isMetaMask) {
