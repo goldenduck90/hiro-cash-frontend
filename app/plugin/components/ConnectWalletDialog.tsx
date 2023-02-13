@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useConnect } from "wagmi";
 
 import { connectorWalletIcon } from "../view/walletHelper";
@@ -20,9 +20,16 @@ export function ConnectWalletDialog() {
   const isMobile = width <= 768;
   const walletPresent = window.ethereum != null;
 
+  useEffect(() => {
+    if (isMobile && window.ethereum && window.ethereum.isMetaMask) {
+      connect({ connector: metaMask });
+    }
+  }, []);
+
   if (isMobile) {
     const urlToSelf = window.location.href.replace("https://", "");
     const deepLinkUri = `https://metamask.app.link/dapp/${urlToSelf}`;
+
     return (
       <div className="overflow-hidden bg-white pt-2">
         <ul className="divide-y divide-blue-300">
