@@ -9,6 +9,7 @@ import { useField, ValidatedForm, validationError } from "remix-validated-form";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { useIsSubmitting } from "remix-validated-form";
+import { Prisma } from "@prisma/client";
 
 export const validator = withZod(
   z.object({
@@ -48,9 +49,25 @@ export let action = async ({ request }: ActionArgs) => {
   if (result.error) return validationError(result.error);
   const data = result.data;
 
-  const account = await createAccount(oauth, data.username);
-
-  return redirect(`/home/${account.username}`);
+  try {
+    const account = await createAccount(oauth, data.username);
+    return redirect(`/home/${account.username}`);
+  } catch (e: any) {
+    // see: https://github.com/prisma/prisma/issues/12128
+    if (e.constructor.name === Prisma.PrismaClientKnownRequestError.name) {
+      if (e.code === "P2002") {
+        return validationError(
+          { fieldErrors: { username: "username already taken" } },
+          result.submittedData
+        );
+      }
+    }
+    console.log(e);
+    return validationError(
+      { fieldErrors: { username: "something went wrong" } },
+      result.submittedData
+    );
+  }
 };
 
 export default function NewAccountPage() {

@@ -1,4 +1,5 @@
 import type { Account, OauthCredential } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { prisma } from "~/db.server";
 
@@ -26,19 +27,14 @@ export async function createAccount(
   oauthCredential: OauthCredential,
   username: string
 ) {
-  try {
-    return await prisma.account.create({
-      data: {
-        username: username,
-        oauthCredentials: {
-          connect: { id: oauthCredential.id },
-        },
+  return await prisma.account.create({
+    data: {
+      username: username,
+      oauthCredentials: {
+        connect: { id: oauthCredential.id },
       },
-    });
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+    },
+  });
 }
 
 export async function deleteAccount(account: Account) {
@@ -55,17 +51,12 @@ export async function deleteAccount(account: Account) {
 }
 
 export async function updateAccount(account: Account, username: string) {
-  try {
-    return await prisma.account.update({
-      where: {
-        id: account.id,
-      },
-      data: {
-        username,
-      },
-    });
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+  return await prisma.account.update({
+    where: {
+      id: account.id,
+    },
+    data: {
+      username,
+    },
+  });
 }

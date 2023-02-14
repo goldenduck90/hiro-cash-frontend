@@ -14,7 +14,13 @@ import invariant from "tiny-invariant";
 import { deleteAccount, updateAccount } from "~/models/account.server";
 import CardHeader from "~/components/__home/card_header";
 import { validator } from "./new";
-import { useField, useIsSubmitting, ValidatedForm } from "remix-validated-form";
+import {
+  useField,
+  useIsSubmitting,
+  ValidatedForm,
+  validationError,
+} from "remix-validated-form";
+import { Prisma } from "@prisma/client";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -59,13 +65,31 @@ export const action: ActionFunction = async ({
     await deleteAccount(account);
     return redirect("/home");
   } else {
-    const data = await request.formData();
-    // Object.fromEntries(data);
-    const username = data.get("username") as string;
+    const result = await validator.validate(await request.formData());
+    if (result.error) return validationError(result.error);
+    const data = result.data;
 
-    await updateAccount(account, username);
+    const username = data.username;
 
-    return redirect(`/home}`);
+    try {
+      await updateAccount(account, username);
+      return redirect(`/home}`);
+    } catch (e: any) {
+      // see: https://github.com/prisma/prisma/issues/12128
+      if (e.constructor.name === Prisma.PrismaClientKnownRequestError.name) {
+        if (e.code === "P2002") {
+          return validationError(
+            { fieldErrors: { username: "username already taken" } },
+            result.submittedData
+          );
+        }
+      }
+      console.error("uncaught prism error", e);
+      return validationError(
+        { fieldErrors: { username: "something went wrong" } },
+        result.submittedData
+      );
+    }
   }
 };
 
