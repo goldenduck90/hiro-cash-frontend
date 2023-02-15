@@ -1,3 +1,4 @@
+import type { OauthCredential } from "@prisma/client";
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
@@ -14,18 +15,20 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
+const USER_SESSION_KEY = "oAuth";
+
 export async function getSession(request: Request) {
   const cookie = request.headers.get("Cookie");
   return sessionStorage.getSession(cookie);
 }
 
-// export async function getUserId(
-//   request: Request
-// ): Promise<User["id"] | undefined> {
-//   const session = await getSession(request);
-//   const userId = session.get(USER_SESSION_KEY);
-//   return userId;
-// }
+export async function getUserId(
+  request: Request
+): Promise<OauthCredential["id"] | undefined> {
+  const session = await getSession(request);
+  const userId = session.get(USER_SESSION_KEY);
+  return userId;
+}
 
 // export async function getUser(request: Request) {
 //   const userId = await getUserId(request);
@@ -58,29 +61,29 @@ export async function getSession(request: Request) {
 //   throw await logout(request);
 // }
 
-// export async function createUserSession({
-//   request,
-//   userId,
-//   remember,
-//   redirectTo,
-// }: {
-//   request: Request;
-//   userId: string;
-//   remember: boolean;
-//   redirectTo: string;
-// }) {
-//   const session = await getSession(request);
-//   session.set(USER_SESSION_KEY, userId);
-//   return redirect(redirectTo, {
-//     headers: {
-//       "Set-Cookie": await sessionStorage.commitSession(session, {
-//         maxAge: remember
-//           ? 60 * 60 * 24 * 7 // 7 days
-//           : undefined,
-//       }),
-//     },
-//   });
-// }
+export async function createUserSession({
+  request,
+  oAuth,
+  remember,
+  redirectTo,
+}: {
+  request: Request;
+  oAuth: OauthCredential;
+  remember: boolean;
+  redirectTo: string;
+}) {
+  const session = await getSession(request);
+  session.set(USER_SESSION_KEY, oAuth);
+  return redirect(redirectTo, {
+    headers: {
+      "Set-Cookie": await sessionStorage.commitSession(session, {
+        maxAge: remember
+          ? 60 * 60 * 24 * 7 // 7 days
+          : undefined,
+      }),
+    },
+  });
+}
 
 export async function logout(request: Request) {
   const session = await getSession(request);
@@ -90,3 +93,5 @@ export async function logout(request: Request) {
     },
   });
 }
+
+export let { commitSession, destroySession } = sessionStorage;

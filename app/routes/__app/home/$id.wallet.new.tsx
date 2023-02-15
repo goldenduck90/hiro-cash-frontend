@@ -153,6 +153,7 @@ export default function AccountOverviewPage() {
             </label>
             <div className="mt-1">
               <input
+                data-testid="new-wallet-address"
                 type="text"
                 {...getInputProps({ id: "address" })}
                 className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"
@@ -210,6 +211,7 @@ export default function AccountOverviewPage() {
 
             <div className="mt-4 border-t border-slate-600 pt-4 text-right">
               <button
+                data-testid="new-wallet-create"
                 type="submit"
                 disabled={isSubmitting}
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

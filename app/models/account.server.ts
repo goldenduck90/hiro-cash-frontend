@@ -1,6 +1,4 @@
 import type { Account, OauthCredential } from "@prisma/client";
-import { Prisma } from "@prisma/client";
-
 import { prisma } from "~/db.server";
 
 export async function findAccount(username: string) {

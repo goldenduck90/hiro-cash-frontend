@@ -103,6 +103,7 @@ export default function NewAccountPage() {
             {error && <p className="p-2 text-xs text-red-300">{error}</p>}
             <div className="mt-4 border-t border-slate-600 pt-4 text-right">
               <button
+                data-testid="account-create"
                 type="submit"
                 disabled={isSubmitting}
                 className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

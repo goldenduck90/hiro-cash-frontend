@@ -1,6 +1,6 @@
 // app/services/auth.server.ts
 import { Authenticator } from "remix-auth";
-import { sessionStorage } from "~/services/session.server";
+import { sessionStorage } from "~/session.server";
 import { GoogleStrategy } from "remix-auth-google";
 import { GitHubStrategy } from "remix-auth-github";
 import { TwitterStrategy } from "remix-auth-twitter";
@@ -43,8 +43,8 @@ export type SessionCredential = Pick<
 export let authenticator = new Authenticator<SessionCredential>(
   sessionStorage,
   {
-    sessionKey: "sessionKey", // keep in sync
-    sessionErrorKey: "sessionErrorKey", // keep in sync
+    sessionKey: "oAuth", // keep in sync
+    sessionErrorKey: "oAuthError", // keep in sync
   }
 );
 
