@@ -26,6 +26,7 @@ import { useIsSubmitting } from "remix-validated-form";
 
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 import CardHeader from "~/components/__home/card_header";
+import { mixpanelTrack } from "~/services/mixpanel.server";
 
 const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
 
@@ -89,6 +90,7 @@ export const loader: LoaderFunction = async ({
     oauthCredential.provider,
     oauthCredential.userId
   );
+  mixpanelTrack(request, oauth, "Show Wallet", {});
   let account = oauth.accounts.find(
     (account) => account.username === params.id
   );
@@ -130,6 +132,11 @@ export const action: ActionFunction = async ({
       config: {
         coins: data["coins"],
       },
+    });
+
+    mixpanelTrack(request, oauth, "Wallet Updated", {
+      address: address,
+      coins: data["coins"],
     });
 
     return redirect(`../${account.username}`);

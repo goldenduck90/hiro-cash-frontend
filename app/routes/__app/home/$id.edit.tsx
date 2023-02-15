@@ -21,6 +21,7 @@ import {
   validationError,
 } from "remix-validated-form";
 import { Prisma } from "@prisma/client";
+import { mixpanelTrack } from "~/services/mixpanel.server";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -63,6 +64,11 @@ export const action: ActionFunction = async ({
 
   if (request.method === "DELETE") {
     await deleteAccount(account);
+
+    mixpanelTrack(request, oauth, "Account Deleted", {
+      username: account.username,
+    });
+
     return redirect("/home");
   } else {
     const result = await validator.validate(await request.formData());
@@ -73,7 +79,12 @@ export const action: ActionFunction = async ({
 
     try {
       await updateAccount(account, username);
-      return redirect(`/home}`);
+
+      mixpanelTrack(request, oauth, "Account Updated", {
+        username: username,
+      });
+
+      return redirect(`/home`);
     } catch (e: any) {
       // see: https://github.com/prisma/prisma/issues/12128
       if (e.constructor.name === Prisma.PrismaClientKnownRequestError.name) {

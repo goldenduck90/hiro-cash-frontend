@@ -14,6 +14,7 @@ import truncateEthAddress from "truncate-eth-address";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import CardHeader from "~/components/__home/card_header";
 import { supportedChainsOfWallet, supportedTokensOfWallet } from "~/helpers";
+import { mixpanelTrack } from "~/services/mixpanel.server";
 
 const coins = tokenlist.tokens;
 
@@ -58,6 +59,7 @@ export const loader: LoaderFunction = async ({
   });
 
   let oauth = await findFromSession(authenticatedSession);
+  mixpanelTrack(request, oauth, "Home", {});
 
   let account = oauth.accounts.find(
     (account) => account.username === params.id

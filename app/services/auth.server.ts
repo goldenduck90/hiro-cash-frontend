@@ -7,6 +7,7 @@ import { TwitterStrategy } from "remix-auth-twitter";
 import { SiweStrategy } from "@sloikaxyz/remix-auth-siwe";
 import type { OauthCredential } from "@prisma/client";
 import { findOrCreatOauthCredential } from "~/models/oauthCredential.server";
+import { mixpanel } from "./mixpanel.server";
 
 const CALLBACK_HOST = process.env.CALLBACK_HOST;
 
@@ -38,6 +39,13 @@ export type SessionCredential = Pick<
   "id" | "provider" | "userId"
 >;
 
+function trackSignIn(provider: string, userId: string) {
+  mixpanel.track("Sign In", {
+    distinct_id: [provider, userId].join("-"),
+    provider: provider,
+  });
+}
+
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
 export let authenticator = new Authenticator<SessionCredential>(
@@ -54,9 +62,11 @@ let googleStrategy = new GoogleStrategy(
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: `${CALLBACK_HOST}/auth/google/callback`,
   },
-  async ({ accessToken, refreshToken, extraParams, profile }) => {
+  async (req: any) => {
     try {
-      return findOrCreatOauthCredential("google", profile.id, profile);
+      console.log(req);
+      trackSignIn("google", req.profile.id);
+      return findOrCreatOauthCredential("google", req.profile.id, req.profile);
     } catch (e) {
       console.log(e);
       throw e;

@@ -1,4 +1,5 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { getClientIPAddress } from "remix-utils";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { findFromSession } from "~/models/oauthCredential.server";
@@ -10,6 +11,8 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { useIsSubmitting } from "remix-validated-form";
 import { Prisma } from "@prisma/client";
+import mixpanel from "mixpanel";
+import { distinctId, mixpanelTrack } from "~/services/mixpanel.server";
 
 export const validator = withZod(
   z.object({
@@ -18,7 +21,7 @@ export const validator = withZod(
       .min(4, { message: "username has to be 4 - 15 characters long" })
       .max(15, { message: "username has to be 4 - 15 characters long" })
       .trim()
-      .regex(/[a-zA-Z_0-9]*/, {
+      .regex(/[a-zAZ_0-9]*/, {
         message: "username can only contain letters, numbers and underscores",
       }),
   })
@@ -45,12 +48,19 @@ export let action = async ({ request }: ActionArgs) => {
   });
   let oauth = await findFromSession(userSession);
 
+  mixpanelTrack(request, oauth, "New Account", {});
+
   const result = await validator.validate(await request.formData());
   if (result.error) return validationError(result.error);
   const data = result.data;
 
   try {
     const account = await createAccount(oauth, data.username);
+
+    mixpanelTrack(request, oauth, "Account Created", {
+      username: account.username,
+    });
+
     return redirect(`/home/${account.username}`);
   } catch (e: any) {
     // see: https://github.com/prisma/prisma/issues/12128

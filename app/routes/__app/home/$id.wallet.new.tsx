@@ -20,6 +20,8 @@ import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 import { validator } from "./$id.wallet.$walletId";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import CardHeader from "~/components/__home/card_header";
+import mixpanel from "mixpanel";
+import { mixpanelTrack } from "~/services/mixpanel.server";
 
 const coins = tokenlist.tokens;
 
@@ -67,6 +69,7 @@ export const loader: LoaderFunction = async ({
   });
 
   let oauth = await findFromSession(authenticatedSession);
+  mixpanelTrack(request, oauth, "New Wallet", {});
 
   let account = oauth.accounts.find(
     (account) => account.username === params.id
@@ -114,6 +117,11 @@ export const action: ActionFunction = async ({
       config: {
         coins: data!["coins"],
       },
+    });
+
+    mixpanelTrack(request, oauth, "Wallet Created", {
+      address: address,
+      coins: data!["coins"],
     });
 
     return redirect(`/home/${account.username}`);
