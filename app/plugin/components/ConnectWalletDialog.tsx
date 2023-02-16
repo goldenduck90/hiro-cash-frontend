@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useConnect } from "wagmi";
-import { walletConnect, walletConnect2 } from "../constants/connectors";
+import {
+  walletConnectConnector,
+  walletConnect2Connector,
+} from "../constants/connectors";
+import { configuredChains } from "../PluginContainer";
 
 import { connectorWalletIcon } from "../view/walletHelper";
 
@@ -38,9 +42,8 @@ export function ConnectWalletDialog() {
   }, []);
 
   if (isMobile) {
-    const wc = connectors.find((c) => c.id === "walletConnect");
-    const wc1 = walletConnect(wc.chains);
-    const wc2 = walletConnect2(wc.chains);
+    const wc1 = walletConnectConnector(configuredChains);
+    const wc2 = walletConnect2Connector(configuredChains);
 
     return (
       <div className="overflow-hidden bg-white pt-2">

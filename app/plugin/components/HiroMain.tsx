@@ -16,11 +16,10 @@ import type { ChainInfo, TokenInfo } from "@hiropay/tokenlists";
 import { getChain } from "@hiropay/tokenlists";
 import { usePayment } from "../hooks";
 import { ConnectWalletDialog } from "./ConnectWalletDialog";
-import type { ethers } from "ethers";
 
 function SubHeader() {
   const { address } = useAccount();
-  const { disconnect, disconnectAsync } = useDisconnect();
+  const { disconnectAsync } = useDisconnect();
   const { chain } = useNetwork();
 
   const chainInfo = getChain(chain!.id);

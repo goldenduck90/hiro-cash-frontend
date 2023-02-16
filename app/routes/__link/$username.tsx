@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import CurrencyInput from "react-currency-input-field";
 import { CHAINS } from "~/plugin/constants/Chains";
 import { walletIcon } from "~/plugin/view/walletHelper";
-import { mixpanel, mixpanelTrack } from "~/services/mixpanel.server";
+import { mixpanel } from "~/services/mixpanel.server";
 
 export async function loader({ request, params }: LoaderArgs) {
   const account = await findAccount(params.username);

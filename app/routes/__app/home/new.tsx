@@ -1,5 +1,4 @@
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { getClientIPAddress } from "remix-utils";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { findFromSession } from "~/models/oauthCredential.server";
@@ -11,8 +10,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { useIsSubmitting } from "remix-validated-form";
 import { Prisma } from "@prisma/client";
-import mixpanel from "mixpanel";
-import { distinctId, mixpanelTrack } from "~/services/mixpanel.server";
+import { mixpanelTrack } from "~/services/mixpanel.server";
 
 export const validator = withZod(
   z.object({

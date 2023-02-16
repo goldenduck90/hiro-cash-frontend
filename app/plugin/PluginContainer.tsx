@@ -14,7 +14,10 @@ import {
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { metaMask, walletConnect2 } from "./constants/connectors";
+import {
+  metaMaskConnector,
+  walletConnect2Connector,
+} from "./constants/connectors";
 
 const { Fragment } = React;
 
@@ -37,18 +40,20 @@ const { chains, provider, webSocketProvider } = configureChains(
   ]
 );
 
+export const configuredChains = chains;
+
 // Set up client
 const client = createClient({
   autoConnect: false,
   connectors: [
-    metaMask(chains),
+    metaMaskConnector(chains),
     // new CoinbaseWalletConnector({
     //   chains,
     //   options: {
     //     appName: "wagmi",
     //   },
     // }),
-    walletConnect2(chains),
+    walletConnect2Connector(chains),
     // new InjectedConnector({
     //   chains,
     //   options: {

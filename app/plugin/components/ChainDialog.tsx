@@ -1,6 +1,6 @@
 import type { TokenInfo } from "@hiropay/tokenlists";
 import { getChain } from "@hiropay/tokenlists";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAccount, useSwitchNetwork, useNetwork } from "wagmi";
 import { tokensOfChain } from "~/plugin/utils";
 
@@ -49,12 +49,10 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
   // This needs to be handled better/more consistently, e.g. using useConnect({chainId: 1})
   useEffect(() => {
     // Run! Like go get some data from an API.
-    if (connector?.id === "walletConnect") {
-      // setChain(currentChain);
+    if (connector?.id === "walletConnect" && currentChain) {
       switchNetwork!(currentChain.id);
-      // send({ type: "SELECT_CHAIN", chainId: chain.id });
     }
-  }, [connector?.id, setChain, currentChain]);
+  }, [connector?.id, switchNetwork, currentChain]);
 
   if (connector?.id === "walletConnect") return null;
 

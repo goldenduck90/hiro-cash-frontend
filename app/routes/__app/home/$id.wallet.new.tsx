@@ -20,7 +20,6 @@ import ethereumLogo from "~/assets/images/chains/ethereum.svg";
 import { validator } from "./$id.wallet.$walletId";
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import CardHeader from "~/components/__home/card_header";
-import mixpanel from "mixpanel";
 import { mixpanelTrack } from "~/services/mixpanel.server";
 
 const coins = tokenlist.tokens;

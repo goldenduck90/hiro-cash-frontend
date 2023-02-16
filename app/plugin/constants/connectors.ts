@@ -1,13 +1,16 @@
+import type { Chain } from "wagmi";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 
-export function metaMask(chains: Chain[]): MetaMaskConnector {
+export function metaMaskConnector(chains: Chain[]): MetaMaskConnector {
   return new MetaMaskConnector({
     chains: chains,
   });
 }
 
-export function walletConnect2(chains: Chain[]): WalletConnectConnector {
+export function walletConnect2Connector(
+  chains: Chain[]
+): WalletConnectConnector {
   return new WalletConnectConnector({
     chains,
     options: {
@@ -18,7 +21,9 @@ export function walletConnect2(chains: Chain[]): WalletConnectConnector {
   });
 }
 
-export function walletConnect(chains: Chain[]): WalletConnectConnector {
+export function walletConnectConnector(
+  chains: Chain[]
+): WalletConnectConnector {
   return new WalletConnectConnector({
     chains,
     options: {

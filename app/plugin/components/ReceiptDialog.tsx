@@ -1,5 +1,3 @@
-import { getChain } from "@hiropay/tokenlists";
-import * as React from "react";
 import { getTxUrl } from "~/plugin/utils";
 import { CheckIcon } from "@heroicons/react/20/solid";
 
@@ -10,15 +8,15 @@ export default function ReceiptDialog({
   invoice: any;
   tx: any;
 }) {
-  const onCompleteFunction = () => {
-    if (invoice.onComplete) {
-      //! Cannot find name 'context'.ts(2304)
-      // invoice.onComplete(tx.transactionHash, context.chain);
-    } else {
-      // TODO: define what happens if no onComplete handler defined.
-      // - possibly just close the window, e.g. for donations.
-    }
-  };
+  // const onCompleteFunction = () => {
+  //   if (invoice.onComplete) {
+  //     //! Cannot find name 'context'.ts(2304)
+  //     // invoice.onComplete(tx.transactionHash, context.chain);
+  //   } else {
+  //     // TODO: define what happens if no onComplete handler defined.
+  //     // - possibly just close the window, e.g. for donations.
+  //   }
+  // };
 
   const txUrl = getTxUrl(tx.chain, tx.hash);
 
