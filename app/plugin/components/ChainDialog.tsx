@@ -50,12 +50,14 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
   useEffect(() => {
     // Run! Like go get some data from an API.
     if (connector?.id === "walletConnect") {
-      setChain(currentChain);
+      // setChain(currentChain);
+      switchNetwork!(currentChain.id);
       // send({ type: "SELECT_CHAIN", chainId: chain.id });
     }
   }, [connector?.id, setChain, currentChain]);
 
   if (connector?.id === "walletConnect") return null;
+
   // STATE: SELECT BLOCKCHAIN
   return (
     <>

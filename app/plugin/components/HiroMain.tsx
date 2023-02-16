@@ -20,7 +20,7 @@ import type { ethers } from "ethers";
 
 function SubHeader() {
   const { address } = useAccount();
-  const { disconnect } = useDisconnect();
+  const { disconnect, disconnectAsync } = useDisconnect();
   const { chain } = useNetwork();
 
   const chainInfo = getChain(chain!.id);
@@ -42,7 +42,11 @@ function SubHeader() {
         )}
         <div className="inline-flex items-center rounded-lg bg-gray-100 px-2 py-2 text-sm font-medium text-indigo-800">
           {address && truncateEthAddress(address)}{" "}
-          <button onClick={() => disconnect()}>
+          <button
+            onClick={() => {
+              disconnectAsync();
+            }}
+          >
             <PowerIcon className="ml-4 h-4 w-4" />
           </button>
         </div>

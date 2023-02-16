@@ -168,7 +168,7 @@ export default function PaymentDialog({
   });
 
   function paymentPressed() {
-    payment.write?.();
+    payment.writeAsync?.();
   }
 
   const allowanceOk =
