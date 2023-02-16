@@ -149,7 +149,7 @@ export default function HiroLinkPage() {
           <div className="ml-4 mt-4 flex-shrink-0"></div>
         </div>
       </div>
-      <div className="overflow-hidden rounded-lg bg-slate-800 p-6 py-0 text-white shadow">
+      <div className="overflow-hidden rounded-lg bg-slate-800 p-6 py-0 text-white ">
         <form className="" onSubmit={handleSubmit(onSubmit)}>
           <dl className="">
             <div className="py-4 ">
