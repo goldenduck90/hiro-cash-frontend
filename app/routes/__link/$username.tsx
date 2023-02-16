@@ -161,7 +161,7 @@ export default function HiroLinkPage() {
                   decimalScale={2}
                   intlConfig={{ locale: "en-US" }}
                   autoFocus={true}
-                  className="block w-full rounded-md bg-slate-900 py-3 pl-10 pr-12 text-2xl text-white focus:border-indigo-500 focus:ring-indigo-500"
+                  className="block w-full rounded-md bg-slate-900 py-3 pr-28 pl-10 pr-12 text-right text-2xl text-white focus:border-indigo-500 focus:ring-indigo-500"
                   {...register("amount", {
                     required: true,
                     // disabled: invoice?.amount != null,
