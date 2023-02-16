@@ -5,7 +5,16 @@ import { useOptionalOauth } from "~/utils";
 import hiro from "~/assets/images/hiro.png";
 
 export function Container({ children }: { children: any }) {
-  return <div className="min-h-full bg-slate-900">{children}</div>;
+  return (
+    <div
+      className="min-h-full "
+      style={{
+        background: "linear-gradient(rgb(32, 39, 56) 0%, rgb(7, 8, 22) 50%)",
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function Header() {
@@ -89,7 +98,7 @@ export function AppContent() {
       <div className="mx-auto max-w-3xl lg:max-w-7xl">
         <h1 className="sr-only">Hiro</h1>
         <section className="mx-auto w-3/4">
-          <div className="overflow-hidden rounded-lg bg-slate-800 py-6 text-white shadow">
+          <div className="overflow-hidden rounded-lg bg-slate-800 py-6 text-white  shadow-lg">
             <Outlet />
           </div>
         </section>
