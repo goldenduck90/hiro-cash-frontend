@@ -22,6 +22,7 @@ import { walletIcon } from "~/plugin/view/walletHelper";
 import { mixpanel } from "~/services/mixpanel.server";
 import AppHeader from "~/components/app_header";
 import { FOOTER_BUTTON } from "~/styles/elements";
+import truncateEthAddress from "truncate-eth-address";
 
 export async function loader({ request, params }: LoaderArgs) {
   const account = await findAccount(params.username);
@@ -135,7 +136,19 @@ export default function HiroLinkPage() {
 
   return (
     <>
-      <AppHeader title={`@${account.username}`} description={wallet.address} />
+      <div className="mb-8 border-b border-slate-900 px-4 py-5 sm:px-6">
+        <div className="-ml-4 -mt-4 flex flex-wrap items-center justify-between sm:flex-nowrap">
+          <div className="ml-4">
+            <h3 className="font-mono text-lg leading-6 text-gray-200">
+              @{account.username}
+            </h3>
+            <p className="mt-1 font-mono text-sm text-gray-500">
+              {wallet.address}
+            </p>
+          </div>
+          <div className="ml-4 mt-4 flex-shrink-0"></div>
+        </div>
+      </div>
       <div className="overflow-hidden rounded-lg bg-slate-800 p-6 py-0 text-white shadow">
         <form className="" onSubmit={handleSubmit(onSubmit)}>
           <dl className="">

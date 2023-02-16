@@ -31,7 +31,7 @@ export function Header() {
         ```
       */}
       <div className="pb-24">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="items-right relative mb-5 flex flex-row justify-center pt-5 pb-2 lg:justify-between">
             {/* Logo */}
             <div className="flex-shrink-0 basis-1/2">

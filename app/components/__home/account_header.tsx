@@ -8,7 +8,7 @@ export default function AccountHeader({ account }: { account: Account }) {
       <div className="-ml-4 -mt-4 flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div className="ml-4 ">
           <h3 className="text-lg font-medium leading-6 text-gray-200">
-            <Link to={"/home"} className="text-2xl font-light">
+            <Link to={"/home"} className="">
               @{account.username}
             </Link>
           </h3>
@@ -23,12 +23,12 @@ export default function AccountHeader({ account }: { account: Account }) {
             <LinkIcon className="ml-2 inline-block w-4" />
           </p>
         </div>
-        <div className="ml-4 mt-4 flex-shrink-0">
+        <div className="ml-4 flex-shrink-0">
           <Link
             to={`/home/${account.username}/edit`}
             className="relative inline-flex items-center rounded-md border border-transparent bg-slate-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Edit Account
+            Edit
           </Link>
         </div>
       </div>
