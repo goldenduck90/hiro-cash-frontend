@@ -1,3 +1,4 @@
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import type {
   ActionArgs,
   ActionFunction,
@@ -25,8 +26,9 @@ import type { Wallet } from ".prisma/client";
 import { useIsSubmitting } from "remix-validated-form";
 
 import ethereumLogo from "~/assets/images/chains/ethereum.svg";
-import CardHeader from "~/components/__home/card_header";
+import AccountHeader from "~/components/__home/account_header";
 import { mixpanelTrack } from "~/services/mixpanel.server";
+import { FOOTER_BUTTON } from "~/styles/elements";
 
 const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
 
@@ -156,10 +158,20 @@ export default function AccountWalletPage() {
 
   return (
     <div className="flex flex-col">
-      <CardHeader account={account} />
+      <AccountHeader account={account} />
 
       <main className="">
-        <div className="rounded-md bg-slate-700 p-6">
+        <Link
+          to={"../"}
+          className="-mt-4 ml-6 inline-flex items-center rounded-md border border-transparent bg-slate-700 px-4 py-2 pl-2 pr-4 text-sm font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          <ChevronLeftIcon
+            className="h-5 w-5 text-gray-400"
+            aria-hidden="true"
+          />{" "}
+          Back
+        </Link>
+        <div className="p-6">
           <ValidatedForm validator={validator} method="post" id="myForm">
             <label htmlFor="email" className="block text-sm font-medium ">
               Wallet Address
@@ -170,7 +182,7 @@ export default function AccountWalletPage() {
                 type="text"
                 name="address"
                 id="address"
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 sm:text-sm"
+                className="block w-full min-w-0 rounded-md border-slate-800 bg-slate-900 p-3  text-lg focus:border-slate-800 focus:ring-slate-800"
                 placeholder="0x..."
                 defaultValue={wallet.address}
               />
@@ -219,17 +231,11 @@ export default function AccountWalletPage() {
                 )
               );
             })}
-            <div className="mt-4 border-t border-slate-600 pt-4 text-right">
-              <Link
-                to={"../"}
-                className="mr-4 inline-flex items-center rounded-md border border-transparent bg-slate-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Back
-              </Link>
+            <div className="mt-4 pt-4 text-center">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className={FOOTER_BUTTON}
               >
                 {isSubmitting ? "Saving..." : "Save"}
               </button>

@@ -6,6 +6,7 @@ import github from "~/assets/images/github.svg";
 import twitter from "~/assets/images/twitter.svg";
 import metamask from "~/assets/images/wallets/metamask.svg";
 import { getWeb3 } from "~/entry.client";
+import AppHeader from "~/components/app_header";
 
 // First we create our UI with the form doing a POST and the inputs with the
 // names we are going to use in the strategy
@@ -27,8 +28,11 @@ export default function Screen() {
   }
   return (
     <>
+      <AppHeader
+        title="Register / Sign In"
+        description="Create a Hiro payment link and start accepting crypto."
+      />
       <div className="text-center">
-        <h2 className="pb-6 text-lg">Register / Sign in</h2>
         <Form action="/auth/twitter" method="post">
           <button
             type="submit"
@@ -71,7 +75,7 @@ export default function Screen() {
             Github
           </button>
         </Form>
-        <button
+        {/* <button
           onClick={handleSubmit}
           className="mt-4 inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-2 font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
@@ -82,7 +86,7 @@ export default function Screen() {
             alt="Metamask Logo"
           />
           Metamask
-        </button>
+        </button> */}
       </div>
     </>
   );

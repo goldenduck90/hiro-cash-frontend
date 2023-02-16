@@ -1,4 +1,4 @@
-import { Container, Content, Footer } from "./header";
+import { AppContent, Container, Footer } from "./header";
 import hiro from "~/assets/images/hiro.png";
 
 export default function LinkLayout() {
@@ -26,7 +26,7 @@ export default function LinkLayout() {
           </div>
         </div>
       </>
-      <Content />
+      <AppContent />
       <Footer />
     </Container>
   );

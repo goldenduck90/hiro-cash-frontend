@@ -12,7 +12,7 @@ import type { Wallet } from "@prisma/client";
 import truncateEthAddress from "truncate-eth-address";
 
 import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
-import CardHeader from "~/components/__home/card_header";
+import AccountHeader from "~/components/__home/account_header";
 import { supportedChainsOfWallet, supportedTokensOfWallet } from "~/helpers";
 import { mixpanelTrack } from "~/services/mixpanel.server";
 
@@ -86,16 +86,7 @@ export default function AccountOverviewPage() {
 
   return (
     <div className="flex flex-col">
-      <CardHeader account={account} />
-
-      <div className="mb-8 pb-4">
-        <Link
-          to="edit"
-          className="rounded bg-slate-600 py-1 px-2 text-xs text-blue-100 hover:bg-blue-500 active:bg-blue-600"
-        >
-          Edit Account
-        </Link>
-      </div>
+      <AccountHeader account={account} />
 
       <main className="">{wallet && <WalletOverview wallet={wallet} />}</main>
     </div>
@@ -108,15 +99,15 @@ function WalletOverview({ wallet }: { wallet: Wallet }) {
 
   return (
     <div className="flex-1 pb-6">
-      <div className="overflow-hidden shadow sm:rounded-md">
-        <h2>Primary Wallet</h2>
-        <ul className="divide-y divide-slate-600">
+      <div className="overflow-hidden">
+        <h2 className="ml-6 mb-2">Primary Wallet</h2>
+        <ul className="">
           <li key={wallet.id}>
             <Link
               to={`wallet/${wallet.id}`}
-              className="block hover:bg-slate-700"
+              className="block hover:bg-slate-700 hover:bg-opacity-30"
             >
-              <div className="flex items-center px-4 py-4 sm:px-6">
+              <div className="flex items-center px-4 py-3 sm:px-6">
                 <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                   <div className="truncate">
                     <div className="flex text-sm">

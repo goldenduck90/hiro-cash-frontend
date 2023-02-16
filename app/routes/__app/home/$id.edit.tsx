@@ -1,3 +1,4 @@
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import type {
   ActionArgs,
   ActionFunction,
@@ -6,13 +7,13 @@ import type {
 } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { findOauthCredential } from "~/models/oauthCredential.server";
 import { authenticator } from "~/services/auth.server";
 
 import invariant from "tiny-invariant";
 import { deleteAccount, updateAccount } from "~/models/account.server";
-import CardHeader from "~/components/__home/card_header";
+import AccountHeader from "~/components/__home/account_header";
 import { validator } from "./new";
 import {
   useField,
@@ -22,6 +23,7 @@ import {
 } from "remix-validated-form";
 import { Prisma } from "@prisma/client";
 import { mixpanelTrack } from "~/services/mixpanel.server";
+import { FOOTER_BUTTON } from "~/styles/elements";
 
 export const loader: LoaderFunction = async ({
   request,
@@ -39,6 +41,9 @@ export const loader: LoaderFunction = async ({
   let account = oauth.accounts.find(
     (account) => account.username === params.id
   );
+  if (!account) {
+    return redirect("/home");
+  }
 
   return json({ oauthCredential: oauth, account: account });
 };
@@ -58,7 +63,10 @@ export const action: ActionFunction = async ({
   let account = oauth.accounts.find(
     (account) => account.username === params.id
   );
-  invariant(account, "account not found");
+
+  if (!account) {
+    return redirect("/home");
+  }
 
   // const userId = await requireUserId(request);
 
@@ -115,35 +123,45 @@ export default function AccountEditPage() {
 
   return (
     <div className="flex  flex-col">
-      <CardHeader account={account} />
+      <AccountHeader account={account} />
 
-      <main className=" h-full ">
-        <div className="rounded-lg bg-slate-700 bg-opacity-50 p-6 shadow">
+      <main className="h-full ">
+        <Link
+          to={"/home"}
+          className="-mt-4 ml-6 inline-flex items-center rounded-md border border-transparent bg-slate-700 px-4 py-2 pl-2 pr-4 text-sm font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          <ChevronLeftIcon
+            className="h-5 w-5 text-gray-400"
+            aria-hidden="true"
+          />{" "}
+          Back
+        </Link>
+        <div className="p-6">
           <ValidatedForm
             validator={validator}
             method="post"
             id="accountForm"
             defaultValues={account}
           >
-            <h2 className="pb-4">Choose your username</h2>
-            <div className="mt-1 flex rounded-md text-lg shadow-sm">
-              <span className="inline-flex items-center rounded-l-md border border-slate-800 bg-slate-800 px-3 text-sm text-gray-400">
+            <div className="mt-1 flex rounded-md text-xl shadow-sm">
+              <span className="inline-flex items-center rounded-l-md bg-slate-900 py-4 px-3 text-lg text-gray-400">
                 http://hiro.cash/
               </span>
               <input
                 type="text"
                 {...getInputProps({ id: "username" })}
                 id="username"
-                className="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-slate-800  bg-slate-800 focus:border-slate-800 focus:ring-slate-800 "
+                className="focus:ring-r-0 block w-full min-w-0 flex-1  rounded-none rounded-r-md border-slate-900 bg-slate-900 py-4 text-xl focus:border-slate-900 focus:ring-slate-900"
                 placeholder="username"
               />
             </div>
             {error && <p className="p-2 text-xs text-red-300">{error}</p>}
-            <div className="mt-4 border-t border-slate-600 pt-4 text-right">
+            <div className="mt-4 pt-4 text-center">
               <button
+                data-testid="account-create"
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center rounded-md border border-transparent bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className={FOOTER_BUTTON}
               >
                 {isSubmitting ? "Saving..." : "Save"}
               </button>
@@ -151,10 +169,20 @@ export default function AccountEditPage() {
           </ValidatedForm>
         </div>
 
-        <Form method="delete" className="mt-4">
+        <Form
+          method="delete"
+          className="mt-4 border-t border-slate-900 pt-8 text-center"
+        >
           <button
+            onClick={(event) => {
+              if (
+                !window.confirm("Do you really want to delete your account?")
+              ) {
+                event.preventDefault();
+              }
+            }}
             type="submit"
-            className="rounded bg-slate-600 py-1 px-2 text-xs hover:bg-red-500 active:bg-red-600"
+            className="rounded bg-slate-700 px-10 py-3 py-3 py-1 px-4 text-lg font-medium text-white hover:bg-red-500 active:bg-red-600"
           >
             Delete
           </button>

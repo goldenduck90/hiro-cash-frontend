@@ -23,7 +23,7 @@ export function Header() {
       */}
       <div className="pb-24">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="items-right relative mb-5 flex flex-row justify-center border-b border-slate-800 pt-5 pb-2 lg:justify-between">
+          <div className="items-right relative mb-5 flex flex-row justify-center pt-5 pb-2 lg:justify-between">
             {/* Logo */}
             <div className="flex-shrink-0 basis-1/2">
               <a href="/">
@@ -78,6 +78,21 @@ export function Content() {
             </section>
           </div>
         </div>
+      </div>
+    </main>
+  );
+}
+
+export function AppContent() {
+  return (
+    <main className="-mt-12 pb-8">
+      <div className="mx-auto max-w-3xl lg:max-w-7xl">
+        <h1 className="sr-only">Hiro</h1>
+        <section className="mx-auto w-3/4">
+          <div className="overflow-hidden rounded-lg bg-slate-800 py-6 text-white shadow">
+            <Outlet />
+          </div>
+        </section>
       </div>
     </main>
   );

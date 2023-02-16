@@ -1,11 +1,10 @@
-import { Container, Header, Content, Footer } from "./header";
+import { Container, Header, AppContent, Footer } from "./header";
 
 export default function AppLayout() {
   return (
     <Container>
       <Header />
-      <Content />
-      <Footer />
+      <AppContent />
     </Container>
   );
 }
