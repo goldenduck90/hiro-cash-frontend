@@ -40,7 +40,7 @@ export function Header() {
                 <img className="h-8 w-auto" src={hiro} alt="Hiro" />
               </a>
             </div>
-            <div className=" flex-shrink-0 basis-1/2 text-right">
+            <div className="flex-shrink-0 basis-1/2 text-right">
               {oauth && (
                 <Form
                   action="/auth/logout"
@@ -94,10 +94,10 @@ export function Content() {
 
 export function AppContent() {
   return (
-    <main className="-mt-12 pb-8">
-      <div className="mx-auto max-w-3xl lg:max-w-7xl">
+    <main className="-mt-20 pb-8 md:-mt-12">
+      <div className="mx-auto md:max-w-3xl lg:max-w-7xl">
         <h1 className="sr-only">Hiro</h1>
-        <section className="mx-auto w-3/4">
+        <section className="mx-auto px-4 md:w-3/4 md:px-0">
           <div className="overflow-hidden rounded-lg bg-slate-800 py-6 text-white  shadow-lg">
             <Outlet />
           </div>
