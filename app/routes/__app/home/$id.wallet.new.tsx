@@ -25,8 +25,6 @@ import { FOOTER_BUTTON } from "~/styles/elements";
 
 const coins = tokenlist.tokens;
 
-const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
-
 export function coinSelected(wallet: Wallet, coinId: string): boolean {
   const coins: any[] =
     wallet?.config!["coins" as keyof typeof wallet.config] || [];
@@ -51,15 +49,6 @@ routerlist.routers.forEach((routerInfo) => {
   }
 });
 
-export const filteredChains = filteredChainIds
-  .map((chainId) => {
-    return getChain(chainId);
-  })
-  .filter((chain) => {
-    // return chain && (SHOW_TESTNETS || !chain.testnet);
-    return chain && (chain.testnet != true || SHOW_TESTNETS);
-  });
-
 export const loader: LoaderFunction = async ({
   request,
   params,
@@ -82,6 +71,7 @@ export const loader: LoaderFunction = async ({
     oauthCredential: oauth,
     account: account,
     primaryWallet: wallet,
+    SHOW_TESTNETS: process.env.SHOW_TESTNETS === "true",
   });
 };
 
@@ -132,6 +122,16 @@ export default function AccountOverviewPage() {
   const data = useLoaderData<typeof loader>();
   const account = data.account;
   const wallet = data.primaryWallet;
+  const SHOW_TESTNETS = data.SHOW_TESTNETS;
+
+  const filteredChains = filteredChainIds
+    .map((chainId) => {
+      return getChain(chainId);
+    })
+    .filter((chain) => {
+      // return chain && (SHOW_TESTNETS || !chain.testnet);
+      return chain && (chain.testnet != true || SHOW_TESTNETS);
+    });
 
   const isSubmitting = useIsSubmitting("walletForm");
 

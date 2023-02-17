@@ -30,8 +30,6 @@ import AccountHeader from "~/components/__home/account_header";
 import { mixpanelTrack } from "~/services/mixpanel.server";
 import { FOOTER_BUTTON } from "~/styles/elements";
 
-const SHOW_TESTNETS = process.env.SHOW_TESTNETS === "true";
-
 const coins = tokenlist.tokens;
 
 const coinsByChain: any = {};
@@ -51,14 +49,6 @@ routerlist.routers.forEach((routerInfo) => {
     }
   }
 });
-
-const filteredChains = filteredChainIds
-  .map((chainId) => {
-    return getChain(chainId);
-  })
-  .filter((chain) => {
-    return chain && (chain.testnet != true || SHOW_TESTNETS);
-  });
 
 function coinSelected(wallet: Wallet, coinId: string): boolean {
   const coins: any[] =
@@ -98,7 +88,12 @@ export const loader: LoaderFunction = async ({
   );
   let wallet = account?.wallets.find((wallet) => wallet.id === params.walletId);
 
-  return json({ oauthCredential: oauth, account: account, wallet: wallet });
+  return json({
+    oauthCredential: oauth,
+    account: account,
+    wallet: wallet,
+    SHOW_TESTNETS: process.env.SHOW_TESTNETS === "true",
+  });
 };
 
 export const action: ActionFunction = async ({
@@ -148,6 +143,15 @@ export const action: ActionFunction = async ({
 export default function AccountWalletPage() {
   const data = useLoaderData<typeof loader>();
   const isSubmitting = useIsSubmitting("myForm");
+  const SHOW_TESTNETS = data.SHOW_TESTNETS;
+
+  const filteredChains = filteredChainIds
+    .map((chainId) => {
+      return getChain(chainId);
+    })
+    .filter((chain) => {
+      return chain && (chain.testnet != true || SHOW_TESTNETS);
+    });
 
   const account = data.account;
   const wallet = data.account.wallets[0];

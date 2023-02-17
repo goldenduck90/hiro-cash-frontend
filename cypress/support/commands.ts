@@ -12,7 +12,7 @@ declare global {
        * @example
        *    cy.login()
        * @example
-       *    cy.login({ email: 'whatever@example.com' })
+       *    cy.login('siwe','0x0E19085DB3FbD6bfc7764dC8CEF89edE76111f1f')
        */
       login: typeof login;
 
@@ -24,19 +24,19 @@ declare global {
        * @example
        *    cy.cleanupUser()
        * @example
-       *    cy.cleanupUser({ email: 'whatever@example.com' })
+       *    cy.cleanupUser('provider','userId')
        */
       cleanupUser: typeof cleanupUser;
 
       /**
-       * Deletes the current @user
+       * Deletes the current @account
        *
        * @returns {typeof cleanupAccount}
        * @memberof Chainable
        * @example
        *    cy.cleanupAccount()
        * @example
-       *    cy.cleanupAccount({ username: 'silverstar' })
+       *    cy.cleanupAccount('username')
        */
       cleanupAccount: typeof cleanupAccount;
 
@@ -55,13 +55,7 @@ declare global {
   }
 }
 
-function login({
-  provider = "siwe",
-  userId = "0xe32C26Be24232ba92cd89d116985F81f94Dd26a8",
-}: {
-  provider?: string;
-  userId?: string;
-} = {}) {
+function login(provider: string, userId: string) {
   cy.then(() => ({ provider, userId })).as("user");
   cy.exec(
     `npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts "${provider}" "${userId}"`
@@ -74,33 +68,20 @@ function login({
   return cy.get("@user");
 }
 
-function cleanupUser({
-  provider,
-  userId,
-}: { provider?: string; userId?: string } = {}) {
+function cleanupUser(provider: string, userId: string) {
   if (userId && provider) {
     deleteUserByProviderUserId(provider, userId);
-  } else {
-    cy.get("@user").then((user) => {
-      const { provider, userId } = user as {
-        provider?: string;
-        userId?: string;
-      };
-      if (provider && userId) {
-        deleteUserByProviderUserId(provider, userId);
-      }
-    });
   }
   cy.clearCookie("__session");
 }
 
-function deleteUserByProviderUserId(provider?: string, userId?: string) {
+function deleteUserByProviderUserId(provider: string, userId: string) {
   cy.exec(
     `npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts "${provider}" "${userId}"`
   );
 }
 
-function cleanupAccount({ username }: { username?: string } = {}) {
+function cleanupAccount(username: string) {
   if (username) {
     deleteAccountByUsername(username);
   }
