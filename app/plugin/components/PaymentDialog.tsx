@@ -176,12 +176,12 @@ export default function PaymentDialog({
 
   return (
     <>
-      <div className="overflow-hidden bg-white  sm:rounded-lg">
-        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-          <dl className="sm:divide-y sm:divide-gray-200">
+      <div className="overflow-hidden">
+        <div className="px-4 py-5 sm:p-0">
+          <dl className="sm:divide-y">
             <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:py-5 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Amount</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+              <dt className="text-sm font-medium text-indigo-100">Amount</dt>
+              <dd className="mt-1 text-sm text-indigo-100 sm:col-span-2 sm:mt-0">
                 <PriceInToken
                   chain={chain}
                   invoice={invoice}
@@ -193,7 +193,7 @@ export default function PaymentDialog({
           </dl>
         </div>
       </div>
-      <div className="bg-white px-4 py-3 text-center sm:px-6">
+      <div className="px-4 py-3 text-center sm:px-6">
         {transaction && (
           <TransactionProgress
             chain={chain}

@@ -28,7 +28,7 @@ function SubHeader() {
     <div className="border-b-1 grid grid-cols-1 gap-4 border-sky-100 py-4">
       <div className="text-right">
         {chainInfo && (
-          <div className="mr-3 inline-flex items-center rounded-lg bg-gray-100 px-2 py-2 text-sm font-medium text-indigo-800">
+          <div className="mr-3 inline-flex items-center rounded-lg bg-slate-700 px-2 py-2 text-sm font-medium text-indigo-200">
             <span>{chainInfo?.chainName}</span>
             <div className="flex-shrink-0 ">
               <img
@@ -39,7 +39,7 @@ function SubHeader() {
             </div>
           </div>
         )}
-        <div className="inline-flex items-center rounded-lg bg-gray-100 px-2 py-2 text-sm font-medium text-indigo-800">
+        <div className="inline-flex items-center rounded-lg bg-slate-700 px-2 py-2 text-sm font-medium text-indigo-200">
           {address && truncateEthAddress(address)}{" "}
           <button
             onClick={() => {

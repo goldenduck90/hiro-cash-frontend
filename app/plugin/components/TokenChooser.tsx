@@ -29,23 +29,23 @@ export default function TokenChooser({
 
   return (
     <>
-      <div className="overflow-hidden bg-white pt-2">
+      <div className="overflow-hidden pt-2">
         <div
           className={classnames(
             display("flex"),
             alignItems("items-center"),
             spacing("px-0", "py-3", "sm:px-6"),
-            borders("border-b", "border-gray-400")
+            borders("border-b", "border-slate-900")
           )}
         >
           <div className="flex min-w-0 flex-1 items-center">
-            <p className="text-md truncate pt-0 font-medium text-slate-600">
+            <p className="text-md truncate pt-0 font-medium text-indigo-200">
               Token
             </p>
             <div className="grid min-w-0 flex-1 grid-cols-2 gap-4 px-4">
               <div></div>
               <div className="">
-                <div className="text-md truncate pt-0 text-right font-medium text-slate-600">
+                <div className="text-md truncate pt-0 text-right font-medium text-indigo-200">
                   Balance
                 </div>
               </div>
@@ -53,7 +53,7 @@ export default function TokenChooser({
           </div>
         </div>
 
-        <ul className="divide-y divide-blue-300">
+        <ul className="divide-y divide-slate-900">
           {tokens.map((token: TokenInfo) => (
             <TokenItem
               key={token.address}

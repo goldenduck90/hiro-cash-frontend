@@ -59,7 +59,7 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
   // STATE: SELECT BLOCKCHAIN
   return (
     <>
-      <div className="overflow-hidden bg-white pt-2 sm:rounded-md">
+      <div className="overflow-hidden pt-2 sm:rounded-md">
         <ul className="divide-y divide-purple-300">
           {availableChains.map((chain) => (
             <li
@@ -68,7 +68,7 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
                 e.preventDefault();
                 switchNetwork!(chain.chainId);
               }}
-              className="block hover:cursor-pointer hover:bg-pink-50"
+              className="block hover:cursor-pointer hover:bg-slate-700/25"
             >
               <div className="flex items-center px-0 py-3 sm:px-4">
                 <div className="flex min-w-0 flex-1 items-center">
@@ -81,7 +81,7 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
                   </div>
                   <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                     <div>
-                      <p className="mt-2 truncate text-sm font-medium text-indigo-600">
+                      <p className="mt-2 truncate text-sm font-medium text-indigo-100">
                         {chain.chainName}
                       </p>
                       <p className="mt-2 flex items-center text-sm text-gray-500">

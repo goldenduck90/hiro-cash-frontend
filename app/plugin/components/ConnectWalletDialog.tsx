@@ -46,11 +46,11 @@ export function ConnectWalletDialog() {
     const wc2 = walletConnect2Connector(configuredChains);
 
     return (
-      <div className="overflow-hidden bg-white pt-2">
-        <ul className="divide-y divide-blue-300">
+      <div className="overflow-hidden pt-2">
+        <ul className="divide-y divide-slate-900">
           <li
             onClick={() => connectAsync({ connector: wc1 })}
-            className="flex items-center px-0 py-3 hover:cursor-pointer hover:bg-blue-50 sm:px-6"
+            className="flex items-center px-0 py-3 hover:cursor-pointer hover:bg-slate-700/25 sm:px-6"
           >
             <div className="flex min-w-0 flex-1 items-center ">
               <div className="flex-shrink-0">
@@ -69,7 +69,7 @@ export function ConnectWalletDialog() {
           </li>
           <li
             onClick={() => connectAsync({ connector: wc2 })}
-            className="flex items-center px-0 py-3 hover:cursor-pointer hover:bg-blue-50 sm:px-6"
+            className="flex items-center px-0 py-3 hover:cursor-pointer hover:bg-slate-800/90 sm:px-6"
           >
             <div className="flex min-w-0 flex-1 items-center ">
               <div className="flex-shrink-0">
@@ -92,12 +92,12 @@ export function ConnectWalletDialog() {
   } else {
     return (
       <>
-        <div className="overflow-hidden bg-white pt-2">
-          <ul className="divide-y divide-blue-300">
+        <div className="overflow-hidden pt-2">
+          <ul className="divide-y divide-slate-900">
             {connectors.map((connector) => (
               <li
                 key={connector.id}
-                className="flex items-center px-0 py-3 hover:cursor-pointer hover:bg-blue-50 sm:px-6"
+                className="flex items-center px-0 py-3 hover:cursor-pointer hover:bg-slate-700/25 sm:px-6"
               >
                 <div className="flex min-w-0 flex-1 items-center ">
                   <div className="flex-shrink-0">
@@ -112,7 +112,7 @@ export function ConnectWalletDialog() {
                       type="button"
                       disabled={!connector.ready}
                       onClick={() => connect({ connector })}
-                      className="w-full text-left text-lg font-bold text-indigo-600"
+                      className="w-full text-left text-lg text-indigo-100"
                     >
                       {connector.name}
                       {(isLoading || isIdle) &&

@@ -7,15 +7,15 @@ import WagmiContainer from "./WagmiContainer";
 export function LayoutContainer({ children, setTab }) {
   return (
     <>
-      <h3 className="text-lg font-medium leading-6 text-gray-900 p-2 pl-4 bg-white">
+      <h3 className="text-lg font-medium leading-6 text-gray-900 p-2 pl-4">
         <div className="w-full max-w-lg m-auto">
           <img src="/img/hiro.png" className="h-8 inline-block" />
         </div>
       </h3>
 
       <div className="w-full max-w-lg m-auto py-auto mt-8">
-        <div className="border-b border-gray-200 px-6 bg-white">
-          <div className="bg-white py-6">{children}</div>
+        <div className="border-b border-gray-200 px-6">
+          <div className="py-6">{children}</div>
         </div>
       </div>
     </>

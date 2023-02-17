@@ -71,7 +71,8 @@ export default function TokenItem({
               : "hover:cursor-not-allowed"
           ),
           backgrounds(
-            isBalanceSufficient() ? "hover:bg-indigo-50" : "hover:bg-gray-100"
+            "hover:bg-opacity-25",
+            isBalanceSufficient() ? "hover:bg-slate-700" : undefined
           )
         )}
       >
@@ -85,12 +86,12 @@ export default function TokenItem({
           </div>
           <div className="grid min-w-0 flex-1 grid-cols-2 gap-4 px-4">
             <div>
-              <p className="text-md truncate pt-0 font-medium text-indigo-600">
+              <p className="text-md truncate pt-0 font-medium text-indigo-100">
                 {tokenInfo.name}
               </p>
             </div>
             <div className="">
-              <div className="text-md truncate pt-0 text-right font-medium text-gray-600">
+              <div className="text-md truncate pt-0 text-right font-medium text-indigo-100">
                 {!isLoading &&
                   formatToken(
                     Math.abs(Math.round(balance / 10 ** tokenInfo.decimals))

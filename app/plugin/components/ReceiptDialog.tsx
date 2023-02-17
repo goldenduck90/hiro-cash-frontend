@@ -22,7 +22,7 @@ export default function ReceiptDialog({
 
   return (
     <>
-      <div className="overflow-hidden bg-white  sm:rounded-lg">
+      <div className="overflow-hidden">
         <div className="px-16 py-5 sm:px-6">
           <h3 className="rounded-xl bg-green-600 py-4 text-center text-lg font-medium leading-6 text-white">
             <CheckIcon className="mr-4 inline-block h-8 w-8" />
@@ -36,7 +36,7 @@ export default function ReceiptDialog({
                 <a
                   href={txUrl}
                   target="_blank"
-                  className="text-underline text-indigo-600"
+                  className="text-underline text-indigo-100"
                   rel="noreferrer"
                 >
                   Show Transaction on Explorer
