@@ -1,18 +1,18 @@
-// Use this to create a new user and login with that user
+// Use this to create a new oauth and login with that oauth
 // Simply call this with:
-// npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts username@example.com
+// npx ts-node --require tsconfig-paths/register ./cypress/support/create-oauth.ts "${provider}" "${userId}"
 // and it will log out the cookie value you can use to interact with the server
-// as that new user.
+// as that new oauth.
 
 import { installGlobals } from "@remix-run/node";
 import { parse } from "cookie";
 
 import { findOrCreatOauthCredential } from "~/models/oauthCredential.server";
-import { createUserSession } from "~/session.server";
+import { createOauthSession } from "~/session.server";
 
 installGlobals();
 
-async function createAndLogin(provider: string, userId: string) {
+async function createOauth(provider: string, userId: string) {
   if (!provider) {
     throw new Error("provider required for login");
   }
@@ -22,7 +22,7 @@ async function createAndLogin(provider: string, userId: string) {
 
   const credential = await findOrCreatOauthCredential(provider, userId, {});
 
-  const response = await createUserSession({
+  const response = await createOauthSession({
     request: new Request("test://test"),
     oAuth: credential,
     remember: false,
@@ -31,18 +31,12 @@ async function createAndLogin(provider: string, userId: string) {
 
   const cookieValue = response.headers.get("Set-Cookie");
   if (!cookieValue) {
-    throw new Error("Cookie missing from createUserSession response");
+    throw new Error("Cookie missing from createOauthSession response");
   }
   const parsedCookie = parse(cookieValue);
   // we log it like this so our cypress command can parse it out and set it as
   // the cookie value.
-  console.log(
-    `
-<cookie>
-  ${parsedCookie.__session}
-</cookie>
-  `.trim()
-  );
+  console.log(`<cookie>  ${parsedCookie.__session}</cookie>  `.trim());
 }
 
-createAndLogin(process.argv[2], process.argv[3]);
+createOauth(process.argv[2], process.argv[3]);

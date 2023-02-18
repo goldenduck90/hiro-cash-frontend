@@ -99,6 +99,7 @@ export default function NewAccountPage() {
                 http://hiro.cash/
               </span>
               <input
+                data-testid="username"
                 type="text"
                 {...getInputProps({ id: "username" })}
                 id="username"
@@ -109,7 +110,7 @@ export default function NewAccountPage() {
             {error && <p className="p-2 text-xs text-red-300">{error}</p>}
             <div className="mt-4 pt-4 text-center">
               <button
-                data-testid="account-create"
+                data-testid="create-account"
                 type="submit"
                 disabled={isSubmitting}
                 className={FOOTER_BUTTON}

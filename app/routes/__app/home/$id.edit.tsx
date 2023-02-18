@@ -158,7 +158,7 @@ export default function AccountEditPage() {
             {error && <p className="p-2 text-xs text-red-300">{error}</p>}
             <div className="mt-4 pt-4 text-center">
               <button
-                data-testid="account-create"
+                data-testid="edit-account"
                 type="submit"
                 disabled={isSubmitting}
                 className={FOOTER_BUTTON}

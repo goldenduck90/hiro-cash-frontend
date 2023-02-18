@@ -142,7 +142,10 @@ export default function HiroLinkPage() {
             <h3 className="font-mono text-lg leading-6 text-gray-200">
               @{account.username}
             </h3>
-            <p className="mt-1 font-mono text-sm text-gray-500">
+            <p
+              data-testid="account-wallet-address"
+              className="mt-1 font-mono text-sm text-gray-500"
+            >
               {wallet.address}
             </p>
           </div>

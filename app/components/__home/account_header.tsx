@@ -14,6 +14,7 @@ export default function AccountHeader({ account }: { account: Account }) {
           </h3>
           <p className="mt-1 text-sm text-gray-500">
             <Link
+              data-testid="account-link"
               to={`/${account.username}`}
               target="_blank"
               className="text-sm font-light text-slate-300"

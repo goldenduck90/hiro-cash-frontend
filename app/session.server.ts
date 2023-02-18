@@ -61,7 +61,7 @@ export async function getUserId(
 //   throw await logout(request);
 // }
 
-export async function createUserSession({
+export async function createOauthSession({
   request,
   oAuth,
   remember,

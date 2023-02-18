@@ -5,28 +5,28 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Logs in with a random user. Yields the user and adds an alias to the user
+       * Logs in with a random oauth. Yields the oauth and adds an alias to the oauth
        *
        * @returns {typeof login}
        * @memberof Chainable
        * @example
        *    cy.login()
        * @example
-       *    cy.login('siwe','0x0E19085DB3FbD6bfc7764dC8CEF89edE76111f1f')
+       *    cy.login('google','120983490862134098')
        */
       login: typeof login;
 
       /**
-       * Deletes the current @user
+       * Deletes the current @oauth
        *
-       * @returns {typeof cleanupUser}
+       * @returns {typeof cleanupOauth}
        * @memberof Chainable
        * @example
-       *    cy.cleanupUser()
+       *    cy.cleanupOauth()
        * @example
-       *    cy.cleanupUser('provider','userId')
+       *    cy.cleanupOauth('provider','userId')
        */
-      cleanupUser: typeof cleanupUser;
+      cleanupOauth: typeof cleanupOauth;
 
       /**
        * Deletes the current @account
@@ -56,42 +56,46 @@ declare global {
 }
 
 function login(provider: string, userId: string) {
-  cy.then(() => ({ provider, userId })).as("user");
+  cy.then(() => ({ provider, userId })).as("oauth");
   cy.exec(
-    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts "${provider}" "${userId}"`
+    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-oauth.ts "${provider}" "${userId}"`
   ).then(({ stdout }) => {
     const cookieValue = stdout
       .replace(/.*<cookie>(?<cookieValue>.*)<\/cookie>.*/s, "$<cookieValue>")
       .trim();
     cy.setCookie("__session", cookieValue);
   });
-  return cy.get("@user");
+  return cy.get("@oauth");
 }
 
-function cleanupUser(provider: string, userId: string) {
+function cleanupOauth(provider?: string, userId?: string) {
   if (userId && provider) {
-    deleteUserByProviderUserId(provider, userId);
+    deleteOauthByProviderUserId(provider, userId);
+  } else {
+    cy.get("@oauth").then((oauth) => {
+      const { provider, userId } = oauth as {
+        provider?: string;
+        userId?: string;
+      };
+      if (provider && userId) {
+        deleteOauthByProviderUserId(provider, userId);
+      }
+    });
   }
   cy.clearCookie("__session");
 }
 
-function deleteUserByProviderUserId(provider: string, userId: string) {
+function deleteOauthByProviderUserId(provider: string, userId: string) {
   cy.exec(
-    `npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts "${provider}" "${userId}"`
+    `npx ts-node --require tsconfig-paths/register ./cypress/support/delete-oauth.ts "${provider}" "${userId}"`
   );
 }
 
 function cleanupAccount(username: string) {
-  if (username) {
-    deleteAccountByUsername(username);
-  }
-  cy.clearCookie("__session");
-}
-
-function deleteAccountByUsername(username: string) {
   cy.exec(
     `npx ts-node --require tsconfig-paths/register ./cypress/support/delete-account.ts "${username}"`
   );
+  cy.clearCookie("__session");
 }
 
 // We're waiting a second because of this issue happen randomly
@@ -105,6 +109,6 @@ function visitAndCheck(url: string, waitTime: number = 1000) {
 }
 
 Cypress.Commands.add("login", login);
-Cypress.Commands.add("cleanupUser", cleanupUser);
+Cypress.Commands.add("cleanupOauth", cleanupOauth);
 Cypress.Commands.add("cleanupAccount", cleanupAccount);
 Cypress.Commands.add("visitAndCheck", visitAndCheck);

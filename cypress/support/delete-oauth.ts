@@ -1,7 +1,7 @@
-// Use this to delete a user by their email
+// Use this to delete a oauth by their email
 // Simply call this with:
-// npx ts-node --require tsconfig-paths/register ./cypress/support/delete-user.ts username@example.com
-// and that user will get deleted
+// npx ts-node --require tsconfig-paths/register ./cypress/support/delete-oauth.ts "${provider}" "${userId}"
+// and that oauth will get deleted
 
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { installGlobals } from "@remix-run/node";
@@ -12,10 +12,10 @@ installGlobals();
 
 async function deleteUser(provider: string, userId: string) {
   if (!userId) {
-    throw new Error("userId required for login");
+    throw new Error("userId required to delete oAuth");
   }
   if (!provider) {
-    throw new Error("provider required for login");
+    throw new Error("provider required to delete oAuth");
   }
   const provider_userId = { provider, userId };
   try {
@@ -25,7 +25,7 @@ async function deleteUser(provider: string, userId: string) {
       error instanceof PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
-      console.log("User not found, so no need to delete");
+      console.log("OAuth not found, so no need to delete");
     } else {
       throw error;
     }

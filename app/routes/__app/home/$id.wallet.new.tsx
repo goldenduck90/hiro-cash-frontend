@@ -151,7 +151,7 @@ export default function AccountOverviewPage() {
           </label>
           <div className="mt-1">
             <input
-              data-testid="new-wallet-address"
+              data-testid="wallet-address"
               type="text"
               {...getInputProps({ id: "address" })}
               className="block w-full min-w-0 rounded-md border-slate-800 bg-slate-900 p-3  text-lg focus:border-slate-800 focus:ring-slate-800"
@@ -209,7 +209,7 @@ export default function AccountOverviewPage() {
 
           <div className="mt-8 border-slate-600 pt-4 text-center">
             <button
-              data-testid="new-wallet-create"
+              data-testid="create-wallet"
               type="submit"
               disabled={isSubmitting}
               className={FOOTER_BUTTON}
