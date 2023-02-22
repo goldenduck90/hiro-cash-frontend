@@ -7,6 +7,8 @@ import twitter from "~/assets/images/twitter.svg";
 import metamask from "~/assets/images/wallets/metamask.svg";
 import { getWeb3 } from "~/entry.client";
 import AppHeader from "~/components/app_header";
+import { SHOW_ROADMAP } from "~/utils";
+import Roadmap from "~/components/roadmap";
 
 // First we create our UI with the form doing a POST and the inputs with the
 // names we are going to use in the strategy
@@ -32,7 +34,7 @@ export default function Screen() {
         title="Register / Sign In"
         description="Create a Hiro payment link and start accepting crypto."
       />
-      <div className="text-center">
+      <div className="pb-8 text-center">
         <Form action="/auth/twitter" method="post">
           <button
             type="submit"
@@ -75,6 +77,7 @@ export default function Screen() {
             Github
           </button>
         </Form>
+
         {/* <button
           onClick={handleSubmit}
           className="mt-4 inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-2 font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -88,6 +91,26 @@ export default function Screen() {
           Metamask
         </button> */}
       </div>
+      <Roadmap>
+        <div className="p-4 ">
+          <div className="relative grid grid-cols-3 gap-4">
+            <div className="ml-3 text-sm">
+              <label className="font-medium text-indigo-500">
+                Sign In With Ethereum
+              </label>
+              <p id="comments-description" className="text-gray-500">
+                Sign in with your Ethereum wallet.
+              </p>
+            </div>
+            <div className="ml-3 text-sm">
+              <label className="font-medium text-indigo-500">Serverless</label>
+              <p id="comments-description" className="text-gray-500">
+                Run your own standalone payment link.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Roadmap>
     </>
   );
 }

@@ -177,7 +177,7 @@ export default function AccountWalletPage() {
         </Link>
         <div className="p-6">
           <ValidatedForm validator={validator} method="post" id="myForm">
-            <label htmlFor="email" className="block text-sm font-medium ">
+            <label htmlFor="email" className="block pb-2 pl-2 text-indigo-100 ">
               Wallet Address
             </label>
             <div className="mt-1">
@@ -193,48 +193,62 @@ export default function AccountWalletPage() {
               {error && <span className="my-error-class">{error}</span>}
             </div>
 
-            {filteredChains.map((chain) => {
-              const chainId = chain.chainId;
-              const tokensForChain = coinsByChain[chainId] || [];
+            <label
+              htmlFor="email"
+              className="mt-8 block pb-2 pl-2 text-indigo-100 "
+            >
+              Accepted Chains and Tokens
+            </label>
+            <div className=" divide-y divide-slate-900">
+              {filteredChains.map((chain) => {
+                const chainId = chain.chainId;
+                const tokensForChain = coinsByChain[chainId] || [];
 
-              return (
-                chain && (
-                  <fieldset key={chainId} className="mt-8">
-                    <div className="" aria-hidden="true">
-                      <img
-                        src={ethereumLogo}
-                        className="inline-block h-8 w-8"
-                        alt="Ethereum Logo"
-                      />
-                      {chain.chainName}
-                    </div>
-                    <div className="mt-4 flex pl-2">
-                      {tokensForChain.map((coin: any) => {
-                        const coinId = coin.symbol + "-" + chainId.toString();
-                        return (
-                          <div key={coinId} className="mr-4 flex items-center">
-                            <input
-                              defaultChecked={coinSelected(wallet, coinId)}
-                              name={`coins`}
-                              id={coinId}
-                              type="checkbox"
-                              value={coinId}
-                              className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-                            />
-                            <label
-                              htmlFor={coinId}
-                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                return (
+                  chain && (
+                    <fieldset
+                      key={chainId}
+                      className="flex rounded-sm border-slate-900 px-4 py-4"
+                    >
+                      <div className="flex-1" aria-hidden="true">
+                        <img
+                          src={ethereumLogo}
+                          className="inline-block h-8 w-8"
+                          alt="Ethereum Logo"
+                        />
+                        {chain.chainName}
+                      </div>
+                      <div className="flex flex-1 pl-2">
+                        {tokensForChain.map((coin: any) => {
+                          const coinId = coin.symbol + "-" + chainId.toString();
+                          return (
+                            <div
+                              key={coinId}
+                              className="mr-4 flex items-center"
                             >
-                              {coin.symbol}
-                            </label>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </fieldset>
-                )
-              );
-            })}
+                              <input
+                                defaultChecked={coinSelected(wallet, coinId)}
+                                name={`coins`}
+                                id={coinId}
+                                type="checkbox"
+                                value={coinId}
+                                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                              />
+                              <label
+                                htmlFor={coinId}
+                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                              >
+                                {coin.symbol}
+                              </label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
+                  )
+                );
+              })}
+            </div>
             <div className="mt-4 pt-4 text-center">
               <button
                 type="submit"

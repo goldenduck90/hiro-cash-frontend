@@ -11,11 +11,13 @@ import sb from "~/assets/images/pages/sb.jpg";
 import ms from "~/assets/images/pages/ms.jpg";
 import bb from "~/assets/images/pages/bb.jpg";
 import ah from "~/assets/images/pages/ah.jpg";
+import { PrimaryFeatures } from "~/components/__pages/PrimaryFeatures";
+import { Faq } from "~/components/__pages/Faq";
 
 const features = [
   {
     name: "Lowest fees",
-    description: "0.20% for B2C payments. Free for P2P. ",
+    description: "Free for P2P. 0.20% for B2C payments.",
     icon: CloudArrowUpIcon,
   },
   {
@@ -123,6 +125,8 @@ export default function PagesMain() {
         </div>
 
         {/* FEATURES  */}
+        <PrimaryFeatures />
+        <Faq />
 
         <div className="-mt-32 bg-slate-900 py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">

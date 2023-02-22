@@ -22,6 +22,7 @@ import { getChain, routerlist, tokenlist } from "@hiropay/tokenlists";
 import AccountHeader from "~/components/__home/account_header";
 import { mixpanelTrack } from "~/services/mixpanel.server";
 import { FOOTER_BUTTON } from "~/styles/elements";
+import Roadmap from "~/components/roadmap";
 
 const coins = tokenlist.tokens;
 
@@ -144,7 +145,7 @@ export default function AccountOverviewPage() {
     <>
       <AccountHeader account={account} />
 
-      <main className="px-6">
+      <main className="px-6 pb-8">
         <ValidatedForm validator={validator} method="post" id="walletForm">
           <label htmlFor="address" className="block text-sm font-medium ">
             Wallet Address
@@ -219,6 +220,35 @@ export default function AccountOverviewPage() {
           </div>
         </ValidatedForm>
       </main>
+      <Roadmap>
+        <div className="p-4">
+          <div className="relative grid grid-cols-3 gap-4">
+            <div className="text-sm">
+              <label className="font-medium text-indigo-500">Insta-swap</label>
+              <p id="comments-description" className="text-gray-500">
+                Senders can pay with any tokens in their wallet.
+              </p>
+            </div>
+            <div className="text-sm">
+              <label className="font-medium text-indigo-500">
+                Send to Exchange
+              </label>
+              <p id="comments-description" className="text-gray-500">
+                Automatically updated token/chain lists compatible with your
+                exchange.
+              </p>
+            </div>
+            <div className="text-sm">
+              <label className="font-medium text-indigo-500">
+                Multi-Wallets
+              </label>
+              <p id="comments-description" className="text-gray-500">
+                Add more wallets and create individual links for different.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Roadmap>
     </>
   );
 }

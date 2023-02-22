@@ -6,6 +6,8 @@ import { useMemo } from "react";
 
 const DEFAULT_REDIRECT = "/";
 
+export const SHOW_ROADMAP = true;
+
 export function coinIdtoToken(coinId: string) {
   const [symbol, chainId] = coinId.split("-");
   const chain = getChain(parseInt(chainId));

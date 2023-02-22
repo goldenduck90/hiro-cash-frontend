@@ -13,6 +13,8 @@ import { Prisma } from "@prisma/client";
 import { mixpanelTrack } from "~/services/mixpanel.server";
 import AppHeader from "~/components/app_header";
 import { FOOTER_BUTTON } from "~/styles/elements";
+import Roadmap from "~/components/roadmap";
+import zapier from "~/assets/images/logos/zapier.svg";
 
 export const validator = withZod(
   z.object({
@@ -120,6 +122,36 @@ export default function NewAccountPage() {
             </div>
           </ValidatedForm>
         </div>
+        <Roadmap>
+          <div className="p-4">
+            <div className="relative grid grid-cols-3 gap-4">
+              <div className="text-sm">
+                <label className="font-medium text-indigo-500">
+                  Realtime Notifications
+                </label>
+                <p id="comments-description" className="text-gray-500">
+                  Get Email, SMS, push when you receive a payment.
+                </p>
+              </div>
+              <div className="text-sm">
+                <label className="font-medium text-indigo-500">
+                  Webhooks & Zapier
+                </label>
+                <p id="comments-description" className="text-gray-500">
+                  Automatically update Quickbooks, Xero, etc.
+                </p>
+              </div>
+              <div className="text-sm">
+                <label className="font-medium text-indigo-500">
+                  Multiple Usernames
+                </label>
+                <p id="comments-description" className="text-gray-500">
+                  For your alt accounts.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Roadmap>
       </main>
     </div>
   );
