@@ -1,6 +1,6 @@
-import Image from "next/image";
-
+import { Link } from "@remix-run/react";
 import { Container } from "~/components/Container";
+
 // import backgroundImage from "@/images/background-faqs.jpg";
 
 const faqs = [
@@ -19,7 +19,7 @@ const faqs = [
   [
     {
       answer:
-        "Hiro charges a payment fee for B2C payments. The fees will be distributed to the $HIRO token stakers.",
+        "Hiro is free to use for P2P (peer-to-peer) and only charges a payment fee of 0.20% for B2C payments (e.g. ecommerce). The fees will be distributed to the $HIRO token stakers.",
       question: "How will you make money? ",
     },
     {
@@ -66,7 +66,15 @@ export function Faq() {
             Frequently asked questions
           </h2>
           <p className="mt-4  text-lg tracking-tight text-slate-200">
-            If you can’t find what you’re looking for, join our Discord and ask.
+            If you can’t find what you’re looking for, join our{" "}
+            <Link
+              className="underline"
+              to="https://discord.gg/PJaynWR8Gc"
+              target="_blank"
+            >
+              Discord
+            </Link>{" "}
+            and ask.
           </p>
         </div>
         <ul
