@@ -135,7 +135,7 @@ const navigation = {
   social: [
     {
       name: "Discord",
-      href: "https://discord.gg/YxXbvRdM",
+      href: "https://discord.gg/PJaynWR8Gc",
       icon: (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
         <svg
           fill="currentColor"
