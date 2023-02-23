@@ -41,7 +41,7 @@ const features = [
 const people = [
   {
     name: "Sebastian Burkhard",
-    role: "Mega boss",
+    role: "Payments Maestro",
     imageUrl: sb,
     linkedinUrl: "https://www.linkedin.com/in/sebastian-b-4235233/",
   },
