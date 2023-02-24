@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePayment } from "../hooks";
 import type { Address } from "wagmi";
 import {
@@ -111,6 +111,7 @@ export default function PaymentDialog({
   const [transaction, setTransaction] = useState<SendTransactionResult | null>(
     null
   );
+  const [allowanceOk, setAllowanceOk] = useState<boolean>(false);
 
   const routerAddress = latestRouter(chain.chainId).address as Address;
 
@@ -119,6 +120,9 @@ export default function PaymentDialog({
     abi: ERC20abi,
     functionName: "allowance",
     args: [address, routerAddress],
+    onSuccess(data) {
+      setAllowanceOk(isAllowanceSufficient(allowance.data));
+    },
   });
 
   const payload = paymentPayload({ invoice, chain, tokenInfo });
@@ -138,6 +142,7 @@ export default function PaymentDialog({
     functionName: "approve",
     args: [latestRouter(chain.chainId).address, maxAllowance],
     onSuccess(data) {
+      console.log("refetching:");
       allowance.refetch();
     },
   });
@@ -171,8 +176,11 @@ export default function PaymentDialog({
     payment.writeAsync?.();
   }
 
-  const allowanceOk =
-    allowance.isSuccess && isAllowanceSufficient(allowance.data);
+  useEffect(() => {
+    setAllowanceOk(
+      allowance.isSuccess && isAllowanceSufficient(allowance.data)
+    );
+  }, []);
 
   return (
     <>
