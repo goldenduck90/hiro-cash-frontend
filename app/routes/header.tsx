@@ -37,7 +37,12 @@ export function Header() {
             <div className="flex-shrink-0 basis-1/2">
               <a href="/">
                 <span className="sr-only">Hiro</span>
-                <img className="h-8 w-auto" src={hiro} alt="Hiro" />
+                <img
+                  className="h-8 w-auto"
+                  src={hiro}
+                  alt="Hiro"
+                  data-testid="header-logo"
+                />
               </a>
             </div>
             <div className="flex-shrink-0 basis-1/2 text-right">
@@ -50,6 +55,7 @@ export function Header() {
                   <button
                     type="submit"
                     className="rounded py-1 px-2 text-sm text-blue-100 hover:bg-slate-500 active:bg-slate-600"
+                    data-testid="logout-button"
                   >
                     Logout
                   </button>
@@ -59,6 +65,7 @@ export function Header() {
                 <Link
                   to="/login"
                   className="inline-block rounded-xl bg-indigo-500 px-4 py-1 font-medium text-white hover:bg-blue-600"
+                  data-testid="login-button"
                 >
                   Register / Sign In
                 </Link>

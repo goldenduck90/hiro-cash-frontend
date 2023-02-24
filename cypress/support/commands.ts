@@ -12,12 +12,12 @@ declare global {
        * @example
        *    cy.login()
        * @example
-       *    cy.login('google','120983490862134098')
+       *    cy.login('google','120983490862134098', 'test@gmail.com')
        */
       login: typeof login;
 
       /**
-       * Deletes the current @oauth
+       * Deletes the current @user
        *
        * @returns {typeof cleanupOauth}
        * @memberof Chainable
@@ -51,14 +51,26 @@ declare global {
        *    cy.visitAndCheck('/', 500)
        */
       visitAndCheck: typeof visitAndCheck;
+
+      /**
+       * Extends the standard visit command to wait for the page to load
+       *
+       * @returns {typeof visitAndCheck}
+       * @memberof Chainable
+       * @example
+       *    cy.visitAndCheck('/')
+       *  @example
+       *    cy.visitAndCheck('/', 500)
+       */
+      visitAndNoPermissionAdmin: typeof visitAndNoPermissionAdmin;
     }
   }
 }
 
-function login(provider: string, userId: string) {
-  cy.then(() => ({ provider, userId })).as("oauth");
+function login(provider: string, userId: string, email: string) {
+  cy.then(() => ({ provider, userId, email })).as("oauth");
   cy.exec(
-    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-oauth.ts "${provider}" "${userId}"`
+    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts "${provider}" "${userId}" "${email}"`
   ).then(({ stdout }) => {
     const cookieValue = stdout
       .replace(/.*<cookie>(?<cookieValue>.*)<\/cookie>.*/s, "$<cookieValue>")
@@ -108,7 +120,13 @@ function visitAndCheck(url: string, waitTime: number = 1000) {
   cy.location("pathname").should("contain", url).wait(waitTime);
 }
 
+function visitAndNoPermissionAdmin(url: string, waitTime: number = 1000) {
+  cy.visit(url);
+  cy.location("pathname").should("not.contain", url).wait(waitTime);
+}
+
 Cypress.Commands.add("login", login);
 Cypress.Commands.add("cleanupOauth", cleanupOauth);
 Cypress.Commands.add("cleanupAccount", cleanupAccount);
 Cypress.Commands.add("visitAndCheck", visitAndCheck);
+Cypress.Commands.add("visitAndNoPermissionAdmin", visitAndNoPermissionAdmin);

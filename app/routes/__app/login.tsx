@@ -39,6 +39,7 @@ export default function Screen() {
           <button
             type="submit"
             className="inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-2  font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            data-testid="login-twitter-button"
           >
             <img
               src={twitter}
@@ -53,6 +54,7 @@ export default function Screen() {
           <button
             type="submit"
             className="inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-2  font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            data-testid="login-google-button"
           >
             <img
               src={google}
@@ -67,6 +69,7 @@ export default function Screen() {
           <button
             type="submit"
             className="mt-4 inline-flex items-center rounded-md border border-transparent bg-slate-600 px-3 py-2 font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            data-testid="login-github-button"
           >
             <img
               src={github}

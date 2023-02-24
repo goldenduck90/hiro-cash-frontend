@@ -1,8 +1,9 @@
+// import node_modules
+import { useMatches } from "@remix-run/react";
+import { useMemo } from "react";
 import { getChain, tokenlist } from "@hiropay/tokenlists";
 import type { OauthCredential } from "@prisma/client";
-import { useMatches } from "@remix-run/react";
 import type { User } from "@sentry/remix";
-import { useMemo } from "react";
 
 const DEFAULT_REDIRECT = "/";
 
@@ -68,11 +69,17 @@ function isOauthCredential(oauth: any): oauth is OauthCredential {
   );
 }
 
+// check the auth status of domains
 export function useOptionalOauth(): OauthCredential | undefined {
   const data = useMatchesData("routes/__app/home");
+  const data_admin = useMatchesData("routes/__admin");
   if (!data || !isOauthCredential(data.oauthCredential)) {
-    return undefined;
+    if (!data_admin || !isOauthCredential(data_admin.oauthCredential)) {
+      return undefined;
+    }
+    return data_admin.oauthCredential;
   }
+
   return data.oauthCredential;
 }
 

@@ -1,6 +1,9 @@
-import type { OauthCredential } from "@prisma/client";
+// import node_modules
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
+
+// database scheme
+import type { OauthCredential } from "@prisma/client";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -22,9 +25,7 @@ export async function getSession(request: Request) {
   return sessionStorage.getSession(cookie);
 }
 
-export async function getUserId(
-  request: Request
-): Promise<OauthCredential["id"] | undefined> {
+export async function getUserId(request: Request): Promise<OauthCredential["id"] | undefined> {
   const session = await getSession(request);
   const userId = session.get(USER_SESSION_KEY);
   return userId;

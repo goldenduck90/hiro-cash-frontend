@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderArgs) {
   const defaultAccount = oauth.accounts[0];
 
   if (defaultAccount) {
-    return redirect(defaultAccount.username);
+    return redirect("/home/" + defaultAccount.username);
   } else {
     return redirect("/home/new");
   }

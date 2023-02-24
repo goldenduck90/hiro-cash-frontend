@@ -1,10 +1,11 @@
 // app/services/auth.server.ts
 import { Authenticator } from "remix-auth";
-import { sessionStorage } from "~/session.server";
+import { sessionStorage } from "~/services/session.server";
 import { GoogleStrategy } from "remix-auth-google";
 import { GitHubStrategy } from "remix-auth-github";
 import { TwitterStrategy } from "remix-auth-twitter";
-import { SiweStrategy } from "@sloikaxyz/remix-auth-siwe";
+import { SiweMessage } from "siwe";
+import { FormStrategy } from "remix-auth-form";
 import type { OauthCredential } from "@prisma/client";
 import { findOrCreatOauthCredential } from "~/models/oauthCredential.server";
 import { mixpanel } from "./mixpanel.server";
@@ -120,17 +121,24 @@ const twitterStrategy = new TwitterStrategy(
   }
 );
 
-const siweStrategy = new SiweStrategy(
-  { domain: "localhost:3000" },
-  async ({ message }) => {
-    try {
-      return findOrCreatOauthCredential("siwe", message.address, {});
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
+let siweStrategy = new FormStrategy(async ({ form }) => {
+  const signature = form.get("signature") as string;
+  const message = (form.get("message") as string).replace(/\r\n/g, "\n");
+  if (!signature || !message) return null;
+  try {
+    const siweMessage = new SiweMessage(message);
+    const fields = await siweMessage.validate(signature);
+
+    if (!fields) return null;
+
+    return findOrCreatOauthCredential("siwe", fields.address, {
+      chainId: fields.chainId,
+      address: fields.address,
+    });
+  } catch (e) {
+    console.log(e);
   }
-);
+}) as FormStrategy<OauthCredential>;
 
 authenticator.use(twitterStrategy, "twitter");
 authenticator.use(githubStrategy, "github");

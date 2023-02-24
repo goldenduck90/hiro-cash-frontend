@@ -106,6 +106,7 @@ export async function action({ request }: ActionArgs) {
 export async function loader({ request }: LoaderArgs) {
   // let session = await getSession(request);
   // let error = session.get(authenticator.sessionErrorKey);
+  console.log("request:", request)
 
   // console.log(error);
   // If the user is already authenticated redirect to /dashboard directly

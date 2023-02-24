@@ -1,6 +1,6 @@
 import { SHOW_ROADMAP } from "~/utils";
 
-export default function Roadmap({ children }) {
+export default function Roadmap({ children }: { children: any }) {
   if (!SHOW_ROADMAP) return null;
 
   return (

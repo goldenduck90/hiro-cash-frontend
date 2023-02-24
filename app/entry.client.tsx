@@ -14,7 +14,6 @@ declare global {
 }
 window.Buffer = window.Buffer || Buffer;
 if (window.ENV.SENTRY_DSN) {
-  console.log(window.ENV);
   Sentry.init({
     dsn: window.ENV.SENTRY_DSN,
     tracesSampleRate: 1,

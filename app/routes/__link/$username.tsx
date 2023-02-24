@@ -1,31 +1,40 @@
 //@ts-nocheck
 
+
+// import node_modules
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-
-import { findAccount } from "~/models/account.server";
-import invariant from "tiny-invariant";
-
-import PluginContainer from "~/plugin/PluginContainer";
-
-import HiroMain from "~/plugin/components/HiroMain";
-
-import { PaymentProvider } from "~/plugin/context/PaymentProvider";
 import type { SetStateAction } from "react";
 import { useState } from "react";
-import { coinIdtoToken } from "~/utils";
+import invariant from "tiny-invariant";
 import { useForm } from "react-hook-form";
 import CurrencyInput from "react-currency-input-field";
+import truncateEthAddress from "truncate-eth-address";
+
+// import server models
+import { findAccount } from "~/models/account.server";
+
+// import plugin
+import { PaymentProvider } from "~/plugin/context/PaymentProvider";
+import PluginContainer from "~/plugin/PluginContainer";
+import HiroMain from "~/plugin/components/HiroMain";
 import { CHAINS } from "~/plugin/constants/Chains";
 import { walletIcon } from "~/plugin/view/walletHelper";
-import { mixpanel } from "~/services/mixpanel.server";
 import AppHeader from "~/components/app_header";
+
+// import services
+import { mixpanel } from "~/services/mixpanel.server";
+
+// import utils
+import { coinIdtoToken } from "~/utils";
+
+// import styles
 import { FOOTER_BUTTON } from "~/styles/elements";
-import truncateEthAddress from "truncate-eth-address";
 
 export async function loader({ request, params }: LoaderArgs) {
   const account = await findAccount(params.username);
+
   const wallet = account.wallets[0];
 
   invariant(wallet, "no wallet configured");
@@ -57,7 +66,7 @@ export default function HiroLinkPage() {
     extraFeeDivisor: null,
     currency: "",
     coins: {},
-    onComplete: () => {},
+    onComplete: () => { },
   });
   const [baseCurrency, setBaseCurrency] = useState("USD");
 
@@ -69,8 +78,7 @@ export default function HiroLinkPage() {
     },
   });
 
-  const coinIds: any[] =
-    wallet.config!["coins" as keyof typeof wallet.config] || [];
+  const coinIds: any[] = wallet.config!["coins" as keyof typeof wallet.config] || [];
   const tokens = coinIds.map(coinIdtoToken);
 
   function baseCurrencyChanged(evt: {
@@ -123,7 +131,7 @@ export default function HiroLinkPage() {
       extraFeeDivisor: null,
       currency: values.baseCurrency,
       coins: tokens,
-      onComplete: () => {},
+      onComplete: () => { },
     });
 
     setOpenPopup(true);
@@ -186,7 +194,7 @@ export default function HiroLinkPage() {
                   >
                     {["USD", "EUR", "CHF"].map((curr) => {
                       return (
-                        <option key={curr} value={curr}>
+                        <option key={curr} value={curr} className="bg-transparent">
                           {curr}
                         </option>
                       );

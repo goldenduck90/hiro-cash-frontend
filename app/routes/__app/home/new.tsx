@@ -45,7 +45,7 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export let action = async ({ request }: ActionArgs) => {
-  let userSession = await authenticator.isAuthenticated(request, {
+    let userSession = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
   let oauth = await findFromSession(userSession);
