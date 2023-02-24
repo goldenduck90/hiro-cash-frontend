@@ -48,6 +48,12 @@ export default function TokenItem({
     return balance && balance.gte(amount);
   };
 
+  function formattedBalance() {
+    return formatToken(
+      Math.abs(Math.round((balance || 0) / 10 ** tokenInfo.decimals))
+    );
+  }
+
   return (
     <li
       key={tokenInfo.address}
@@ -92,10 +98,7 @@ export default function TokenItem({
             </div>
             <div className="">
               <div className="text-md truncate pt-0 text-right font-medium text-indigo-100">
-                {!isLoading &&
-                  formatToken(
-                    Math.abs(Math.round(balance / 10 ** tokenInfo.decimals))
-                  )}
+                {!isLoading && formattedBalance()}
               </div>
             </div>
           </div>

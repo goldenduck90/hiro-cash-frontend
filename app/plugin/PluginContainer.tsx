@@ -7,6 +7,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { WagmiConfig, createClient, configureChains } from "wagmi";
 import {
   mainnet,
+  arbitrum,
   avalanche,
   avalancheFuji,
   goerli,
@@ -27,7 +28,7 @@ const { Fragment } = React;
 // }
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, avalanche, avalancheFuji, goerli, fantom],
+  [mainnet, avalanche, arbitrum, avalancheFuji, goerli, fantom],
   [
     publicProvider(),
     jsonRpcProvider({
