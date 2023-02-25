@@ -70,7 +70,7 @@ declare global {
 function login(provider: string, userId: string, email: string) {
   cy.then(() => ({ provider, userId, email })).as("oauth");
   cy.exec(
-    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-user.ts "${provider}" "${userId}" "${email}"`
+    `npx ts-node --require tsconfig-paths/register ./cypress/support/create-oauth.ts "${provider}" "${userId}" "${email}"`
   ).then(({ stdout }) => {
     const cookieValue = stdout
       .replace(/.*<cookie>(?<cookieValue>.*)<\/cookie>.*/s, "$<cookieValue>")
