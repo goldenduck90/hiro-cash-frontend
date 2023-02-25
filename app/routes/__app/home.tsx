@@ -20,7 +20,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function HomePage() {
   return (
-    <div className="flex h-full flex-col bg-slate-800 p-6">
+    <div className="flex h-full flex-col bg-slate-800">
       <Outlet />
     </div>
   );
