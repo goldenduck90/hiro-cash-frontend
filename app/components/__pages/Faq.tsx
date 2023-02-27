@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { Container } from "~/components/Container";
-
+import { DISCORD } from "~/constants";
 // import backgroundImage from "@/images/background-faqs.jpg";
 
 const faqs = [
@@ -67,23 +67,16 @@ export function Faq() {
           </h2>
           <p className="mt-4  text-lg tracking-tight text-slate-200">
             If you can’t find what you’re looking for, join our{" "}
-            <Link
-              className="underline"
-              to="https://discord.gg/PJaynWR8Gc"
-              target="_blank"
-            >
+            <Link className="underline" to={DISCORD} target="_blank">
               Discord
             </Link>{" "}
             and ask.
           </p>
         </div>
-        <ul
-          role="list"
-          className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3"
-        >
+        <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3">
           {faqs.map((column, columnIndex) => (
             <li key={columnIndex}>
-              <ul role="list" className="flex flex-col gap-y-8">
+              <ul className="flex flex-col gap-y-8">
                 {column.map((faq, faqIndex) => (
                   <li key={faqIndex}>
                     <h3 className="font-display text-lg leading-7 text-indigo-200">
