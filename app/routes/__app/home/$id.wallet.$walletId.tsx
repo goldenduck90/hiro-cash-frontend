@@ -213,7 +213,7 @@ export default function AccountWalletPage() {
                       <div className="flex-1" aria-hidden="true">
                         <img
                           src={chain.logoUri}
-                          className="inline-block h-8 w-8"
+                          className="mr-2 inline-block h-6 w-6"
                           alt="Ethereum Logo"
                         />
                         {chain.chainName}

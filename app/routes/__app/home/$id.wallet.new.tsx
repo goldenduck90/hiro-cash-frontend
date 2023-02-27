@@ -169,9 +169,9 @@ export default function AccountOverviewPage() {
                 <fieldset key={chainId} className="mt-8">
                   <div className="" aria-hidden="true">
                     <img
-                      src={ethereumLogo}
-                      className="inline-block h-8 w-8"
-                      alt="Ethereum Logo"
+                      src={chain.logoUri}
+                      className="mr-2 inline-block h-6 w-6"
+                      alt="Logo"
                     />
                     {chain.chainName}
                   </div>

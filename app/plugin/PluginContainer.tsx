@@ -8,6 +8,8 @@ import { WagmiConfig, createClient, configureChains } from "wagmi";
 import {
   mainnet,
   arbitrum,
+  optimism,
+  optimismGoerli,
   avalanche,
   avalancheFuji,
   goerli,
@@ -28,7 +30,16 @@ const { Fragment } = React;
 // }
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, avalanche, arbitrum, avalancheFuji, goerli, fantom],
+  [
+    mainnet,
+    avalanche,
+    arbitrum,
+    optimism,
+    optimismGoerli,
+    avalancheFuji,
+    goerli,
+    fantom,
+  ],
   [
     publicProvider(),
     jsonRpcProvider({
