@@ -41,7 +41,7 @@ export function ConnectWalletDialog() {
     }
   }, []);
 
-  if (isMobile) {
+  if (false && isMobile) {
     const wc1 = walletConnectConnector(configuredChains);
     const wc2 = walletConnect2Connector(configuredChains);
 

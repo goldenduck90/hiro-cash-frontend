@@ -60,7 +60,7 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
   return (
     <>
       <div className="overflow-hidden pt-2 sm:rounded-md">
-        <ul className="divide-y divide-purple-300">
+        <ul className="divide-y divide-slate-900">
           {availableChains.map((chain) => (
             <li
               key={chain.chainId}
@@ -71,40 +71,29 @@ export default function ChainDialog({ setChain }: { setChain: any }) {
               className="block hover:cursor-pointer hover:bg-slate-700/25"
             >
               <div className="flex items-center px-0 py-3 sm:px-4">
-                <div className="flex min-w-0 flex-1 items-center">
-                  <div className="flex-shrink-0 ">
-                    <img
-                      className="h-8 w-8 rounded-full"
-                      src={chain.logoUri}
-                      alt="Logo"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                    <div>
-                      <p className="mt-2 truncate text-sm font-medium text-indigo-100">
-                        {chain.chainName}
-                      </p>
-                      <p className="mt-2 flex items-center text-sm text-gray-500">
-                        {/* <EnvelopeIcon
-                            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                            aria-hidden="true"
-                          /> */}
-                        <span className="truncate"></span>
-                      </p>
-                    </div>
-                    <div className="flex-shrink-5 mt-4 sm:mt-0 sm:ml-5">
-                      <div className="flex flex-row-reverse -space-x-1 overflow-hidden">
-                        {tokensOfChain(invoice.coins, chain.chainId).map(
-                          (token) => (
-                            <img
-                              key={token.address}
-                              className="inline-block h-8 w-8"
-                              src={token.logoUri}
-                              alt={token.name}
-                            />
-                          )
-                        )}
-                      </div>
+                <div className="w-10 flex-none">
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src={chain.logoUri}
+                    alt="Logo"
+                  />
+                </div>
+                <div className="min-w-0 px-4 md:grid md:grid-cols-2 md:gap-4">
+                  <p className="truncate text-sm font-medium text-indigo-100">
+                    {chain.chainName}
+                  </p>
+                  <div className="mt-4 hidden text-right sm:mt-0 sm:ml-5">
+                    <div className="flex flex-row-reverse -space-x-1 overflow-hidden">
+                      {tokensOfChain(invoice.coins, chain.chainId).map(
+                        (token) => (
+                          <img
+                            key={token.address}
+                            className="inline-block h-8 w-8"
+                            src={token.logoUri}
+                            alt={token.name}
+                          />
+                        )
+                      )}
                     </div>
                   </div>
                 </div>
