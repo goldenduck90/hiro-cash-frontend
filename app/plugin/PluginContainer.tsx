@@ -41,14 +41,24 @@ const { chains, provider, webSocketProvider } = configureChains(
     fantom,
   ],
   [
-    publicProvider(),
     jsonRpcProvider({
       rpc: (chain) => {
+        console.log(
+          `${chain.rpcUrls.infura?.http}/7c96628b378d451fb1522e9de03413ee`
+        );
         return {
-          http: chain.rpcUrls.default[0],
+          http: `${chain.rpcUrls.infura?.http}/7c96628b378d451fb1522e9de03413ee`,
         };
       },
     }),
+    publicProvider(),
+    // jsonRpcProvider({
+    //   rpc: (chain) => {
+    //     return {
+    //       http: chain.rpcUrls.default[0],
+    //     };
+    //   },
+    // }),
   ]
 );
 
