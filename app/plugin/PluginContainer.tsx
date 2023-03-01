@@ -43,9 +43,6 @@ const { chains, provider, webSocketProvider } = configureChains(
   [
     jsonRpcProvider({
       rpc: (chain) => {
-        console.log(
-          `${chain.rpcUrls.infura?.http}/7c96628b378d451fb1522e9de03413ee`
-        );
         return {
           http: `${chain.rpcUrls.infura?.http}/7c96628b378d451fb1522e9de03413ee`,
         };
