@@ -87,10 +87,18 @@ export function TransactionProgress({
   });
 
   return (
-    <div>
+    <div className="text-center text-indigo-100">
       <>
         {data && data.status == 0 && "Transaction failed"}
-        {isLoading && <div>{spinner}</div>}
+        {isLoading && (
+          <button
+            type="button"
+            disabled={true}
+            className="inline-flex items-center rounded-md border-0 border-transparent bg-gradient-to-r from-pink-500 to-blue-500 px-4 py-2 text-lg font-medium text-white shadow shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            {spinner} waiting...
+          </button>
+        )}
         {isError && error}
       </>
     </div>
@@ -242,10 +250,6 @@ export default function PaymentDialog({
             )}
           </button>
         )}
-      </div>
-      <div className="text-center text-red-500">
-        {/* {state.matches("connected.ready.allowance_sufficient.failed") &&
-          state.context.error?.reason} */}
       </div>
     </>
   );
